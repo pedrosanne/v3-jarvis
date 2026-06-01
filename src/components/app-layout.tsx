@@ -149,7 +149,7 @@ export function AppLayout({ title, children }: { title: string; children: ReactN
           </button>
         </header>
 
-        <main className="flex-1 px-4 py-6 lg:px-8">{children}</main>
+        <main className="flex-1 px-3 py-5 sm:px-4 sm:py-6 lg:px-8">{children}</main>
       </div>
     </div>
   );
