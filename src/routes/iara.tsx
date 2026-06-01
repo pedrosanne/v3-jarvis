@@ -636,8 +636,12 @@ function IaraPage() {
     setConfidence(0);
     setLogs([]);
     setSignal(null);
+    revealTimersRef.current.forEach(clearTimeout);
+    revealTimersRef.current = [];
+    setRevealStep(0);
     stopAutoScroll();
   }
+  useEffect(() => () => revealTimersRef.current.forEach(clearTimeout), []);
 
   const running = phase !== "idle" && phase !== "signal";
 
