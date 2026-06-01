@@ -540,6 +540,7 @@ function IaraPage() {
   function push(text: string, tone: LogLine["tone"] = "info") {
     idRef.current += 1;
     setLogs((l) => [...l.slice(-80), { id: idRef.current, text, tone }]);
+    sfxType();
   }
 
   // Matrix rain
