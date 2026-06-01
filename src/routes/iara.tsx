@@ -983,6 +983,14 @@ function IaraPage() {
             )}
           </div>
         )}
+
+        {/* Placeholder when no signal */}
+        {!signal && revealStep === 0 && (
+          <div className="min-w-0 lg:col-span-12">
+            <div className="rounded-2xl border border-dashed border-border bg-card/50 p-6 text-center text-sm text-muted-foreground">
+              Nenhum sinal ativo. Inicie uma análise para que a Iara gere o próximo scalp.
+            </div>
+          </div>
         )}
       </div>
 
