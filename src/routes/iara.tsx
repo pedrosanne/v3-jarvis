@@ -1698,6 +1698,274 @@ function BrokerUrlGate({
   );
 }
 
+function AccountIdGate({
+  accountId,
+  setAccountId,
+  status,
+  progress,
+  steps,
+  meta,
+  savedId,
+  exampleId,
+  onStart,
+  onReset,
+  onSaveDefault,
+  onClearDefault,
+}: {
+  accountId: string;
+  setAccountId: (v: string) => void;
+  status: "idle" | "checking" | "approved" | "rejected";
+  progress: number;
+  steps: { label: string; done: boolean; ok?: boolean }[];
+  meta: { masked: string; assets: number; latency: number; tier: string } | null;
+  savedId: string | null;
+  exampleId: string;
+  onStart: (raw: string) => void;
+  onReset: () => void;
+  onSaveDefault: () => void;
+  onClearDefault: () => void;
+}) {
+  const checking = status === "checking";
+  const approved = status === "approved";
+  const rejected = status === "rejected";
+
+  const borderClass = approved
+    ? "border-emerald-400/60 shadow-[0_0_40px_-10px_rgba(16,185,129,0.7)]"
+    : rejected
+      ? "border-red-500/60 shadow-[0_0_40px_-10px_rgba(239,68,68,0.7)]"
+      : checking
+        ? "border-cyan-400/50 shadow-[0_0_40px_-10px_rgba(34,211,238,0.6)]"
+        : "border-emerald-500/30";
+
+  function trigger(value: string) {
+    setAccountId(value);
+    if (value.trim().length >= 12) onStart(value);
+  }
+
+  return (
+    <div
+      className={cn(
+        "relative overflow-hidden rounded-xl border-2 bg-black/40 p-4 transition-all",
+        borderClass,
+      )}
+    >
+      {checking && (
+        <div className="pointer-events-none absolute inset-0 overflow-hidden">
+          <div className="absolute inset-x-0 -top-px h-[2px] animate-[scan_1.4s_linear_infinite] bg-gradient-to-r from-transparent via-cyan-400 to-transparent" />
+          <div
+            className="absolute inset-0 opacity-[0.18] [background-image:linear-gradient(rgba(34,211,238,.7)_1px,transparent_1px)] [background-size:100%_6px]"
+            style={{ animation: "scan-grid 2s linear infinite" }}
+          />
+        </div>
+      )}
+
+      <div className="relative flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex min-w-0 items-start gap-3">
+          <div
+            className={cn(
+              "flex h-11 w-11 shrink-0 items-center justify-center rounded-xl ring-1 transition",
+              approved && "bg-emerald-500/15 ring-emerald-400/40",
+              rejected && "bg-red-500/15 ring-red-400/40",
+              checking && "bg-cyan-500/10 ring-cyan-400/40",
+              status === "idle" && "bg-emerald-500/10 ring-emerald-400/30",
+            )}
+          >
+            {approved ? (
+              <Unlock className="h-5 w-5 text-emerald-300" />
+            ) : rejected ? (
+              <ShieldX className="h-5 w-5 text-red-300" />
+            ) : checking ? (
+              <Loader2 className="h-5 w-5 animate-spin text-cyan-300" />
+            ) : (
+              <Cpu className="h-5 w-5 text-emerald-300" />
+            )}
+          </div>
+          <div className="min-w-0">
+            <div className="font-mono text-[10px] uppercase tracking-[0.25em] text-emerald-400">
+              ID da Conta
+            </div>
+            <h3 className="font-mono text-base font-bold text-emerald-100">
+              {approved
+                ? "Conta autenticada"
+                : rejected
+                  ? "ID da conta inválido"
+                  : checking
+                    ? "Autenticando ID da conta…"
+                    : "Cole o ID da sua conta na corretora"}
+            </h3>
+            <p className="mt-0.5 text-[12px] leading-snug text-emerald-300/70">
+              {status === "idle" &&
+                "A Iara precisa do ID da sua conta para puxar os dados dos ativos em tempo real diretamente da sua corretora."}
+              {checking && (
+                <span className="font-mono text-cyan-300/90">
+                  sincronizando feed em tempo real…
+                </span>
+              )}
+              {approved && meta && (
+                <span className="font-mono text-emerald-300/90">
+                  {meta.masked} • {meta.assets} ativos • {meta.latency}ms • {meta.tier}
+                </span>
+              )}
+              {rejected && (
+                <span className="text-red-300/90">
+                  formato não reconhecido — confira o ID e tente novamente
+                </span>
+              )}
+            </p>
+          </div>
+        </div>
+
+        <div className="flex shrink-0 items-center gap-2">
+          {(approved || rejected) && (
+            <button
+              onClick={onReset}
+              className="inline-flex items-center justify-center gap-1.5 rounded-md border border-emerald-500/30 bg-black/40 px-3 py-2 font-mono text-xs uppercase tracking-wider text-emerald-200 hover:bg-emerald-500/10"
+            >
+              <X className="h-3.5 w-3.5" /> Trocar ID
+            </button>
+          )}
+        </div>
+      </div>
+
+      <div className="relative mt-3">
+        <input
+          value={accountId}
+          onChange={(e) => trigger(e.target.value)}
+          onPaste={(e) => {
+            const v = e.clipboardData.getData("text");
+            if (v) {
+              e.preventDefault();
+              trigger(v);
+            }
+          }}
+          disabled={checking || approved}
+          placeholder={`ex: ${exampleId}`}
+          spellCheck={false}
+          className={cn(
+            "w-full rounded-md border bg-black/60 px-3 py-2.5 font-mono text-sm tracking-wider text-emerald-100 outline-none transition placeholder:text-emerald-500/40",
+            approved && "border-emerald-400/60",
+            rejected && "border-red-500/60 text-red-200",
+            checking && "border-cyan-400/60",
+            status === "idle" && "border-emerald-500/30 focus:border-emerald-400",
+          )}
+        />
+        {status === "idle" && (
+          <button
+            type="button"
+            onClick={() => trigger(exampleId)}
+            className="mt-2 inline-flex items-center gap-1.5 rounded-md border border-emerald-500/30 bg-black/40 px-2.5 py-1 font-mono text-[11px] uppercase tracking-wider text-emerald-300/90 hover:bg-emerald-500/10"
+          >
+            <Copy className="h-3 w-3" /> Usar ID de exemplo
+          </button>
+        )}
+      </div>
+
+      {approved && (
+        <div className="relative mt-3 flex flex-wrap items-center justify-between gap-2 rounded-md border border-emerald-500/20 bg-emerald-500/5 px-3 py-2">
+          <div className="flex items-center gap-2 font-mono text-[11px] text-emerald-300/80">
+            {savedId && savedId === accountId ? (
+              <>
+                <ShieldCheck className="h-3.5 w-3.5 text-emerald-300" />
+                <span>ID padrão salvo — usado em todas as operações</span>
+              </>
+            ) : (
+              <>
+                <Link2 className="h-3.5 w-3.5 text-emerald-300" />
+                <span>Salvar esse ID como padrão para próximas operações?</span>
+              </>
+            )}
+          </div>
+          {savedId && savedId === accountId ? (
+            <button
+              onClick={onClearDefault}
+              className="inline-flex items-center gap-1.5 rounded-md border border-emerald-500/30 bg-black/40 px-2.5 py-1 font-mono text-[11px] uppercase tracking-wider text-emerald-200 hover:bg-emerald-500/10"
+            >
+              <X className="h-3 w-3" /> Remover padrão
+            </button>
+          ) : (
+            <button
+              onClick={onSaveDefault}
+              className="inline-flex items-center gap-1.5 rounded-md border border-emerald-400/50 bg-emerald-500/15 px-2.5 py-1 font-mono text-[11px] uppercase tracking-wider text-emerald-100 hover:bg-emerald-500/25"
+            >
+              <ShieldCheck className="h-3 w-3" /> Salvar como padrão
+            </button>
+          )}
+        </div>
+      )}
+
+      {(checking || approved || rejected) && (
+        <div className="relative mt-3 space-y-2">
+          <div className="h-1 overflow-hidden rounded-full bg-emerald-500/10">
+            <div
+              className={cn(
+                "h-full transition-[width] duration-150",
+                rejected
+                  ? "bg-gradient-to-r from-red-600 to-red-400"
+                  : "bg-gradient-to-r from-cyan-500 via-emerald-400 to-emerald-300",
+              )}
+              style={{ width: `${progress}%` }}
+            />
+          </div>
+          <div className="grid gap-1 font-mono text-[11px] sm:grid-cols-2">
+            {steps.map((s, i) => (
+              <div
+                key={i}
+                className={cn(
+                  "flex items-center gap-2 rounded-md border px-2 py-1.5 transition",
+                  !s.done && "border-cyan-400/20 bg-cyan-500/5 text-cyan-300/80",
+                  s.done && s.ok && "border-emerald-400/30 bg-emerald-500/5 text-emerald-200",
+                  s.done && !s.ok && "border-red-500/40 bg-red-500/10 text-red-200",
+                )}
+              >
+                {!s.done ? (
+                  <Loader2 className="h-3 w-3 animate-spin" />
+                ) : s.ok ? (
+                  <ShieldCheck className="h-3 w-3" />
+                ) : (
+                  <ShieldX className="h-3 w-3" />
+                )}
+                <span className="truncate">{s.label}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {approved && meta && (
+        <div className="relative mt-3 grid grid-cols-3 gap-2 font-mono text-[11px]">
+          <div className="rounded-md border border-emerald-500/20 bg-emerald-500/5 px-2 py-1.5">
+            <div className="text-[9px] uppercase tracking-[0.2em] text-emerald-400/70">Ativos</div>
+            <div className="text-emerald-100">{meta.assets}</div>
+          </div>
+          <div className="rounded-md border border-emerald-500/20 bg-emerald-500/5 px-2 py-1.5">
+            <div className="text-[9px] uppercase tracking-[0.2em] text-emerald-400/70">Latência</div>
+            <div className="text-emerald-100">{meta.latency} ms</div>
+          </div>
+          <div className="rounded-md border border-emerald-500/20 bg-emerald-500/5 px-2 py-1.5">
+            <div className="text-[9px] uppercase tracking-[0.2em] text-emerald-400/70">Feed</div>
+            <div className="text-emerald-100">{meta.tier}</div>
+          </div>
+        </div>
+      )}
+
+      {rejected && (
+        <div className="relative mt-3 rounded-lg border border-red-500/40 bg-red-500/10 p-3 text-[12.5px] leading-relaxed text-red-100">
+          <div className="mb-1 flex items-center gap-2 font-mono text-[11px] font-bold uppercase tracking-widest text-red-300">
+            <ShieldAlert className="h-3.5 w-3.5" /> ID não reconhecido
+          </div>
+          <p>
+            O ID informado não está no formato esperado pela API da corretora. Copie o ID da
+            sua conta dentro da corretora (geralmente em <span className="font-mono">Perfil → Conta → ID</span>)
+            e cole novamente.
+          </p>
+        </div>
+      )}
+    </div>
+  );
+}
+
+
+
 function AssetIcon({ item, size = 28 }: { item: AssetItem; size?: number }) {
   const [err, setErr] = useState(false);
   if (item.flags) {
