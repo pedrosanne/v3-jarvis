@@ -683,10 +683,12 @@ function IaraPage() {
     setConfidence(conf);
     setSignal({ side, entry, sl, tp, confidence: conf, expiry });
     setPhase("signal");
+    sfxSignalReady();
     stopAutoScroll();
   }
 
   function stop() {
+    sfxAbort();
     setPhase("idle");
     setProgress(0);
     setConfidence(0);
