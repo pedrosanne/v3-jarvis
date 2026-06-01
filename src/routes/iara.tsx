@@ -38,6 +38,29 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import {
+  primeAudio,
+  sfxClick,
+  sfxBeep,
+  sfxScanStart,
+  sfxScanTick,
+  sfxSuccess,
+  sfxError,
+  sfxAlert,
+  sfxUpload,
+  sfxWhoosh,
+  sfxPowerUp,
+  sfxConnecting,
+  sfxSonar,
+  sfxIntercept,
+  sfxNews,
+  sfxNeural,
+  sfxSignalReady,
+  sfxAbort,
+  sfxType,
+} from "@/lib/iara-sounds";
+
+
 
 
 export const Route = createFileRoute("/iara")({
@@ -239,6 +262,8 @@ function IaraPage() {
 
   function startBrokerCheck(raw: string) {
     clearBrokerTimers();
+    primeAudio();
+    sfxScanStart();
     const domain = parseDomain(raw);
     setBrokerDomain(domain);
     setBrokerStatus("checking");
@@ -267,12 +292,15 @@ function IaraPage() {
           prev.map((p, idx) => (idx === i ? { ...p, done: true, ok: stepOk } : p)),
         );
         setBrokerProgress(Math.round((acc / total) * 100));
+        if (i < steps.length - 1) sfxBeep();
         if (i === steps.length - 1) {
           if (allowed) {
             setBrokerStatus("approved");
+            sfxSuccess();
             toast.success(`Corretora ${domain} verificada e aprovada`);
           } else {
             setBrokerStatus("rejected");
+            sfxError();
             toast.error("Corretora não regulamentada — operação bloqueada");
           }
         }
@@ -341,6 +369,8 @@ function IaraPage() {
 
   function startAccountCheck(raw: string) {
     clearAccountTimers();
+    primeAudio();
+    sfxScanStart();
     const v = raw.trim();
     setAccountStatus("checking");
     setAccountProgress(0);
@@ -368,6 +398,7 @@ function IaraPage() {
           prev.map((p, idx) => (idx === i ? { ...p, done: true, ok: stepOk } : p)),
         );
         setAccountProgress(Math.round((acc / total) * 100));
+        if (i < steps.length - 1) sfxBeep();
         if (i === steps.length - 1) {
           if (valid) {
             setAccountStatus("approved");
@@ -377,9 +408,11 @@ function IaraPage() {
               latency: 9 + Math.floor(Math.random() * 14),
               tier: "Pro · Tempo Real",
             });
+            sfxSuccess();
             toast.success("ID da conta autenticado — feed em tempo real ativo");
           } else {
             setAccountStatus("rejected");
+            sfxError();
             toast.error("ID da conta inválido — verifique e tente novamente");
           }
         }
@@ -439,15 +472,22 @@ function IaraPage() {
     if (scanTimerRef.current) clearInterval(scanTimerRef.current);
     setScanningPrint(true);
     setScanProgress(0);
+    sfxSonar();
     const startT = Date.now();
     const duration = 2600;
+    let lastTick = 0;
     scanTimerRef.current = setInterval(() => {
       const p = Math.min(100, Math.round(((Date.now() - startT) / duration) * 100));
       setScanProgress(p);
+      if (p - lastTick >= 10) {
+        lastTick = p;
+        sfxScanTick();
+      }
       if (p >= 100) {
         if (scanTimerRef.current) clearInterval(scanTimerRef.current);
         scanTimerRef.current = null;
         setScanningPrint(false);
+        sfxSuccess();
         toast.success("Raio-X concluído — imagem indexada");
       }
     }, 40);
@@ -461,11 +501,13 @@ function IaraPage() {
     const reader = new FileReader();
     reader.onload = (ev) => {
       setChartPrint(ev.target?.result as string);
+      sfxUpload();
       toast.success("Print recebido — iniciando varredura Raio-X");
       startPrintScan();
     };
     reader.readAsDataURL(file);
   }
+
 
 
   // Paste image from clipboard (Ctrl+V) anywhere on the page
@@ -498,6 +540,7 @@ function IaraPage() {
   function push(text: string, tone: LogLine["tone"] = "info") {
     idRef.current += 1;
     setLogs((l) => [...l.slice(-80), { id: idRef.current, text, tone }]);
+    sfxType();
   }
 
   // Matrix rain
@@ -600,8 +643,21 @@ function IaraPage() {
     const total = steps.reduce((a, s) => a + s.ms, 0);
     let elapsed = 0;
 
+    const phaseSfx: Record<Phase, (() => void) | undefined> = {
+      idle: undefined,
+      connecting: sfxConnecting,
+      scanning: sfxSonar,
+      intercepting: sfxIntercept,
+      news: sfxNews,
+      deep: sfxNeural,
+      signal: undefined,
+    };
+
     for (const step of steps) {
       setPhase(step.phase);
+      phaseSfx[step.phase]?.();
+      // pequena rajada de whoosh ao revelar painéis correspondentes
+      if (step.phase === "scanning") sfxWhoosh();
       const per = step.ms / step.lines.length;
       for (const [text, tone] of step.lines) {
         push(text, tone);
@@ -627,10 +683,12 @@ function IaraPage() {
     setConfidence(conf);
     setSignal({ side, entry, sl, tp, confidence: conf, expiry });
     setPhase("signal");
+    sfxSignalReady();
     stopAutoScroll();
   }
 
   function stop() {
+    sfxAbort();
     setPhase("idle");
     setProgress(0);
     setConfidence(0);
@@ -1032,11 +1090,18 @@ function SignalModal({
   const accent = isBuy ? "emerald" : "red";
   const [confirmOpen, setConfirmOpen] = useState(false);
 
-  const requestClose = () => setConfirmOpen(true);
+  const requestClose = () => {
+    sfxAlert();
+    setConfirmOpen(true);
+  };
 
   useEffect(() => {
+    sfxWhoosh();
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setConfirmOpen(true);
+      if (e.key === "Escape") {
+        sfxAlert();
+        setConfirmOpen(true);
+      }
     };
     document.addEventListener("keydown", onKey);
     document.body.style.overflow = "hidden";
@@ -1195,6 +1260,7 @@ function SignalModal({
             target="_blank"
             rel="noopener noreferrer"
             onClick={() => {
+              sfxSuccess();
               const txt = `${signal.side} ${asset} @ ${signal.entry} | SL ${signal.sl} | TP ${signal.tp}`;
               navigator.clipboard?.writeText(txt).catch(() => {});
               toast.success("Sinal copiado", { description: "Abrindo corretora..." });
@@ -1395,9 +1461,11 @@ function SlideToHack({
     if (x >= m - 4) {
       setX(m);
       setUnlocked(true);
-      setTimeout(() => onUnlock(), 180);
+      sfxPowerUp();
+      setTimeout(() => onUnlock(), 480);
     } else {
       setX(0);
+      sfxClick();
     }
   }
 
