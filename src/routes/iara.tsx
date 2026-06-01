@@ -657,10 +657,33 @@ function IaraPage() {
 
               <div
                 className={cn(
-                  "flex flex-col gap-4 transition-opacity duration-500 lg:flex-row lg:items-center lg:justify-between",
+                  "transition-opacity duration-500",
                   !brokerApproved && "pointer-events-none select-none opacity-40 blur-[1px]",
                 )}
               >
+                <AccountIdGate
+                  accountId={accountId}
+                  setAccountId={setAccountId}
+                  status={accountStatus}
+                  progress={accountProgress}
+                  steps={accountSteps}
+                  meta={accountMeta}
+                  savedId={savedAccountId}
+                  exampleId="745972b1-lf5a-3c2f-be6b-3c1a72778934"
+                  onStart={startAccountCheck}
+                  onReset={resetAccount}
+                  onSaveDefault={saveAccountDefault}
+                  onClearDefault={clearAccountDefault}
+                />
+              </div>
+
+              <div
+                className={cn(
+                  "flex flex-col gap-4 transition-opacity duration-500 lg:flex-row lg:items-center lg:justify-between",
+                  (!brokerApproved || !accountApproved) && "pointer-events-none select-none opacity-40 blur-[1px]",
+                )}
+              >
+
               <div
                 onDragOver={(e) => {
                   e.preventDefault();
