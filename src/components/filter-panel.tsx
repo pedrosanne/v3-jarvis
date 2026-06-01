@@ -35,13 +35,13 @@ function Select({
   options: { value: string; label: string }[];
 }) {
   return (
-    <label className="flex flex-col gap-1">
-      <span className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">{label}</span>
+    <label className="flex flex-col gap-0.5">
+      <span className="text-[9px] font-medium uppercase tracking-wide text-muted-foreground">{label}</span>
       <div className="relative">
         <select
           value={value}
           onChange={(e) => onChange(e.target.value)}
-          className="h-9 w-full appearance-none rounded-md border border-input bg-background pl-3 pr-8 text-sm outline-none focus:ring-2 focus:ring-ring"
+          className="h-7 w-full appearance-none rounded border border-input bg-background pl-2 pr-6 text-xs outline-none focus:ring-1 focus:ring-ring"
         >
           {options.map((o) => (
             <option key={o.value} value={o.value}>
@@ -49,7 +49,7 @@ function Select({
             </option>
           ))}
         </select>
-        <ChevronDown className="pointer-events-none absolute right-2 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+        <ChevronDown className="pointer-events-none absolute right-1.5 top-1/2 h-3 w-3 -translate-y-1/2 text-muted-foreground" />
       </div>
     </label>
   );
@@ -158,17 +158,17 @@ export function FilterPanel({
       </div>
 
       {/* Desktop: inline panel */}
-      <div className="hidden rounded-2xl border border-border bg-card p-4 shadow-[var(--shadow-card)] lg:block">
+      <div className="hidden rounded-lg border border-border bg-card px-3 py-2 shadow-[var(--shadow-card)] lg:block">
         <button
           className="flex w-full items-center justify-between gap-2"
           onClick={() => setOpen((o) => !o)}
         >
-          <span className="flex items-center gap-2 text-sm font-semibold">
-            <Filter className="h-4 w-4 text-primary" /> Filters
+          <span className="flex items-center gap-1.5 text-xs font-medium">
+            <Filter className="h-3 w-3 text-primary" /> Filters
           </span>
-          <ChevronDown className={cn("h-4 w-4 text-muted-foreground transition-transform", open && "rotate-180")} />
+          <ChevronDown className={cn("h-3 w-3 text-muted-foreground transition-transform", open && "rotate-180")} />
         </button>
-        {open && <div className="mt-4 grid grid-cols-3 gap-3 lg:grid-cols-7">{selects}</div>}
+        {open && <div className="mt-2 grid grid-cols-3 gap-2 lg:grid-cols-7">{selects}</div>}
       </div>
 
       {/* Mobile: modal */}
