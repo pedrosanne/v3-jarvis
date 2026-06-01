@@ -472,15 +472,22 @@ function IaraPage() {
     if (scanTimerRef.current) clearInterval(scanTimerRef.current);
     setScanningPrint(true);
     setScanProgress(0);
+    sfxSonar();
     const startT = Date.now();
     const duration = 2600;
+    let lastTick = 0;
     scanTimerRef.current = setInterval(() => {
       const p = Math.min(100, Math.round(((Date.now() - startT) / duration) * 100));
       setScanProgress(p);
+      if (p - lastTick >= 10) {
+        lastTick = p;
+        sfxScanTick();
+      }
       if (p >= 100) {
         if (scanTimerRef.current) clearInterval(scanTimerRef.current);
         scanTimerRef.current = null;
         setScanningPrint(false);
+        sfxSuccess();
         toast.success("Raio-X concluído — imagem indexada");
       }
     }, 40);
@@ -494,11 +501,13 @@ function IaraPage() {
     const reader = new FileReader();
     reader.onload = (ev) => {
       setChartPrint(ev.target?.result as string);
+      sfxUpload();
       toast.success("Print recebido — iniciando varredura Raio-X");
       startPrintScan();
     };
     reader.readAsDataURL(file);
   }
+
 
 
   // Paste image from clipboard (Ctrl+V) anywhere on the page
