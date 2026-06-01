@@ -159,10 +159,23 @@ function IaraPage() {
   const [savedBrokerUrl, setSavedBrokerUrl] = useState<string | null>(null);
   const brokerTimerRef = useRef<ReturnType<typeof setTimeout>[]>([]);
 
+  // Account ID gate
+  const [accountId, setAccountId] = useState("");
+  type AccountStatus = "idle" | "checking" | "approved" | "rejected";
+  const [accountStatus, setAccountStatus] = useState<AccountStatus>("idle");
+  const [accountProgress, setAccountProgress] = useState(0);
+  const [accountSteps, setAccountSteps] = useState<{ label: string; done: boolean; ok?: boolean }[]>([]);
+  const [savedAccountId, setSavedAccountId] = useState<string | null>(null);
+  const [accountMeta, setAccountMeta] = useState<null | {
+    masked: string;
+    assets: number;
+    latency: number;
+    tier: string;
+  }>(null);
+  const accountTimerRef = useRef<ReturnType<typeof setTimeout>[]>([]);
+
 
   // Onboarding gating — libera funções uma de cada vez na primeira sessão.
-  // Após o usuário tocar nos selects pelo menos uma vez (com print já enviado)
-  // a etapa é marcada como concluída e tudo fica desbloqueado nas próximas visitas.
   const [touchedSelect, setTouchedSelect] = useState(false);
   useEffect(() => {
     if (typeof window !== "undefined" && localStorage.getItem("iara_onboarded_v1") === "1") {
@@ -175,9 +188,10 @@ function IaraPage() {
     }
   }, [chartPrint, touchedSelect]);
   const brokerApproved = brokerStatus === "approved";
-  const printLocked = !brokerApproved;
-  const selectsLocked = !brokerApproved || !chartPrint;
-  const slideLocked = !brokerApproved || !chartPrint || !touchedSelect;
+  const accountApproved = accountStatus === "approved";
+  const printLocked = !brokerApproved || !accountApproved;
+  const selectsLocked = !brokerApproved || !accountApproved || !chartPrint;
+  const slideLocked = !brokerApproved || !accountApproved || !chartPrint || !touchedSelect;
 
   // Auto-scroll lento enquanto a análise roda
   const scrollTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
