@@ -903,87 +903,86 @@ function IaraPage() {
         </div>
 
         {/* Terminal */}
-        <div className="min-w-0 lg:col-span-7">
-          <Panel title="Terminal Iara" icon={Terminal}>
-            <div
-              ref={logRef}
-              className="h-[320px] overflow-y-auto rounded-md bg-[#04070a] p-3 font-mono text-[11px] leading-relaxed sm:h-[440px] sm:p-4 sm:text-[12.5px]"
-            >
-              {logs.length === 0 && (
-                <div className="text-cyan-500/40">
-                  $ aguardando comando... selecione ativo e tempo e clique em
-                  <span className="text-cyan-400"> Hackear Mercado</span>.
-                </div>
-              )}
-              {logs.map((l) => (
-                <div
-                  key={l.id}
-                  className={cn(
-                    "whitespace-pre-wrap break-words",
-                    l.tone === "ok" && "text-cyan-300",
-                    l.tone === "info" && "text-cyan-400/80",
-                    l.tone === "warn" && "text-amber-300",
-                    l.tone === "crit" && "text-red-400",
-                    l.tone === "data" && "text-cyan-300",
-                  )}
-                >
-                  {l.text}
-                </div>
-              ))}
-              {running && (
-                <div className="mt-1 inline-block h-3 w-2 animate-pulse bg-cyan-400" />
-              )}
-            </div>
-          </Panel>
-        </div>
+        {revealStep >= 1 && (
+          <div className="min-w-0 animate-fade-in lg:col-span-7">
+            <Panel title="Terminal Iara" icon={Terminal}>
+              <div
+                ref={logRef}
+                className="h-[320px] overflow-y-auto rounded-md bg-[#04070a] p-3 font-mono text-[11px] leading-relaxed sm:h-[440px] sm:p-4 sm:text-[12.5px]"
+              >
+                {logs.length === 0 && (
+                  <div className="text-cyan-500/40">
+                    $ inicializando núcleo Iara...
+                  </div>
+                )}
+                {logs.map((l) => (
+                  <div
+                    key={l.id}
+                    className={cn(
+                      "whitespace-pre-wrap break-words",
+                      l.tone === "ok" && "text-cyan-300",
+                      l.tone === "info" && "text-cyan-400/80",
+                      l.tone === "warn" && "text-amber-300",
+                      l.tone === "crit" && "text-red-400",
+                      l.tone === "data" && "text-cyan-300",
+                    )}
+                  >
+                    {l.text}
+                  </div>
+                ))}
+                {running && (
+                  <div className="mt-1 inline-block h-3 w-2 animate-pulse bg-cyan-400" />
+                )}
+              </div>
+            </Panel>
+          </div>
+        )}
 
         {/* Side: matrix + news */}
-        <div className="min-w-0 space-y-4 lg:col-span-5">
-          <Panel title="Data Stream" icon={Globe}>
-            <div className="grid h-[160px] grid-cols-2 gap-2 overflow-hidden rounded-md bg-[#04070a] p-3 font-mono text-[10px] leading-[1.1] text-cyan-400/70 sm:h-[210px]">
-              <div className="min-w-0 space-y-0.5">
-                {(matrix.length ? matrix.slice(0, 12) : Array(12).fill("······ ······ ······")).map(
-                  (row, i) => (
-                    <div key={i} className="truncate">
-                      {row}
+        {(revealStep >= 2 || revealStep >= 3) && (
+          <div className="min-w-0 space-y-4 lg:col-span-5">
+            {revealStep >= 2 && (
+              <div className="animate-fade-in">
+                <Panel title="Data Stream" icon={Globe}>
+                  <div className="grid h-[160px] grid-cols-2 gap-2 overflow-hidden rounded-md bg-[#04070a] p-3 font-mono text-[10px] leading-[1.1] text-cyan-400/70 sm:h-[210px]">
+                    <div className="min-w-0 space-y-0.5">
+                      {(matrix.length ? matrix.slice(0, 12) : Array(12).fill("······ ······ ······")).map(
+                        (row, i) => (
+                          <div key={i} className="truncate">{row}</div>
+                        ),
+                      )}
                     </div>
-                  ),
-                )}
-              </div>
-              <div className="min-w-0 space-y-0.5 text-cyan-300/60">
-                {(matrix.length ? matrix.slice(12, 24) : Array(12).fill("······ ······ ······")).map(
-                  (row, i) => (
-                    <div key={i} className="truncate">
-                      {row}
+                    <div className="min-w-0 space-y-0.5 text-cyan-300/60">
+                      {(matrix.length ? matrix.slice(12, 24) : Array(12).fill("······ ······ ······")).map(
+                        (row, i) => (
+                          <div key={i} className="truncate">{row}</div>
+                        ),
+                      )}
                     </div>
-                  ),
-                )}
+                  </div>
+                </Panel>
               </div>
-            </div>
-          </Panel>
+            )}
 
-          <Panel title="Notícias Interceptadas" icon={Newspaper}>
-            <ul className="space-y-2 font-mono text-[11px] sm:text-xs">
-              {NEWS_FEED.slice(0, 5).map((n, i) => (
-                <li
-                  key={i}
-                  className="flex min-w-0 items-start gap-2 rounded-md border border-cyan-500/10 bg-cyan-500/5 px-3 py-2 text-cyan-200/80"
-                >
-                  <Lock className="mt-0.5 h-3 w-3 shrink-0 text-cyan-400" />
-                  <span className="min-w-0 truncate">{n}</span>
-                </li>
-              ))}
-            </ul>
-          </Panel>
-        </div>
-
-        {/* Placeholder when no signal */}
-        {!signal && (
-          <div className="min-w-0 lg:col-span-12">
-            <div className="rounded-2xl border border-dashed border-border bg-card/50 p-6 text-center text-sm text-muted-foreground">
-              Nenhum sinal ativo. Inicie uma análise para que a Iara gere o próximo scalp.
-            </div>
+            {revealStep >= 3 && (
+              <div className="animate-fade-in">
+                <Panel title="Notícias Interceptadas" icon={Newspaper}>
+                  <ul className="space-y-2 font-mono text-[11px] sm:text-xs">
+                    {NEWS_FEED.slice(0, 5).map((n, i) => (
+                      <li
+                        key={i}
+                        className="flex min-w-0 items-start gap-2 rounded-md border border-cyan-500/10 bg-cyan-500/5 px-3 py-2 text-cyan-200/80"
+                      >
+                        <Lock className="mt-0.5 h-3 w-3 shrink-0 text-cyan-400" />
+                        <span className="min-w-0 truncate">{n}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </Panel>
+              </div>
+            )}
           </div>
+        )}
         )}
       </div>
 
