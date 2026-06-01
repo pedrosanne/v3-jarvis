@@ -398,6 +398,7 @@ function IaraPage() {
           prev.map((p, idx) => (idx === i ? { ...p, done: true, ok: stepOk } : p)),
         );
         setAccountProgress(Math.round((acc / total) * 100));
+        if (i < steps.length - 1) sfxBeep();
         if (i === steps.length - 1) {
           if (valid) {
             setAccountStatus("approved");
@@ -407,9 +408,11 @@ function IaraPage() {
               latency: 9 + Math.floor(Math.random() * 14),
               tier: "Pro · Tempo Real",
             });
+            sfxSuccess();
             toast.success("ID da conta autenticado — feed em tempo real ativo");
           } else {
             setAccountStatus("rejected");
+            sfxError();
             toast.error("ID da conta inválido — verifique e tente novamente");
           }
         }
