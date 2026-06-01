@@ -168,3 +168,183 @@
     color: var(--color-foreground);
   }
 }
+
+/* =========================================================
+ * Futuristic HUD theme (scoped to .hud-theme)
+ * Inspired by sci-fi command dashboards: deep navy, cyan neon,
+ * corner brackets, scanlines, animated grid.
+ * ========================================================= */
+.hud-theme {
+  --hud-bg: oklch(0.16 0.05 250);
+  --hud-bg-2: oklch(0.12 0.05 250);
+  --hud-panel: oklch(0.21 0.06 245 / 0.55);
+  --hud-cyan: oklch(0.82 0.16 200);
+  --hud-cyan-strong: oklch(0.88 0.2 200);
+  --hud-cyan-soft: oklch(0.7 0.12 200);
+  --hud-magenta: oklch(0.75 0.22 340);
+  --hud-amber: oklch(0.82 0.17 75);
+  --hud-green: oklch(0.82 0.18 150);
+  --hud-red: oklch(0.7 0.24 25);
+  --hud-grid: oklch(0.82 0.16 200 / 0.07);
+  --hud-border: oklch(0.82 0.16 200 / 0.35);
+  --hud-border-strong: oklch(0.88 0.2 200 / 0.7);
+  --hud-text: oklch(0.95 0.03 200);
+  --hud-text-dim: oklch(0.78 0.06 215);
+
+  color: var(--hud-text);
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 0%, oklch(0.3 0.12 220 / 0.45), transparent 70%),
+    radial-gradient(ellipse 60% 50% at 100% 100%, oklch(0.25 0.16 280 / 0.35), transparent 70%),
+    linear-gradient(180deg, var(--hud-bg), var(--hud-bg-2));
+  position: relative;
+  isolation: isolate;
+  font-feature-settings: "tnum";
+}
+
+.hud-theme::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(to right, var(--hud-grid) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--hud-grid) 1px, transparent 1px);
+  background-size: 44px 44px;
+  mask-image: radial-gradient(ellipse 100% 80% at 50% 30%, black 30%, transparent 80%);
+  pointer-events: none;
+  z-index: -1;
+}
+
+.hud-panel {
+  position: relative;
+  background: var(--hud-panel);
+  border: 1px solid var(--hud-border);
+  border-radius: 14px;
+  backdrop-filter: blur(6px);
+  box-shadow:
+    0 0 0 1px oklch(0.82 0.16 200 / 0.05) inset,
+    0 12px 40px -16px oklch(0.5 0.2 220 / 0.5),
+    0 0 30px -10px oklch(0.82 0.16 200 / 0.25);
+}
+
+.hud-panel::before,
+.hud-panel::after {
+  content: "";
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border-color: var(--hud-cyan-strong);
+  pointer-events: none;
+}
+.hud-panel::before {
+  top: -1px; left: -1px;
+  border-top: 2px solid; border-left: 2px solid;
+  border-top-left-radius: 14px;
+}
+.hud-panel::after {
+  bottom: -1px; right: -1px;
+  border-bottom: 2px solid; border-right: 2px solid;
+  border-bottom-right-radius: 14px;
+}
+
+.hud-corner-tr,
+.hud-corner-bl {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border-color: var(--hud-cyan-strong);
+  pointer-events: none;
+}
+.hud-corner-tr { top: -1px; right: -1px; border-top: 2px solid; border-right: 2px solid; border-top-right-radius: 14px; }
+.hud-corner-bl { bottom: -1px; left: -1px; border-bottom: 2px solid; border-left: 2px solid; border-bottom-left-radius: 14px; }
+
+.hud-title {
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--hud-cyan);
+  text-shadow: 0 0 12px oklch(0.82 0.16 200 / 0.6);
+}
+
+.hud-glow-text {
+  color: var(--hud-cyan-strong);
+  text-shadow:
+    0 0 8px oklch(0.82 0.16 200 / 0.8),
+    0 0 22px oklch(0.82 0.16 200 / 0.45);
+}
+
+.hud-divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--hud-border-strong), transparent);
+}
+
+.hud-scan {
+  position: relative;
+  overflow: hidden;
+}
+.hud-scan::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 0%, oklch(0.82 0.16 200 / 0.18) 50%, transparent 100%);
+  height: 30%;
+  animation: hud-scan 4.5s linear infinite;
+  pointer-events: none;
+  mix-blend-mode: screen;
+}
+
+@keyframes hud-scan {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(380%); }
+}
+
+@keyframes hud-pulse {
+  0%, 100% { opacity: 1; box-shadow: 0 0 0 0 oklch(0.82 0.16 200 / 0.7); }
+  50% { opacity: 0.6; box-shadow: 0 0 0 8px oklch(0.82 0.16 200 / 0); }
+}
+
+.hud-dot {
+  display: inline-block;
+  width: 8px; height: 8px;
+  border-radius: 999px;
+  background: var(--hud-cyan-strong);
+  animation: hud-pulse 1.8s ease-out infinite;
+}
+
+@keyframes hud-flicker {
+  0%, 100% { opacity: 1; }
+  47% { opacity: 1; }
+  48% { opacity: 0.4; }
+  49% { opacity: 1; }
+  51% { opacity: 0.7; }
+  52% { opacity: 1; }
+}
+.hud-flicker { animation: hud-flicker 6s infinite; }
+
+@keyframes hud-rotate {
+  to { transform: rotate(360deg); }
+}
+.hud-ring-rotate { animation: hud-rotate 18s linear infinite; transform-origin: center; }
+.hud-ring-rotate-rev { animation: hud-rotate 24s linear infinite reverse; transform-origin: center; }
+
+.hud-input,
+.hud-btn {
+  background: oklch(0.18 0.06 240 / 0.6);
+  border: 1px solid var(--hud-border);
+  color: var(--hud-text);
+  border-radius: 8px;
+}
+.hud-btn:hover {
+  border-color: var(--hud-border-strong);
+  box-shadow: 0 0 16px -2px oklch(0.82 0.16 200 / 0.5);
+}
+
+.hud-bar-track {
+  background: oklch(0.82 0.16 200 / 0.12);
+  border-radius: 999px;
+  overflow: hidden;
+}
+.hud-bar-fill {
+  background: linear-gradient(90deg, var(--hud-cyan-soft), var(--hud-cyan-strong));
+  box-shadow: 0 0 10px oklch(0.82 0.16 200 / 0.7);
+  height: 100%;
+}
