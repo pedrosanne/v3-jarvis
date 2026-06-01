@@ -1453,9 +1453,11 @@ function SlideToHack({
     if (x >= m - 4) {
       setX(m);
       setUnlocked(true);
-      setTimeout(() => onUnlock(), 180);
+      sfxPowerUp();
+      setTimeout(() => onUnlock(), 480);
     } else {
       setX(0);
+      sfxClick();
     }
   }
 
