@@ -531,6 +531,12 @@ function IaraPage() {
     setLogs([]);
     setProgress(0);
     setConfidence(0);
+    // revela painéis um a um para imersão visual
+    revealTimersRef.current.forEach(clearTimeout);
+    revealTimersRef.current = [];
+    setRevealStep(1); // Terminal aparece imediatamente
+    revealTimersRef.current.push(setTimeout(() => setRevealStep(2), 900));  // Data Stream
+    revealTimersRef.current.push(setTimeout(() => setRevealStep(3), 1900)); // Notícias
     startAutoScroll();
 
     const broker = BROKERS[Math.floor(Math.random() * BROKERS.length)];
