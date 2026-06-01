@@ -369,6 +369,8 @@ function IaraPage() {
 
   function startAccountCheck(raw: string) {
     clearAccountTimers();
+    primeAudio();
+    sfxScanStart();
     const v = raw.trim();
     setAccountStatus("checking");
     setAccountProgress(0);
