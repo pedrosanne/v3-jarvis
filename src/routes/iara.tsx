@@ -292,12 +292,15 @@ function IaraPage() {
           prev.map((p, idx) => (idx === i ? { ...p, done: true, ok: stepOk } : p)),
         );
         setBrokerProgress(Math.round((acc / total) * 100));
+        if (i < steps.length - 1) sfxBeep();
         if (i === steps.length - 1) {
           if (allowed) {
             setBrokerStatus("approved");
+            sfxSuccess();
             toast.success(`Corretora ${domain} verificada e aprovada`);
           } else {
             setBrokerStatus("rejected");
+            sfxError();
             toast.error("Corretora não regulamentada — operação bloqueada");
           }
         }
