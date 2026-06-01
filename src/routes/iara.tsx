@@ -1260,6 +1260,7 @@ function SignalModal({
             target="_blank"
             rel="noopener noreferrer"
             onClick={() => {
+              sfxSuccess();
               const txt = `${signal.side} ${asset} @ ${signal.entry} | SL ${signal.sl} | TP ${signal.tp}`;
               navigator.clipboard?.writeText(txt).catch(() => {});
               toast.success("Sinal copiado", { description: "Abrindo corretora..." });
