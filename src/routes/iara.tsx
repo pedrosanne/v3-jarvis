@@ -262,6 +262,8 @@ function IaraPage() {
 
   function startBrokerCheck(raw: string) {
     clearBrokerTimers();
+    primeAudio();
+    sfxScanStart();
     const domain = parseDomain(raw);
     setBrokerDomain(domain);
     setBrokerStatus("checking");
