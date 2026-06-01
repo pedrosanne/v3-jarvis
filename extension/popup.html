@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <title>Iara AI</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="brand">
+        <img src="icon.png" alt="" width="22" height="22" />
+        <span>Iara AI</span>
+      </div>
+      <button id="openSettings" class="link" title="Configurar domínio">⚙</button>
+    </header>
+
+    <main id="view-main" class="view">
+      <div class="hero">
+        <div class="hero-badge">SCALPER NEURAL · v4.2</div>
+        <h1>Hackear o mercado<br />em 1 clique.</h1>
+        <p class="muted">
+          A Iara escaneia book, intercepta ordens de market makers, cruza notícias e
+          devolve um sinal em segundos. Esta extensão abre a Iara direto, sem rodeios.
+        </p>
+        <button id="openIara" class="primary big">
+          ▶ Abrir Iara AI
+        </button>
+        <button id="openFullApp" class="ghost small">
+          Abrir app completo (dashboard, journal, analytics) ↗
+        </button>
+      </div>
+
+      <ul class="feats">
+        <li>· Print do gráfico via Ctrl+V / drag &amp; drop</li>
+        <li>· Sinal com entrada, SL, TP e expiração</li>
+        <li>· Funciona com qualquer ativo / timeframe</li>
+      </ul>
+    </main>
+
+    <!-- SETTINGS -->
+    <main id="view-settings" class="view hidden">
+      <h1>Domínio do app</h1>
+      <p class="muted">
+        Configure o domínio onde seu app está hospedado. Use isto se publicou em domínio
+        personalizado ou em outro ambiente (staging, self-hosted, etc.).
+      </p>
+      <form id="domainForm" class="stack">
+        <label>
+          URL base
+          <input
+            id="domainInput"
+            type="url"
+            required
+            placeholder="https://seu-dominio.com"
+            autocomplete="off"
+          />
+        </label>
+        <p class="hint" id="domainHint"></p>
+        <div class="row">
+          <button type="button" id="resetDomain" class="ghost">Padrão</button>
+          <button type="submit" class="primary">Salvar</button>
+        </div>
+        <p id="domainStatus" class="status hidden"></p>
+      </form>
+      <button id="backFromSettings" class="link back">← Voltar</button>
+    </main>
+
+    <script src="popup.js"></script>
+  </body>
+</html>
