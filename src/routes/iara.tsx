@@ -147,6 +147,9 @@ function IaraPage() {
   const scanTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const [dragOver, setDragOver] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  // Sequencial reveal dos painéis (Terminal → Data Stream → Notícias)
+  const [revealStep, setRevealStep] = useState(0);
+  const revealTimersRef = useRef<ReturnType<typeof setTimeout>[]>([]);
 
 
   // Broker URL gate
