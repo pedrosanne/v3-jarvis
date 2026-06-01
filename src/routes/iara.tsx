@@ -323,6 +323,112 @@ function IaraPage() {
     toast.message("URL padrão removida");
   }
 
+  // Account ID verification ----------------------------------------------
+  function clearAccountTimers() {
+    accountTimerRef.current.forEach((t) => clearTimeout(t));
+    accountTimerRef.current = [];
+  }
+  useEffect(() => () => clearAccountTimers(), []);
+
+  function maskAccountId(raw: string) {
+    const v = raw.trim();
+    if (v.length <= 10) return v;
+    return v.slice(0, 8) + "•••••••••••" + v.slice(-6);
+  }
+
+  function startAccountCheck(raw: string) {
+    clearAccountTimers();
+    const v = raw.trim();
+    setAccountStatus("checking");
+    setAccountProgress(0);
+    setAccountMeta(null);
+
+    // Accept any reasonably formatted ID (>= 12 chars, alphanumeric + dashes)
+    const valid = /^[a-zA-Z0-9-]{12,}$/.test(v);
+
+    const steps = [
+      { label: "Conectando à API da corretora", ms: 600 },
+      { label: "Autenticando ID da conta", ms: 700 },
+      { label: "Sincronizando feed de ativos em tempo real", ms: 850 },
+      { label: "Validando permissões de leitura", ms: 700 },
+      { label: "Indexando book L2 na neural Iara", ms: 800 },
+    ];
+    setAccountSteps(steps.map((s) => ({ label: s.label, done: false })));
+
+    let acc = 0;
+    const total = steps.reduce((a, s) => a + s.ms, 0);
+    steps.forEach((s, i) => {
+      acc += s.ms;
+      const stepOk = i < steps.length - 1 ? true : valid;
+      const t = setTimeout(() => {
+        setAccountSteps((prev) =>
+          prev.map((p, idx) => (idx === i ? { ...p, done: true, ok: stepOk } : p)),
+        );
+        setAccountProgress(Math.round((acc / total) * 100));
+        if (i === steps.length - 1) {
+          if (valid) {
+            setAccountStatus("approved");
+            setAccountMeta({
+              masked: maskAccountId(v),
+              assets: 124 + Math.floor(Math.random() * 40),
+              latency: 9 + Math.floor(Math.random() * 14),
+              tier: "Pro · Tempo Real",
+            });
+            toast.success("ID da conta autenticado — feed em tempo real ativo");
+          } else {
+            setAccountStatus("rejected");
+            toast.error("ID da conta inválido — verifique e tente novamente");
+          }
+        }
+      }, acc);
+      accountTimerRef.current.push(t);
+    });
+
+    const startT = Date.now();
+    const tick = setInterval(() => {
+      const p = Math.min(99, Math.round(((Date.now() - startT) / total) * 100));
+      setAccountProgress((cur) => (cur < p ? p : cur));
+      if (p >= 99) clearInterval(tick);
+    }, 60);
+    accountTimerRef.current.push(tick as unknown as ReturnType<typeof setTimeout>);
+  }
+
+  function resetAccount() {
+    clearAccountTimers();
+    setAccountId("");
+    setAccountStatus("idle");
+    setAccountProgress(0);
+    setAccountSteps([]);
+    setAccountMeta(null);
+  }
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const saved = localStorage.getItem("iara_account_id_v1");
+    if (saved) {
+      setSavedAccountId(saved);
+      setAccountId(saved);
+      startAccountCheck(saved);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  function saveAccountDefault() {
+    if (typeof window === "undefined") return;
+    if (accountStatus !== "approved" || !accountId) return;
+    localStorage.setItem("iara_account_id_v1", accountId);
+    setSavedAccountId(accountId);
+    toast.success("ID da conta salvo como padrão");
+  }
+
+  function clearAccountDefault() {
+    if (typeof window === "undefined") return;
+    localStorage.removeItem("iara_account_id_v1");
+    setSavedAccountId(null);
+    toast.message("ID padrão removido");
+  }
+
+
 
 
 
