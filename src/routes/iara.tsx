@@ -38,6 +38,29 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import {
+  primeAudio,
+  sfxClick,
+  sfxBeep,
+  sfxScanStart,
+  sfxScanTick,
+  sfxSuccess,
+  sfxError,
+  sfxAlert,
+  sfxUpload,
+  sfxWhoosh,
+  sfxPowerUp,
+  sfxConnecting,
+  sfxSonar,
+  sfxIntercept,
+  sfxNews,
+  sfxNeural,
+  sfxSignalReady,
+  sfxAbort,
+  sfxType,
+} from "@/lib/iara-sounds";
+
+
 
 
 export const Route = createFileRoute("/iara")({
