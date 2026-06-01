@@ -643,8 +643,21 @@ function IaraPage() {
     const total = steps.reduce((a, s) => a + s.ms, 0);
     let elapsed = 0;
 
+    const phaseSfx: Record<Phase, (() => void) | undefined> = {
+      idle: undefined,
+      connecting: sfxConnecting,
+      scanning: sfxSonar,
+      intercepting: sfxIntercept,
+      news: sfxNews,
+      deep: sfxNeural,
+      signal: undefined,
+    };
+
     for (const step of steps) {
       setPhase(step.phase);
+      phaseSfx[step.phase]?.();
+      // pequena rajada de whoosh ao revelar painéis correspondentes
+      if (step.phase === "scanning") sfxWhoosh();
       const per = step.ms / step.lines.length;
       for (const [text, tone] of step.lines) {
         push(text, tone);
