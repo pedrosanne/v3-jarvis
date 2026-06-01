@@ -70,92 +70,112 @@
   --color-info-foreground: var(--info-foreground);
 }
 
+/* ================================================================
+ * GLOBAL THEME — J.A.R.V.I.S. HUD
+ * Deep navy background, cyan neon accents, grid + scanline ambient.
+ * Applied to the whole app so every page/component inherits it.
+ * ================================================================ */
 :root {
   --radius: 0.625rem;
-  --background: oklch(0.985 0.005 270);
-  --foreground: oklch(0.18 0.04 270);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.18 0.04 270);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.18 0.04 270);
-  --primary: oklch(0.55 0.22 290);
-  --primary-foreground: oklch(0.99 0 0);
-  --secondary: oklch(0.96 0.015 280);
-  --secondary-foreground: oklch(0.25 0.05 280);
-  --muted: oklch(0.96 0.012 270);
-  --muted-foreground: oklch(0.5 0.03 270);
-  --accent: oklch(0.95 0.03 290);
-  --accent-foreground: oklch(0.3 0.1 290);
-  --destructive: oklch(0.6 0.24 25);
-  --destructive-foreground: oklch(0.984 0.003 247.858);
-  --border: oklch(0.92 0.01 270);
-  --input: oklch(0.92 0.01 270);
-  --ring: oklch(0.55 0.22 290);
-  --chart-1: oklch(0.6 0.22 290);
-  --chart-2: oklch(0.7 0.18 25);
-  --chart-3: oklch(0.72 0.16 200);
-  --chart-4: oklch(0.75 0.18 145);
-  --chart-5: oklch(0.78 0.17 70);
-  --success: oklch(0.65 0.18 150);
-  --success-foreground: oklch(0.99 0 0);
-  --warning: oklch(0.78 0.17 70);
-  --warning-foreground: oklch(0.2 0.05 70);
-  --info: oklch(0.7 0.16 220);
-  --info-foreground: oklch(0.99 0 0);
-  --kpi-1: oklch(0.6 0.22 290);
-  --kpi-2: oklch(0.7 0.2 35);
-  --kpi-3: oklch(0.72 0.15 210);
-  --kpi-4: oklch(0.68 0.21 10);
-  --gradient-sidebar: linear-gradient(180deg, oklch(0.55 0.22 290), oklch(0.45 0.2 295));
-  --gradient-kpi-1: linear-gradient(135deg, oklch(0.65 0.24 285), oklch(0.55 0.22 295));
-  --gradient-kpi-2: linear-gradient(135deg, oklch(0.78 0.2 50), oklch(0.7 0.22 25));
-  --gradient-kpi-3: linear-gradient(135deg, oklch(0.78 0.15 210), oklch(0.68 0.18 225));
-  --gradient-kpi-4: linear-gradient(135deg, oklch(0.75 0.22 10), oklch(0.65 0.24 0));
-  --shadow-card: 0 4px 20px -8px oklch(0.5 0.15 290 / 0.18);
-  --shadow-kpi: 0 12px 30px -10px oklch(0.5 0.2 290 / 0.35);
-  --sidebar: oklch(0.55 0.22 290);
-  --sidebar-foreground: oklch(0.98 0.02 290);
-  --sidebar-primary: oklch(0.98 0.02 290);
-  --sidebar-primary-foreground: oklch(0.3 0.15 290);
-  --sidebar-accent: oklch(0.5 0.2 290);
-  --sidebar-accent-foreground: oklch(0.98 0.02 290);
-  --sidebar-border: oklch(0.5 0.15 290 / 0.4);
-  --sidebar-ring: oklch(0.98 0.02 290);
+
+  /* Core surfaces — dark navy */
+  --background: oklch(0.14 0.045 250);
+  --foreground: oklch(0.95 0.03 200);
+  --card: oklch(0.2 0.055 245 / 0.55);
+  --card-foreground: oklch(0.95 0.03 200);
+  --popover: oklch(0.18 0.05 245);
+  --popover-foreground: oklch(0.95 0.03 200);
+
+  /* Cyan = primary HUD accent */
+  --primary: oklch(0.85 0.17 200);
+  --primary-foreground: oklch(0.12 0.05 245);
+  --secondary: oklch(0.22 0.05 245);
+  --secondary-foreground: oklch(0.92 0.04 200);
+  --muted: oklch(0.22 0.05 245);
+  --muted-foreground: oklch(0.72 0.06 215);
+  --accent: oklch(0.28 0.08 230);
+  --accent-foreground: oklch(0.95 0.03 200);
+  --destructive: oklch(0.7 0.24 25);
+  --destructive-foreground: oklch(0.98 0.01 200);
+
+  --border: oklch(0.82 0.16 200 / 0.22);
+  --input: oklch(0.82 0.16 200 / 0.22);
+  --ring: oklch(0.85 0.17 200);
+
+  /* Charts — neon palette */
+  --chart-1: oklch(0.85 0.17 200);
+  --chart-2: oklch(0.75 0.22 340);
+  --chart-3: oklch(0.82 0.17 75);
+  --chart-4: oklch(0.82 0.18 150);
+  --chart-5: oklch(0.72 0.24 25);
+
+  --success: oklch(0.82 0.18 150);
+  --success-foreground: oklch(0.12 0.05 245);
+  --warning: oklch(0.82 0.17 75);
+  --warning-foreground: oklch(0.12 0.05 245);
+  --info: oklch(0.82 0.16 210);
+  --info-foreground: oklch(0.12 0.05 245);
+
+  --kpi-1: oklch(0.85 0.17 200);
+  --kpi-2: oklch(0.82 0.17 75);
+  --kpi-3: oklch(0.75 0.22 340);
+  --kpi-4: oklch(0.7 0.24 25);
+
+  --gradient-sidebar: linear-gradient(180deg, oklch(0.16 0.05 250), oklch(0.1 0.05 250));
+  --gradient-kpi-1: linear-gradient(135deg, oklch(0.85 0.17 200), oklch(0.7 0.18 215));
+  --gradient-kpi-2: linear-gradient(135deg, oklch(0.82 0.17 75), oklch(0.7 0.18 55));
+  --gradient-kpi-3: linear-gradient(135deg, oklch(0.75 0.22 340), oklch(0.6 0.22 320));
+  --gradient-kpi-4: linear-gradient(135deg, oklch(0.72 0.24 25), oklch(0.6 0.22 10));
+
+  --shadow-card: 0 12px 40px -16px oklch(0.5 0.2 220 / 0.5),
+                 0 0 24px -8px oklch(0.82 0.16 200 / 0.25);
+  --shadow-kpi:  0 0 32px -8px oklch(0.85 0.18 200 / 0.5);
+
+  /* Sidebar */
+  --sidebar: oklch(0.12 0.05 250);
+  --sidebar-foreground: oklch(0.92 0.04 200);
+  --sidebar-primary: oklch(0.85 0.17 200);
+  --sidebar-primary-foreground: oklch(0.12 0.05 245);
+  --sidebar-accent: oklch(0.22 0.06 240);
+  --sidebar-accent-foreground: oklch(0.95 0.03 200);
+  --sidebar-border: oklch(0.82 0.16 200 / 0.18);
+  --sidebar-ring: oklch(0.85 0.17 200);
 }
 
+/* Keep .dark identical — the app is dark-by-default JARVIS HUD. */
 .dark {
-  --background: oklch(0.129 0.042 264.695);
-  --foreground: oklch(0.984 0.003 247.858);
-  --card: oklch(0.208 0.042 265.755);
-  --card-foreground: oklch(0.984 0.003 247.858);
-  --popover: oklch(0.208 0.042 265.755);
-  --popover-foreground: oklch(0.984 0.003 247.858);
-  --primary: oklch(0.929 0.013 255.508);
-  --primary-foreground: oklch(0.208 0.042 265.755);
-  --secondary: oklch(0.279 0.041 260.031);
-  --secondary-foreground: oklch(0.984 0.003 247.858);
-  --muted: oklch(0.279 0.041 260.031);
-  --muted-foreground: oklch(0.704 0.04 256.788);
-  --accent: oklch(0.279 0.041 260.031);
-  --accent-foreground: oklch(0.984 0.003 247.858);
-  --destructive: oklch(0.704 0.191 22.216);
-  --destructive-foreground: oklch(0.984 0.003 247.858);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.551 0.027 264.364);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.208 0.042 265.755);
-  --sidebar-foreground: oklch(0.984 0.003 247.858);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.984 0.003 247.858);
-  --sidebar-accent: oklch(0.279 0.041 260.031);
-  --sidebar-accent-foreground: oklch(0.984 0.003 247.858);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.551 0.027 264.364);
+  --background: oklch(0.14 0.045 250);
+  --foreground: oklch(0.95 0.03 200);
+  --card: oklch(0.2 0.055 245 / 0.55);
+  --card-foreground: oklch(0.95 0.03 200);
+  --popover: oklch(0.18 0.05 245);
+  --popover-foreground: oklch(0.95 0.03 200);
+  --primary: oklch(0.85 0.17 200);
+  --primary-foreground: oklch(0.12 0.05 245);
+  --secondary: oklch(0.22 0.05 245);
+  --secondary-foreground: oklch(0.92 0.04 200);
+  --muted: oklch(0.22 0.05 245);
+  --muted-foreground: oklch(0.72 0.06 215);
+  --accent: oklch(0.28 0.08 230);
+  --accent-foreground: oklch(0.95 0.03 200);
+  --destructive: oklch(0.7 0.24 25);
+  --destructive-foreground: oklch(0.98 0.01 200);
+  --border: oklch(0.82 0.16 200 / 0.22);
+  --input: oklch(0.82 0.16 200 / 0.22);
+  --ring: oklch(0.85 0.17 200);
+  --chart-1: oklch(0.85 0.17 200);
+  --chart-2: oklch(0.75 0.22 340);
+  --chart-3: oklch(0.82 0.17 75);
+  --chart-4: oklch(0.82 0.18 150);
+  --chart-5: oklch(0.72 0.24 25);
+  --sidebar: oklch(0.12 0.05 250);
+  --sidebar-foreground: oklch(0.92 0.04 200);
+  --sidebar-primary: oklch(0.85 0.17 200);
+  --sidebar-primary-foreground: oklch(0.12 0.05 245);
+  --sidebar-accent: oklch(0.22 0.06 240);
+  --sidebar-accent-foreground: oklch(0.95 0.03 200);
+  --sidebar-border: oklch(0.82 0.16 200 / 0.18);
+  --sidebar-ring: oklch(0.85 0.17 200);
 }
 
 @layer base {
@@ -163,10 +183,63 @@
     border-color: var(--color-border);
   }
 
-  body {
+  html, body {
     background-color: var(--color-background);
     color: var(--color-foreground);
+    font-feature-settings: "tnum";
   }
+
+  /* Ambient JARVIS atmosphere — radial glows + grid */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 50% 0%, oklch(0.3 0.12 220 / 0.5), transparent 70%),
+      radial-gradient(ellipse 60% 50% at 100% 100%, oklch(0.25 0.16 280 / 0.35), transparent 70%),
+      radial-gradient(ellipse 50% 40% at 0% 80%, oklch(0.3 0.14 200 / 0.25), transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+  body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(to right, oklch(0.82 0.16 200 / 0.06) 1px, transparent 1px),
+      linear-gradient(to bottom, oklch(0.82 0.16 200 / 0.06) 1px, transparent 1px);
+    background-size: 44px 44px;
+    mask-image: radial-gradient(ellipse 100% 80% at 50% 30%, black 30%, transparent 85%);
+    pointer-events: none;
+    z-index: 0;
+  }
+  body > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Inputs / selects pick up HUD accent */
+  input, select, textarea {
+    color: var(--color-foreground);
+  }
+  select option {
+    background: oklch(0.16 0.05 250);
+    color: oklch(0.95 0.03 200);
+  }
+
+  ::selection {
+    background: oklch(0.85 0.17 200 / 0.35);
+    color: oklch(0.98 0.01 200);
+  }
+
+  /* Subtle scrollbars */
+  ::-webkit-scrollbar { width: 10px; height: 10px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb {
+    background: oklch(0.82 0.16 200 / 0.25);
+    border-radius: 999px;
+  }
+  ::-webkit-scrollbar-thumb:hover { background: oklch(0.82 0.16 200 / 0.45); }
 }
 
 /* =========================================================
