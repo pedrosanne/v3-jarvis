@@ -1090,11 +1090,18 @@ function SignalModal({
   const accent = isBuy ? "emerald" : "red";
   const [confirmOpen, setConfirmOpen] = useState(false);
 
-  const requestClose = () => setConfirmOpen(true);
+  const requestClose = () => {
+    sfxAlert();
+    setConfirmOpen(true);
+  };
 
   useEffect(() => {
+    sfxWhoosh();
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setConfirmOpen(true);
+      if (e.key === "Escape") {
+        sfxAlert();
+        setConfirmOpen(true);
+      }
     };
     document.addEventListener("keydown", onKey);
     document.body.style.overflow = "hidden";
