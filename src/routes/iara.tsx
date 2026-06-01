@@ -147,6 +147,9 @@ function IaraPage() {
   const scanTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const [dragOver, setDragOver] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  // Sequencial reveal dos painéis (Terminal → Data Stream → Notícias)
+  const [revealStep, setRevealStep] = useState(0);
+  const revealTimersRef = useRef<ReturnType<typeof setTimeout>[]>([]);
 
 
   // Broker URL gate
@@ -528,6 +531,12 @@ function IaraPage() {
     setLogs([]);
     setProgress(0);
     setConfidence(0);
+    // revela painéis um a um para imersão visual
+    revealTimersRef.current.forEach(clearTimeout);
+    revealTimersRef.current = [];
+    setRevealStep(1); // Terminal aparece imediatamente
+    revealTimersRef.current.push(setTimeout(() => setRevealStep(2), 900));  // Data Stream
+    revealTimersRef.current.push(setTimeout(() => setRevealStep(3), 1900)); // Notícias
     startAutoScroll();
 
     const broker = BROKERS[Math.floor(Math.random() * BROKERS.length)];
@@ -627,8 +636,12 @@ function IaraPage() {
     setConfidence(0);
     setLogs([]);
     setSignal(null);
+    revealTimersRef.current.forEach(clearTimeout);
+    revealTimersRef.current = [];
+    setRevealStep(0);
     stopAutoScroll();
   }
+  useEffect(() => () => revealTimersRef.current.forEach(clearTimeout), []);
 
   const running = phase !== "idle" && phase !== "signal";
 
@@ -637,8 +650,8 @@ function IaraPage() {
       <div className="grid w-full max-w-full gap-4 overflow-x-hidden lg:grid-cols-12">
         {/* Hero / Controls */}
         <div className="min-w-0 lg:col-span-12">
-          <div className="relative overflow-hidden rounded-2xl border border-emerald-500/20 bg-[#070b10] p-4 text-emerald-200 shadow-[0_0_60px_-15px_rgba(16,185,129,0.4)] sm:p-5">
-            <div className="absolute inset-0 opacity-[0.08] [background-image:linear-gradient(rgba(16,185,129,.6)_1px,transparent_1px),linear-gradient(90deg,rgba(16,185,129,.6)_1px,transparent_1px)] [background-size:24px_24px]" />
+          <div className="relative overflow-hidden rounded-2xl border border-cyan-500/20 bg-[#070b10] p-4 text-cyan-200 shadow-[0_0_60px_-15px_rgba(34,211,238,0.4)] sm:p-5">
+            <div className="absolute inset-0 opacity-[0.08] [background-image:linear-gradient(rgba(34,211,238,.6)_1px,transparent_1px),linear-gradient(90deg,rgba(34,211,238,.6)_1px,transparent_1px)] [background-size:24px_24px]" />
             <div className="relative flex flex-col gap-4">
               <BrokerUrlGate
                 url={brokerUrl}
@@ -698,29 +711,29 @@ function IaraPage() {
                 className={cn(
                   "min-w-0 flex-1 rounded-xl border-2 border-dashed bg-black/30 p-4 transition lg:max-w-xl",
                   dragOver
-                    ? "border-emerald-400 bg-emerald-500/5"
-                    : "border-emerald-500/25 hover:border-emerald-400/60",
+                    ? "border-cyan-400 bg-cyan-500/5"
+                    : "border-cyan-500/25 hover:border-cyan-400/60",
                 )}
               >
                 <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                   <div className="flex min-w-0 items-start gap-3">
-                    <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-emerald-500/15 ring-1 ring-emerald-400/30">
-                      <ImageIcon className="h-5 w-5 text-emerald-300" />
+                    <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-cyan-500/15 ring-1 ring-cyan-400/30">
+                      <ImageIcon className="h-5 w-5 text-cyan-300" />
                     </div>
                     <div className="min-w-0">
-                      <div className="font-mono text-[10px] uppercase tracking-[0.25em] text-emerald-400">
+                      <div className="font-mono text-[10px] uppercase tracking-[0.25em] text-cyan-400">
                         Adicionar Print
                       </div>
-                      <h3 className="font-mono text-base font-bold text-emerald-100">
+                      <h3 className="font-mono text-base font-bold text-cyan-100">
                         Envie o print do gráfico
                       </h3>
-                      <p className="mt-0.5 text-[12px] leading-snug text-emerald-300/70">
+                      <p className="mt-0.5 text-[12px] leading-snug text-cyan-300/70">
                         <span className="sm:hidden">Toque em enviar e selecione a imagem.</span>
                         <span className="hidden sm:inline">
                           Cole com{" "}
-                          <kbd className="rounded border border-emerald-500/30 bg-black/40 px-1.5 py-0.5 font-mono text-[10px] text-emerald-300">Ctrl</kbd>
+                          <kbd className="rounded border border-cyan-500/30 bg-black/40 px-1.5 py-0.5 font-mono text-[10px] text-cyan-300">Ctrl</kbd>
                           {" + "}
-                          <kbd className="rounded border border-emerald-500/30 bg-black/40 px-1.5 py-0.5 font-mono text-[10px] text-emerald-300">V</kbd>
+                          <kbd className="rounded border border-cyan-500/30 bg-black/40 px-1.5 py-0.5 font-mono text-[10px] text-cyan-300">V</kbd>
                           , arraste ou clique para enviar.
                         </span>
                       </p>
@@ -737,7 +750,7 @@ function IaraPage() {
                     )}
                     <button
                       onClick={() => fileInputRef.current?.click()}
-                      className="inline-flex flex-1 items-center justify-center gap-2 rounded-md bg-emerald-500 px-4 py-2 font-mono text-xs font-bold uppercase tracking-wider text-black shadow-[0_0_30px_-10px_rgba(16,185,129,0.8)] transition hover:bg-emerald-400 sm:flex-none"
+                      className="inline-flex flex-1 items-center justify-center gap-2 rounded-md bg-cyan-500 px-4 py-2 font-mono text-xs font-bold uppercase tracking-wider text-black shadow-[0_0_30px_-10px_rgba(34,211,238,0.8)] transition hover:bg-cyan-400 sm:flex-none"
                     >
                       <Upload className="h-3.5 w-3.5" />
                       {chartPrint ? "Trocar" : "Enviar"}
@@ -755,7 +768,7 @@ function IaraPage() {
                   </div>
                 </div>
                 {chartPrint && (
-                  <div className="relative mt-3 overflow-hidden rounded-lg border border-emerald-500/20 bg-black/40">
+                  <div className="relative mt-3 overflow-hidden rounded-lg border border-cyan-500/20 bg-black/40">
                     <img
                       src={chartPrint}
                       alt="Print do gráfico enviado"
@@ -800,7 +813,7 @@ function IaraPage() {
                         <div className="absolute inset-x-2 bottom-2">
                           <div className="h-1 overflow-hidden rounded-full bg-cyan-500/20 ring-1 ring-cyan-400/30">
                             <div
-                              className="h-full bg-gradient-to-r from-cyan-400 via-emerald-300 to-cyan-200 transition-[width] duration-100"
+                              className="h-full bg-gradient-to-r from-cyan-400 via-cyan-300 to-cyan-200 transition-[width] duration-100"
                               style={{ width: `${scanProgress}%` }}
                             />
                           </div>
@@ -836,7 +849,7 @@ function IaraPage() {
                     }}
                     disabled={running || selectsLocked}
                     className={cn(
-                      "w-full rounded-md border border-emerald-500/30 bg-black/40 px-3 py-2 font-mono text-sm text-emerald-200 outline-none focus:border-emerald-400 lg:w-28",
+                      "w-full rounded-md border border-cyan-500/30 bg-black/40 px-3 py-2 font-mono text-sm text-cyan-200 outline-none focus:border-cyan-400 lg:w-28",
                       selectsLocked && "cursor-not-allowed",
                     )}
                   >
@@ -875,13 +888,13 @@ function IaraPage() {
 
             {/* Progress */}
             <div className="relative mt-4">
-              <div className="flex items-center justify-between font-mono text-[11px] uppercase tracking-widest text-emerald-400/80">
+              <div className="flex items-center justify-between font-mono text-[11px] uppercase tracking-widest text-cyan-400/80">
                 <span>{phaseLabel[phase]}</span>
                 <span>{Math.round(progress)}%</span>
               </div>
-              <div className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-emerald-500/10">
+              <div className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-cyan-500/10">
                 <div
-                  className="h-full bg-gradient-to-r from-emerald-500 via-emerald-300 to-cyan-300 transition-[width] duration-150"
+                  className="h-full bg-gradient-to-r from-cyan-500 via-cyan-300 to-cyan-300 transition-[width] duration-150"
                   style={{ width: `${progress}%` }}
                 />
               </div>
@@ -890,82 +903,89 @@ function IaraPage() {
         </div>
 
         {/* Terminal */}
-        <div className="min-w-0 lg:col-span-7">
-          <Panel title="Terminal Iara" icon={Terminal}>
-            <div
-              ref={logRef}
-              className="h-[320px] overflow-y-auto rounded-md bg-[#04070a] p-3 font-mono text-[11px] leading-relaxed sm:h-[440px] sm:p-4 sm:text-[12.5px]"
-            >
-              {logs.length === 0 && (
-                <div className="text-emerald-500/40">
-                  $ aguardando comando... selecione ativo e tempo e clique em
-                  <span className="text-emerald-400"> Hackear Mercado</span>.
-                </div>
-              )}
-              {logs.map((l) => (
-                <div
-                  key={l.id}
-                  className={cn(
-                    "whitespace-pre-wrap break-words",
-                    l.tone === "ok" && "text-emerald-300",
-                    l.tone === "info" && "text-emerald-400/80",
-                    l.tone === "warn" && "text-amber-300",
-                    l.tone === "crit" && "text-red-400",
-                    l.tone === "data" && "text-cyan-300",
-                  )}
-                >
-                  {l.text}
-                </div>
-              ))}
-              {running && (
-                <div className="mt-1 inline-block h-3 w-2 animate-pulse bg-emerald-400" />
-              )}
-            </div>
-          </Panel>
-        </div>
+        {revealStep >= 1 && (
+          <div className="min-w-0 animate-fade-in lg:col-span-7">
+            <Panel title="Terminal Iara" icon={Terminal}>
+              <div
+                ref={logRef}
+                className="h-[320px] overflow-y-auto rounded-md bg-[#04070a] p-3 font-mono text-[11px] leading-relaxed sm:h-[440px] sm:p-4 sm:text-[12.5px]"
+              >
+                {logs.length === 0 && (
+                  <div className="text-cyan-500/40">
+                    $ inicializando núcleo Iara...
+                  </div>
+                )}
+                {logs.map((l) => (
+                  <div
+                    key={l.id}
+                    className={cn(
+                      "whitespace-pre-wrap break-words",
+                      l.tone === "ok" && "text-cyan-300",
+                      l.tone === "info" && "text-cyan-400/80",
+                      l.tone === "warn" && "text-amber-300",
+                      l.tone === "crit" && "text-red-400",
+                      l.tone === "data" && "text-cyan-300",
+                    )}
+                  >
+                    {l.text}
+                  </div>
+                ))}
+                {running && (
+                  <div className="mt-1 inline-block h-3 w-2 animate-pulse bg-cyan-400" />
+                )}
+              </div>
+            </Panel>
+          </div>
+        )}
 
         {/* Side: matrix + news */}
-        <div className="min-w-0 space-y-4 lg:col-span-5">
-          <Panel title="Data Stream" icon={Globe}>
-            <div className="grid h-[160px] grid-cols-2 gap-2 overflow-hidden rounded-md bg-[#04070a] p-3 font-mono text-[10px] leading-[1.1] text-emerald-400/70 sm:h-[210px]">
-              <div className="min-w-0 space-y-0.5">
-                {(matrix.length ? matrix.slice(0, 12) : Array(12).fill("······ ······ ······")).map(
-                  (row, i) => (
-                    <div key={i} className="truncate">
-                      {row}
+        {(revealStep >= 2 || revealStep >= 3) && (
+          <div className="min-w-0 space-y-4 lg:col-span-5">
+            {revealStep >= 2 && (
+              <div className="animate-fade-in">
+                <Panel title="Data Stream" icon={Globe}>
+                  <div className="grid h-[160px] grid-cols-2 gap-2 overflow-hidden rounded-md bg-[#04070a] p-3 font-mono text-[10px] leading-[1.1] text-cyan-400/70 sm:h-[210px]">
+                    <div className="min-w-0 space-y-0.5">
+                      {(matrix.length ? matrix.slice(0, 12) : Array(12).fill("······ ······ ······")).map(
+                        (row, i) => (
+                          <div key={i} className="truncate">{row}</div>
+                        ),
+                      )}
                     </div>
-                  ),
-                )}
-              </div>
-              <div className="min-w-0 space-y-0.5 text-cyan-300/60">
-                {(matrix.length ? matrix.slice(12, 24) : Array(12).fill("······ ······ ······")).map(
-                  (row, i) => (
-                    <div key={i} className="truncate">
-                      {row}
+                    <div className="min-w-0 space-y-0.5 text-cyan-300/60">
+                      {(matrix.length ? matrix.slice(12, 24) : Array(12).fill("······ ······ ······")).map(
+                        (row, i) => (
+                          <div key={i} className="truncate">{row}</div>
+                        ),
+                      )}
                     </div>
-                  ),
-                )}
+                  </div>
+                </Panel>
               </div>
-            </div>
-          </Panel>
+            )}
 
-          <Panel title="Notícias Interceptadas" icon={Newspaper}>
-            <ul className="space-y-2 font-mono text-[11px] sm:text-xs">
-              {NEWS_FEED.slice(0, 5).map((n, i) => (
-                <li
-                  key={i}
-                  className="flex min-w-0 items-start gap-2 rounded-md border border-emerald-500/10 bg-emerald-500/5 px-3 py-2 text-emerald-200/80"
-                >
-                  <Lock className="mt-0.5 h-3 w-3 shrink-0 text-emerald-400" />
-                  <span className="min-w-0 truncate">{n}</span>
-                </li>
-              ))}
-            </ul>
-          </Panel>
-        </div>
+            {revealStep >= 3 && (
+              <div className="animate-fade-in">
+                <Panel title="Notícias Interceptadas" icon={Newspaper}>
+                  <ul className="space-y-2 font-mono text-[11px] sm:text-xs">
+                    {NEWS_FEED.slice(0, 5).map((n, i) => (
+                      <li
+                        key={i}
+                        className="flex min-w-0 items-start gap-2 rounded-md border border-cyan-500/10 bg-cyan-500/5 px-3 py-2 text-cyan-200/80"
+                      >
+                        <Lock className="mt-0.5 h-3 w-3 shrink-0 text-cyan-400" />
+                        <span className="min-w-0 truncate">{n}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </Panel>
+              </div>
+            )}
+          </div>
+        )}
 
         {/* Placeholder when no signal */}
-        {!signal && (
+        {!signal && revealStep === 0 && (
           <div className="min-w-0 lg:col-span-12">
             <div className="rounded-2xl border border-dashed border-border bg-card/50 p-6 text-center text-sm text-muted-foreground">
               Nenhum sinal ativo. Inicie uma análise para que a Iara gere o próximo scalp.
@@ -1037,7 +1057,7 @@ function SignalModal({
         className={cn(
           "relative w-full max-w-md overflow-hidden rounded-3xl border bg-[#070b10] shadow-2xl",
           isBuy
-            ? "border-emerald-500/40 shadow-[0_0_80px_-10px_rgba(16,185,129,0.6)]"
+            ? "border-cyan-500/40 shadow-[0_0_80px_-10px_rgba(34,211,238,0.6)]"
             : "border-red-500/40 shadow-[0_0_80px_-10px_rgba(239,68,68,0.6)]",
         )}
       >
@@ -1045,10 +1065,10 @@ function SignalModal({
         <div
           className={cn(
             "absolute -top-32 left-1/2 h-64 w-64 -translate-x-1/2 rounded-full blur-3xl",
-            isBuy ? "bg-emerald-500/30" : "bg-red-500/30",
+            isBuy ? "bg-cyan-500/30" : "bg-red-500/30",
           )}
         />
-        <div className="absolute inset-0 opacity-[0.06] [background-image:linear-gradient(rgba(16,185,129,.6)_1px,transparent_1px),linear-gradient(90deg,rgba(16,185,129,.6)_1px,transparent_1px)] [background-size:20px_20px]" />
+        <div className="absolute inset-0 opacity-[0.06] [background-image:linear-gradient(rgba(34,211,238,.6)_1px,transparent_1px),linear-gradient(90deg,rgba(34,211,238,.6)_1px,transparent_1px)] [background-size:20px_20px]" />
 
         <button
           onClick={requestClose}
@@ -1098,20 +1118,20 @@ function SignalModal({
           <div
             className={cn(
               "flex items-center justify-center gap-2 font-mono text-[10px] uppercase tracking-[0.3em]",
-              isBuy ? "text-emerald-300" : "text-red-300",
+              isBuy ? "text-cyan-300" : "text-red-300",
             )}
           >
             <span className="relative flex h-2 w-2">
               <span
                 className={cn(
                   "absolute inline-flex h-full w-full animate-ping rounded-full opacity-75",
-                  isBuy ? "bg-emerald-400" : "bg-red-400",
+                  isBuy ? "bg-cyan-400" : "bg-red-400",
                 )}
               />
               <span
                 className={cn(
                   "relative inline-flex h-2 w-2 rounded-full",
-                  isBuy ? "bg-emerald-500" : "bg-red-500",
+                  isBuy ? "bg-cyan-500" : "bg-red-500",
                 )}
               />
             </span>
@@ -1123,7 +1143,7 @@ function SignalModal({
             <div
               className={cn(
                 "mx-auto flex h-16 w-16 items-center justify-center rounded-2xl",
-                isBuy ? "bg-emerald-500/15 text-emerald-300" : "bg-red-500/15 text-red-300",
+                isBuy ? "bg-cyan-500/15 text-cyan-300" : "bg-red-500/15 text-red-300",
               )}
             >
               {isBuy ? (
@@ -1145,7 +1165,7 @@ function SignalModal({
           <div className="mt-6">
             <div className="flex items-center justify-between font-mono text-[10px] uppercase tracking-widest text-white/50">
               <span>Confiança</span>
-              <span className={cn("font-bold", isBuy ? "text-emerald-300" : "text-red-300")}>
+              <span className={cn("font-bold", isBuy ? "text-cyan-300" : "text-red-300")}>
                 {signal.confidence}%
               </span>
             </div>
@@ -1154,7 +1174,7 @@ function SignalModal({
                 className={cn(
                   "h-full rounded-full",
                   isBuy
-                    ? "bg-gradient-to-r from-emerald-500 to-cyan-300"
+                    ? "bg-gradient-to-r from-cyan-500 to-cyan-300"
                     : "bg-gradient-to-r from-red-500 to-orange-300",
                 )}
                 style={{ width: `${signal.confidence}%` }}
@@ -1182,7 +1202,7 @@ function SignalModal({
             className={cn(
               "group mt-6 flex w-full items-center justify-center gap-2 rounded-xl px-5 py-3.5 font-mono text-sm font-bold uppercase tracking-wider text-black transition",
               isBuy
-                ? "bg-emerald-400 hover:bg-emerald-300 shadow-[0_0_30px_-5px_rgba(16,185,129,0.8)]"
+                ? "bg-cyan-400 hover:bg-cyan-300 shadow-[0_0_30px_-5px_rgba(34,211,238,0.8)]"
                 : "bg-red-400 hover:bg-red-300 shadow-[0_0_30px_-5px_rgba(239,68,68,0.8)]",
             )}
           >
@@ -1215,7 +1235,7 @@ function Level({
         className={cn(
           "mt-0.5 truncate font-mono text-sm font-bold sm:text-base",
           tone === "red" && "text-red-300",
-          tone === "green" && "text-emerald-300",
+          tone === "green" && "text-cyan-300",
           tone === "white" && "text-white",
         )}
       >
@@ -1244,9 +1264,9 @@ function Field({
       )}
       title={locked ? hint : undefined}
     >
-      <span className="flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-widest text-emerald-400/80">
+      <span className="flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-widest text-cyan-400/80">
         {label}
-        {locked && <Lock className="h-3 w-3 text-emerald-400/60" />}
+        {locked && <Lock className="h-3 w-3 text-cyan-400/60" />}
       </span>
       {children}
     </label>
@@ -1265,13 +1285,13 @@ function Stat({
   ok?: boolean;
 }) {
   return (
-    <div className="flex min-w-0 items-center gap-2 rounded-lg border border-emerald-500/20 bg-black/30 px-2.5 py-2 sm:gap-3 sm:px-3">
-      <Icon className={cn("h-4 w-4 shrink-0", ok ? "text-emerald-400" : "text-emerald-500/50")} />
+    <div className="flex min-w-0 items-center gap-2 rounded-lg border border-cyan-500/20 bg-black/30 px-2.5 py-2 sm:gap-3 sm:px-3">
+      <Icon className={cn("h-4 w-4 shrink-0", ok ? "text-cyan-400" : "text-cyan-500/50")} />
       <div className="min-w-0">
-        <div className="truncate font-mono text-[9px] uppercase tracking-widest text-emerald-400/70 sm:text-[10px]">
+        <div className="truncate font-mono text-[9px] uppercase tracking-widest text-cyan-400/70 sm:text-[10px]">
           {label}
         </div>
-        <div className="truncate font-mono text-xs text-emerald-100 sm:text-sm">{value}</div>
+        <div className="truncate font-mono text-xs text-cyan-100 sm:text-sm">{value}</div>
       </div>
     </div>
   );
@@ -1287,8 +1307,8 @@ function Panel({
   children: React.ReactNode;
 }) {
   return (
-    <div className="rounded-2xl border border-emerald-500/20 bg-[#070b10] p-4">
-      <div className="mb-3 flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-emerald-400">
+    <div className="rounded-2xl border border-cyan-500/20 bg-[#070b10] p-4">
+      <div className="mb-3 flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-cyan-400">
         <Icon className="h-3.5 w-3.5" /> {title}
       </div>
       {children}
@@ -1312,7 +1332,7 @@ function SignalCell({
         className={cn(
           "mt-1 truncate font-mono text-sm font-bold sm:text-lg",
           tone === "red" && "text-red-300",
-          tone === "green" && "text-emerald-300",
+          tone === "green" && "text-cyan-300",
           !tone && "text-white",
         )}
       >
@@ -1397,12 +1417,12 @@ function SlideToHack({
       <div
         ref={trackRef}
         className={cn(
-          "relative h-12 select-none overflow-hidden rounded-full border border-emerald-500/40 bg-black/60 shadow-[0_0_30px_-10px_rgba(16,185,129,0.7)]",
+          "relative h-12 select-none overflow-hidden rounded-full border border-cyan-500/40 bg-black/60 shadow-[0_0_30px_-10px_rgba(34,211,238,0.7)]",
         )}
       >
         {/* progress fill */}
         <div
-          className="absolute inset-y-0 left-0 bg-gradient-to-r from-emerald-600 via-emerald-500 to-emerald-400 transition-[width]"
+          className="absolute inset-y-0 left-0 bg-gradient-to-r from-cyan-600 via-cyan-500 to-cyan-400 transition-[width]"
           style={{
             width: `${x + KNOB / 2 + 3}px`,
             transition: dragging ? "none" : "width 200ms ease",
@@ -1432,7 +1452,7 @@ function SlideToHack({
           onPointerUp={onPointerUp}
           onPointerCancel={onPointerUp}
           className={cn(
-            "absolute top-1/2 flex h-11 w-11 -translate-y-1/2 cursor-grab items-center justify-center rounded-full bg-emerald-400 text-black shadow-[0_0_20px_rgba(16,185,129,0.9)] ring-2 ring-emerald-200/60 active:cursor-grabbing",
+            "absolute top-1/2 flex h-11 w-11 -translate-y-1/2 cursor-grab items-center justify-center rounded-full bg-cyan-400 text-black shadow-[0_0_20px_rgba(34,211,238,0.9)] ring-2 ring-cyan-200/60 active:cursor-grabbing",
             unlocked && "bg-white",
           )}
           style={{
@@ -1480,12 +1500,12 @@ function BrokerUrlGate({
   const rejected = status === "rejected";
 
   const borderClass = approved
-    ? "border-emerald-400/60 shadow-[0_0_40px_-10px_rgba(16,185,129,0.7)]"
+    ? "border-cyan-400/60 shadow-[0_0_40px_-10px_rgba(34,211,238,0.7)]"
     : rejected
       ? "border-red-500/60 shadow-[0_0_40px_-10px_rgba(239,68,68,0.7)]"
       : checking
         ? "border-cyan-400/50 shadow-[0_0_40px_-10px_rgba(34,211,238,0.6)]"
-        : "border-emerald-500/30";
+        : "border-cyan-500/30";
 
   function trigger(value: string) {
     setUrl(value);
@@ -1515,27 +1535,27 @@ function BrokerUrlGate({
           <div
             className={cn(
               "flex h-11 w-11 shrink-0 items-center justify-center rounded-xl ring-1 transition",
-              approved && "bg-emerald-500/15 ring-emerald-400/40",
+              approved && "bg-cyan-500/15 ring-cyan-400/40",
               rejected && "bg-red-500/15 ring-red-400/40",
               checking && "bg-cyan-500/10 ring-cyan-400/40",
-              status === "idle" && "bg-emerald-500/10 ring-emerald-400/30",
+              status === "idle" && "bg-cyan-500/10 ring-cyan-400/30",
             )}
           >
             {approved ? (
-              <ShieldCheck className="h-5 w-5 text-emerald-300" />
+              <ShieldCheck className="h-5 w-5 text-cyan-300" />
             ) : rejected ? (
               <ShieldX className="h-5 w-5 text-red-300" />
             ) : checking ? (
               <Loader2 className="h-5 w-5 animate-spin text-cyan-300" />
             ) : (
-              <Link2 className="h-5 w-5 text-emerald-300" />
+              <Link2 className="h-5 w-5 text-cyan-300" />
             )}
           </div>
           <div className="min-w-0">
-            <div className="font-mono text-[10px] uppercase tracking-[0.25em] text-emerald-400">
+            <div className="font-mono text-[10px] uppercase tracking-[0.25em] text-cyan-400">
               URL da Corretora
             </div>
-            <h3 className="font-mono text-base font-bold text-emerald-100">
+            <h3 className="font-mono text-base font-bold text-cyan-100">
               {approved
                 ? "Corretora verificada"
                 : rejected
@@ -1544,14 +1564,14 @@ function BrokerUrlGate({
                     ? "Verificando corretora…"
                     : "Cole a URL da sua corretora"}
             </h3>
-            <p className="mt-0.5 text-[12px] leading-snug text-emerald-300/70">
+            <p className="mt-0.5 text-[12px] leading-snug text-cyan-300/70">
               {status === "idle" &&
                 "Iara aceita apenas corretoras regulamentadas e auditadas."}
               {checking && domain && (
                 <span className="font-mono text-cyan-300/90">{domain}</span>
               )}
               {approved && domain && (
-                <span className="font-mono text-emerald-300/90">
+                <span className="font-mono text-cyan-300/90">
                   {domain} • licença ativa
                 </span>
               )}
@@ -1568,7 +1588,7 @@ function BrokerUrlGate({
           {(approved || rejected) && (
             <button
               onClick={onReset}
-              className="inline-flex items-center justify-center gap-1.5 rounded-md border border-emerald-500/30 bg-black/40 px-3 py-2 font-mono text-xs uppercase tracking-wider text-emerald-200 hover:bg-emerald-500/10"
+              className="inline-flex items-center justify-center gap-1.5 rounded-md border border-cyan-500/30 bg-black/40 px-3 py-2 font-mono text-xs uppercase tracking-wider text-cyan-200 hover:bg-cyan-500/10"
             >
               <X className="h-3.5 w-3.5" /> Trocar URL
             </button>
@@ -1591,26 +1611,26 @@ function BrokerUrlGate({
           placeholder="https://app.suacorretora.com"
           spellCheck={false}
           className={cn(
-            "w-full rounded-md border bg-black/60 px-3 py-2.5 font-mono text-sm text-emerald-100 outline-none transition placeholder:text-emerald-500/40",
-            approved && "border-emerald-400/60",
+            "w-full rounded-md border bg-black/60 px-3 py-2.5 font-mono text-sm text-cyan-100 outline-none transition placeholder:text-cyan-500/40",
+            approved && "border-cyan-400/60",
             rejected && "border-red-500/60 text-red-200",
             checking && "border-cyan-400/60",
-            status === "idle" && "border-emerald-500/30 focus:border-emerald-400",
+            status === "idle" && "border-cyan-500/30 focus:border-cyan-400",
           )}
         />
       </div>
 
       {approved && (
-        <div className="relative mt-3 flex flex-wrap items-center justify-between gap-2 rounded-md border border-emerald-500/20 bg-emerald-500/5 px-3 py-2">
-          <div className="flex items-center gap-2 font-mono text-[11px] text-emerald-300/80">
+        <div className="relative mt-3 flex flex-wrap items-center justify-between gap-2 rounded-md border border-cyan-500/20 bg-cyan-500/5 px-3 py-2">
+          <div className="flex items-center gap-2 font-mono text-[11px] text-cyan-300/80">
             {savedUrl && savedUrl === url ? (
               <>
-                <ShieldCheck className="h-3.5 w-3.5 text-emerald-300" />
+                <ShieldCheck className="h-3.5 w-3.5 text-cyan-300" />
                 <span>URL padrão salva — usada em todas as operações</span>
               </>
             ) : (
               <>
-                <Link2 className="h-3.5 w-3.5 text-emerald-300" />
+                <Link2 className="h-3.5 w-3.5 text-cyan-300" />
                 <span>Salvar essa URL como padrão para próximas operações?</span>
               </>
             )}
@@ -1618,14 +1638,14 @@ function BrokerUrlGate({
           {savedUrl && savedUrl === url ? (
             <button
               onClick={onClearDefault}
-              className="inline-flex items-center gap-1.5 rounded-md border border-emerald-500/30 bg-black/40 px-2.5 py-1 font-mono text-[11px] uppercase tracking-wider text-emerald-200 hover:bg-emerald-500/10"
+              className="inline-flex items-center gap-1.5 rounded-md border border-cyan-500/30 bg-black/40 px-2.5 py-1 font-mono text-[11px] uppercase tracking-wider text-cyan-200 hover:bg-cyan-500/10"
             >
               <X className="h-3 w-3" /> Remover padrão
             </button>
           ) : (
             <button
               onClick={onSaveDefault}
-              className="inline-flex items-center gap-1.5 rounded-md border border-emerald-400/50 bg-emerald-500/15 px-2.5 py-1 font-mono text-[11px] uppercase tracking-wider text-emerald-100 hover:bg-emerald-500/25"
+              className="inline-flex items-center gap-1.5 rounded-md border border-cyan-400/50 bg-cyan-500/15 px-2.5 py-1 font-mono text-[11px] uppercase tracking-wider text-cyan-100 hover:bg-cyan-500/25"
             >
               <ShieldCheck className="h-3 w-3" /> Salvar como padrão
             </button>
@@ -1636,13 +1656,13 @@ function BrokerUrlGate({
 
       {(checking || approved || rejected) && (
         <div className="relative mt-3 space-y-2">
-          <div className="h-1 overflow-hidden rounded-full bg-emerald-500/10">
+          <div className="h-1 overflow-hidden rounded-full bg-cyan-500/10">
             <div
               className={cn(
                 "h-full transition-[width] duration-150",
                 rejected
                   ? "bg-gradient-to-r from-red-600 to-red-400"
-                  : "bg-gradient-to-r from-cyan-500 via-emerald-400 to-emerald-300",
+                  : "bg-gradient-to-r from-cyan-500 via-cyan-400 to-cyan-300",
               )}
               style={{ width: `${progress}%` }}
             />
@@ -1654,7 +1674,7 @@ function BrokerUrlGate({
                 className={cn(
                   "flex items-center gap-2 rounded-md border px-2 py-1.5 transition",
                   !s.done && "border-cyan-400/20 bg-cyan-500/5 text-cyan-300/80",
-                  s.done && s.ok && "border-emerald-400/30 bg-emerald-500/5 text-emerald-200",
+                  s.done && s.ok && "border-cyan-400/30 bg-cyan-500/5 text-cyan-200",
                   s.done && !s.ok && "border-red-500/40 bg-red-500/10 text-red-200",
                 )}
               >
@@ -1730,12 +1750,12 @@ function AccountIdGate({
   const rejected = status === "rejected";
 
   const borderClass = approved
-    ? "border-emerald-400/60 shadow-[0_0_40px_-10px_rgba(16,185,129,0.7)]"
+    ? "border-cyan-400/60 shadow-[0_0_40px_-10px_rgba(34,211,238,0.7)]"
     : rejected
       ? "border-red-500/60 shadow-[0_0_40px_-10px_rgba(239,68,68,0.7)]"
       : checking
         ? "border-cyan-400/50 shadow-[0_0_40px_-10px_rgba(34,211,238,0.6)]"
-        : "border-emerald-500/30";
+        : "border-cyan-500/30";
 
   function trigger(value: string) {
     setAccountId(value);
@@ -1764,27 +1784,27 @@ function AccountIdGate({
           <div
             className={cn(
               "flex h-11 w-11 shrink-0 items-center justify-center rounded-xl ring-1 transition",
-              approved && "bg-emerald-500/15 ring-emerald-400/40",
+              approved && "bg-cyan-500/15 ring-cyan-400/40",
               rejected && "bg-red-500/15 ring-red-400/40",
               checking && "bg-cyan-500/10 ring-cyan-400/40",
-              status === "idle" && "bg-emerald-500/10 ring-emerald-400/30",
+              status === "idle" && "bg-cyan-500/10 ring-cyan-400/30",
             )}
           >
             {approved ? (
-              <Unlock className="h-5 w-5 text-emerald-300" />
+              <Unlock className="h-5 w-5 text-cyan-300" />
             ) : rejected ? (
               <ShieldX className="h-5 w-5 text-red-300" />
             ) : checking ? (
               <Loader2 className="h-5 w-5 animate-spin text-cyan-300" />
             ) : (
-              <Cpu className="h-5 w-5 text-emerald-300" />
+              <Cpu className="h-5 w-5 text-cyan-300" />
             )}
           </div>
           <div className="min-w-0">
-            <div className="font-mono text-[10px] uppercase tracking-[0.25em] text-emerald-400">
+            <div className="font-mono text-[10px] uppercase tracking-[0.25em] text-cyan-400">
               ID da Conta
             </div>
-            <h3 className="font-mono text-base font-bold text-emerald-100">
+            <h3 className="font-mono text-base font-bold text-cyan-100">
               {approved
                 ? "Conta autenticada"
                 : rejected
@@ -1793,7 +1813,7 @@ function AccountIdGate({
                     ? "Autenticando ID da conta…"
                     : "Cole o ID da sua conta na corretora"}
             </h3>
-            <p className="mt-0.5 text-[12px] leading-snug text-emerald-300/70">
+            <p className="mt-0.5 text-[12px] leading-snug text-cyan-300/70">
               {status === "idle" &&
                 "A Iara precisa do ID da sua conta para puxar os dados dos ativos em tempo real diretamente da sua corretora."}
               {checking && (
@@ -1802,7 +1822,7 @@ function AccountIdGate({
                 </span>
               )}
               {approved && meta && (
-                <span className="font-mono text-emerald-300/90">
+                <span className="font-mono text-cyan-300/90">
                   {meta.masked} • {meta.assets} ativos • {meta.latency}ms • {meta.tier}
                 </span>
               )}
@@ -1819,7 +1839,7 @@ function AccountIdGate({
           {(approved || rejected) && (
             <button
               onClick={onReset}
-              className="inline-flex items-center justify-center gap-1.5 rounded-md border border-emerald-500/30 bg-black/40 px-3 py-2 font-mono text-xs uppercase tracking-wider text-emerald-200 hover:bg-emerald-500/10"
+              className="inline-flex items-center justify-center gap-1.5 rounded-md border border-cyan-500/30 bg-black/40 px-3 py-2 font-mono text-xs uppercase tracking-wider text-cyan-200 hover:bg-cyan-500/10"
             >
               <X className="h-3.5 w-3.5" /> Trocar ID
             </button>
@@ -1842,18 +1862,18 @@ function AccountIdGate({
           placeholder={`ex: ${exampleId}`}
           spellCheck={false}
           className={cn(
-            "w-full rounded-md border bg-black/60 px-3 py-2.5 font-mono text-sm tracking-wider text-emerald-100 outline-none transition placeholder:text-emerald-500/40",
-            approved && "border-emerald-400/60",
+            "w-full rounded-md border bg-black/60 px-3 py-2.5 font-mono text-sm tracking-wider text-cyan-100 outline-none transition placeholder:text-cyan-500/40",
+            approved && "border-cyan-400/60",
             rejected && "border-red-500/60 text-red-200",
             checking && "border-cyan-400/60",
-            status === "idle" && "border-emerald-500/30 focus:border-emerald-400",
+            status === "idle" && "border-cyan-500/30 focus:border-cyan-400",
           )}
         />
         {status === "idle" && (
           <button
             type="button"
             onClick={() => trigger(exampleId)}
-            className="mt-2 inline-flex items-center gap-1.5 rounded-md border border-emerald-500/30 bg-black/40 px-2.5 py-1 font-mono text-[11px] uppercase tracking-wider text-emerald-300/90 hover:bg-emerald-500/10"
+            className="mt-2 inline-flex items-center gap-1.5 rounded-md border border-cyan-500/30 bg-black/40 px-2.5 py-1 font-mono text-[11px] uppercase tracking-wider text-cyan-300/90 hover:bg-cyan-500/10"
           >
             <Copy className="h-3 w-3" /> Usar ID de exemplo
           </button>
@@ -1861,16 +1881,16 @@ function AccountIdGate({
       </div>
 
       {approved && (
-        <div className="relative mt-3 flex flex-wrap items-center justify-between gap-2 rounded-md border border-emerald-500/20 bg-emerald-500/5 px-3 py-2">
-          <div className="flex items-center gap-2 font-mono text-[11px] text-emerald-300/80">
+        <div className="relative mt-3 flex flex-wrap items-center justify-between gap-2 rounded-md border border-cyan-500/20 bg-cyan-500/5 px-3 py-2">
+          <div className="flex items-center gap-2 font-mono text-[11px] text-cyan-300/80">
             {savedId && savedId === accountId ? (
               <>
-                <ShieldCheck className="h-3.5 w-3.5 text-emerald-300" />
+                <ShieldCheck className="h-3.5 w-3.5 text-cyan-300" />
                 <span>ID padrão salvo — usado em todas as operações</span>
               </>
             ) : (
               <>
-                <Link2 className="h-3.5 w-3.5 text-emerald-300" />
+                <Link2 className="h-3.5 w-3.5 text-cyan-300" />
                 <span>Salvar esse ID como padrão para próximas operações?</span>
               </>
             )}
@@ -1878,14 +1898,14 @@ function AccountIdGate({
           {savedId && savedId === accountId ? (
             <button
               onClick={onClearDefault}
-              className="inline-flex items-center gap-1.5 rounded-md border border-emerald-500/30 bg-black/40 px-2.5 py-1 font-mono text-[11px] uppercase tracking-wider text-emerald-200 hover:bg-emerald-500/10"
+              className="inline-flex items-center gap-1.5 rounded-md border border-cyan-500/30 bg-black/40 px-2.5 py-1 font-mono text-[11px] uppercase tracking-wider text-cyan-200 hover:bg-cyan-500/10"
             >
               <X className="h-3 w-3" /> Remover padrão
             </button>
           ) : (
             <button
               onClick={onSaveDefault}
-              className="inline-flex items-center gap-1.5 rounded-md border border-emerald-400/50 bg-emerald-500/15 px-2.5 py-1 font-mono text-[11px] uppercase tracking-wider text-emerald-100 hover:bg-emerald-500/25"
+              className="inline-flex items-center gap-1.5 rounded-md border border-cyan-400/50 bg-cyan-500/15 px-2.5 py-1 font-mono text-[11px] uppercase tracking-wider text-cyan-100 hover:bg-cyan-500/25"
             >
               <ShieldCheck className="h-3 w-3" /> Salvar como padrão
             </button>
@@ -1895,13 +1915,13 @@ function AccountIdGate({
 
       {(checking || approved || rejected) && (
         <div className="relative mt-3 space-y-2">
-          <div className="h-1 overflow-hidden rounded-full bg-emerald-500/10">
+          <div className="h-1 overflow-hidden rounded-full bg-cyan-500/10">
             <div
               className={cn(
                 "h-full transition-[width] duration-150",
                 rejected
                   ? "bg-gradient-to-r from-red-600 to-red-400"
-                  : "bg-gradient-to-r from-cyan-500 via-emerald-400 to-emerald-300",
+                  : "bg-gradient-to-r from-cyan-500 via-cyan-400 to-cyan-300",
               )}
               style={{ width: `${progress}%` }}
             />
@@ -1913,7 +1933,7 @@ function AccountIdGate({
                 className={cn(
                   "flex items-center gap-2 rounded-md border px-2 py-1.5 transition",
                   !s.done && "border-cyan-400/20 bg-cyan-500/5 text-cyan-300/80",
-                  s.done && s.ok && "border-emerald-400/30 bg-emerald-500/5 text-emerald-200",
+                  s.done && s.ok && "border-cyan-400/30 bg-cyan-500/5 text-cyan-200",
                   s.done && !s.ok && "border-red-500/40 bg-red-500/10 text-red-200",
                 )}
               >
@@ -1933,17 +1953,17 @@ function AccountIdGate({
 
       {approved && meta && (
         <div className="relative mt-3 grid grid-cols-3 gap-2 font-mono text-[11px]">
-          <div className="rounded-md border border-emerald-500/20 bg-emerald-500/5 px-2 py-1.5">
-            <div className="text-[9px] uppercase tracking-[0.2em] text-emerald-400/70">Ativos</div>
-            <div className="text-emerald-100">{meta.assets}</div>
+          <div className="rounded-md border border-cyan-500/20 bg-cyan-500/5 px-2 py-1.5">
+            <div className="text-[9px] uppercase tracking-[0.2em] text-cyan-400/70">Ativos</div>
+            <div className="text-cyan-100">{meta.assets}</div>
           </div>
-          <div className="rounded-md border border-emerald-500/20 bg-emerald-500/5 px-2 py-1.5">
-            <div className="text-[9px] uppercase tracking-[0.2em] text-emerald-400/70">Latência</div>
-            <div className="text-emerald-100">{meta.latency} ms</div>
+          <div className="rounded-md border border-cyan-500/20 bg-cyan-500/5 px-2 py-1.5">
+            <div className="text-[9px] uppercase tracking-[0.2em] text-cyan-400/70">Latência</div>
+            <div className="text-cyan-100">{meta.latency} ms</div>
           </div>
-          <div className="rounded-md border border-emerald-500/20 bg-emerald-500/5 px-2 py-1.5">
-            <div className="text-[9px] uppercase tracking-[0.2em] text-emerald-400/70">Feed</div>
-            <div className="text-emerald-100">{meta.tier}</div>
+          <div className="rounded-md border border-cyan-500/20 bg-cyan-500/5 px-2 py-1.5">
+            <div className="text-[9px] uppercase tracking-[0.2em] text-cyan-400/70">Feed</div>
+            <div className="text-cyan-100">{meta.tier}</div>
           </div>
         </div>
       )}
@@ -2048,33 +2068,33 @@ function AssetPickerDialog({
           type="button"
           disabled={disabled}
           className={cn(
-            "flex w-full items-center gap-2 rounded-md border border-emerald-500/30 bg-black/40 px-2.5 py-2 text-left font-mono text-sm text-emerald-200 outline-none transition hover:border-emerald-400/60 disabled:cursor-not-allowed disabled:opacity-60 lg:w-56",
+            "flex w-full items-center gap-2 rounded-md border border-cyan-500/30 bg-black/40 px-2.5 py-2 text-left font-mono text-sm text-cyan-200 outline-none transition hover:border-cyan-400/60 disabled:cursor-not-allowed disabled:opacity-60 lg:w-56",
           )}
         >
           <AssetIcon item={current} size={22} />
           <span className="min-w-0 flex-1 truncate text-[12.5px]">{current.symbol}</span>
-          <span className="shrink-0 rounded bg-emerald-500/15 px-1.5 py-0.5 font-mono text-[10px] font-bold text-emerald-300 ring-1 ring-emerald-400/30">
+          <span className="shrink-0 rounded bg-cyan-500/15 px-1.5 py-0.5 font-mono text-[10px] font-bold text-cyan-300 ring-1 ring-cyan-400/30">
             +{current.payout}%
           </span>
-          <ChevronDown className="h-3.5 w-3.5 shrink-0 text-emerald-300/70" />
+          <ChevronDown className="h-3.5 w-3.5 shrink-0 text-cyan-300/70" />
         </button>
       </DialogTrigger>
-      <DialogContent className="max-h-[85vh] max-w-md gap-0 overflow-hidden border-emerald-500/30 bg-[#0a0f14] p-0 text-emerald-100 shadow-[0_0_60px_-15px_rgba(16,185,129,0.5)]">
-        <DialogHeader className="border-b border-emerald-500/15 px-4 py-3">
-          <DialogTitle className="font-mono text-[11px] uppercase tracking-[0.25em] text-emerald-400">
+      <DialogContent className="max-h-[85vh] max-w-md gap-0 overflow-hidden border-cyan-500/30 bg-[#0a0f14] p-0 text-cyan-100 shadow-[0_0_60px_-15px_rgba(34,211,238,0.5)]">
+        <DialogHeader className="border-b border-cyan-500/15 px-4 py-3">
+          <DialogTitle className="font-mono text-[11px] uppercase tracking-[0.25em] text-cyan-400">
             Selecionar ativo
           </DialogTitle>
         </DialogHeader>
 
-        <div className="border-b border-emerald-500/10 bg-black/40 p-3">
+        <div className="border-b border-cyan-500/10 bg-black/40 p-3">
           <div className="relative">
-            <Search className="absolute left-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-emerald-400/60" />
+            <Search className="absolute left-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-cyan-400/60" />
             <input
               autoFocus
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Buscar ativo, ticker ou nome…"
-              className="w-full rounded-md border border-emerald-500/20 bg-black/60 py-2 pl-8 pr-3 font-mono text-sm text-emerald-100 outline-none placeholder:text-emerald-500/40 focus:border-emerald-400"
+              className="w-full rounded-md border border-cyan-500/20 bg-black/60 py-2 pl-8 pr-3 font-mono text-sm text-cyan-100 outline-none placeholder:text-cyan-500/40 focus:border-cyan-400"
             />
           </div>
           <div className="mt-2 flex flex-wrap gap-1.5">
@@ -2085,8 +2105,8 @@ function AssetPickerDialog({
                 className={cn(
                   "rounded-md border px-2.5 py-1 font-mono text-[11px] uppercase tracking-wider transition",
                   tab === t
-                    ? "border-emerald-400/60 bg-emerald-500/15 text-emerald-200"
-                    : "border-emerald-500/15 text-emerald-400/70 hover:border-emerald-500/40 hover:text-emerald-200",
+                    ? "border-cyan-400/60 bg-cyan-500/15 text-cyan-200"
+                    : "border-cyan-500/15 text-cyan-400/70 hover:border-cyan-500/40 hover:text-cyan-200",
                 )}
               >
                 {t}
@@ -2100,8 +2120,8 @@ function AssetPickerDialog({
             const items = grouped[cat];
             if (!items.length) return null;
             return (
-              <div key={cat} className="border-b border-emerald-500/10 last:border-0">
-                <div className="sticky top-0 z-10 bg-[#0a0f14]/95 px-4 py-2 font-mono text-[10px] uppercase tracking-[0.25em] text-emerald-400/80 backdrop-blur">
+              <div key={cat} className="border-b border-cyan-500/10 last:border-0">
+                <div className="sticky top-0 z-10 bg-[#0a0f14]/95 px-4 py-2 font-mono text-[10px] uppercase tracking-[0.25em] text-cyan-400/80 backdrop-blur">
                   {cat}
                 </div>
                 <div>
@@ -2115,20 +2135,20 @@ function AssetPickerDialog({
                           setOpen(false);
                         }}
                         className={cn(
-                          "flex w-full items-center gap-3 px-4 py-2.5 text-left transition hover:bg-emerald-500/10",
-                          active && "bg-emerald-500/15",
+                          "flex w-full items-center gap-3 px-4 py-2.5 text-left transition hover:bg-cyan-500/10",
+                          active && "bg-cyan-500/15",
                         )}
                       >
                         <AssetIcon item={a} size={32} />
                         <div className="min-w-0 flex-1">
-                          <div className="truncate font-mono text-sm font-semibold text-emerald-100">
+                          <div className="truncate font-mono text-sm font-semibold text-cyan-100">
                             {a.symbol}
                           </div>
-                          <div className="truncate font-mono text-[10px] uppercase tracking-wider text-emerald-400/60">
+                          <div className="truncate font-mono text-[10px] uppercase tracking-wider text-cyan-400/60">
                             {a.code}
                           </div>
                         </div>
-                        <div className="shrink-0 font-mono text-sm font-bold text-emerald-300">
+                        <div className="shrink-0 font-mono text-sm font-bold text-cyan-300">
                           +{a.payout}%
                         </div>
                       </button>
@@ -2139,7 +2159,7 @@ function AssetPickerDialog({
             );
           })}
           {filtered.length === 0 && (
-            <div className="px-4 py-10 text-center font-mono text-xs text-emerald-400/60">
+            <div className="px-4 py-10 text-center font-mono text-xs text-cyan-400/60">
               Nenhum ativo encontrado para "{query}"
             </div>
           )}
