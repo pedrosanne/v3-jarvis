@@ -89,9 +89,9 @@ export function Panel({
   return (
     <div className={cn("rounded-2xl border border-border bg-card p-4 shadow-[var(--shadow-card)]", className)}>
       {(title || action) && (
-        <div className="mb-3 flex items-center justify-between gap-2">
-          {title && <h3 className="text-sm font-semibold tracking-tight">{title}</h3>}
-          {action}
+        <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+          {title && <h3 className="min-w-0 text-sm font-semibold tracking-tight">{title}</h3>}
+          {action && <div className="flex flex-wrap items-center gap-2">{action}</div>}
         </div>
       )}
       {children}
