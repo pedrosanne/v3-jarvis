@@ -108,7 +108,7 @@ export function AppLayout({ title, children }: { title: string; children: ReactN
 
       <div className="flex min-w-0 flex-1 flex-col">
         {/* Topbar */}
-        <header className="sticky top-0 z-20 flex h-16 items-center gap-3 border-b border-border bg-card/80 px-4 backdrop-blur lg:px-8">
+        <header className="sticky top-0 z-20 flex h-16 items-center gap-2 border-b border-border bg-card/80 px-3 backdrop-blur sm:gap-3 sm:px-4 lg:px-8">
           <button
             className="rounded-md p-2 text-muted-foreground hover:bg-accent lg:hidden"
             onClick={() => setOpen(true)}
@@ -117,7 +117,7 @@ export function AppLayout({ title, children }: { title: string; children: ReactN
             <Menu className="h-5 w-5" />
           </button>
           <div className="min-w-0 flex-1">
-            <h1 className="truncate text-lg font-semibold tracking-tight md:text-xl">{title}</h1>
+            <h1 className="truncate text-base font-semibold tracking-tight sm:text-lg md:text-xl">{title}</h1>
           </div>
           <div className="relative hidden md:block">
             <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
@@ -131,7 +131,7 @@ export function AppLayout({ title, children }: { title: string; children: ReactN
             <span className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-destructive" />
           </button>
           <div
-            className="flex h-9 w-9 items-center justify-center rounded-full bg-primary text-sm font-semibold text-primary-foreground"
+            className="hidden h-9 w-9 items-center justify-center rounded-full bg-primary text-sm font-semibold text-primary-foreground sm:flex"
             title={displayName}
           >
             {initials}
