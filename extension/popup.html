@@ -21,9 +21,15 @@
     <!-- App embed (iframe carrega /iara do app real) -->
     <main id="view-main" class="view">
       <div class="iframe-shell">
-        <div id="loader" class="loader">
-          <div class="loader-bars"><i></i><i></i><i></i><i></i></div>
-          <div class="loader-text">Conectando à Iara…</div>
+        <div id="preloader" class="preloader">
+          <video
+            id="preloaderVideo"
+            src="preloader.mp4"
+            autoplay
+            muted
+            playsinline
+            preload="auto"
+          ></video>
         </div>
         <iframe
           id="appFrame"
