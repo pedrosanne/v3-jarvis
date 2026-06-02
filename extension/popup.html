@@ -2,23 +2,24 @@
 <html lang="pt-BR">
   <head>
     <meta charset="utf-8" />
-    <title>Iara AI</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>J.A.R.V.I.S.</title>
     <link rel="stylesheet" href="popup.css" />
   </head>
   <body>
     <header class="topbar">
       <div class="brand">
         <img src="icon.png" alt="" width="20" height="20" />
-        <span>IARA AI</span>
+        <span>J.A.R.V.I.S.</span>
         <span class="status-dot" title="Online"></span>
       </div>
       <div class="topbar-actions">
+        <button id="reloadFrame" class="icon-btn" title="Recarregar">⟳</button>
         <button id="openTab" class="icon-btn" title="Abrir em nova aba">↗</button>
         <button id="openSettings" class="icon-btn" title="Configurar domínio">⚙</button>
       </div>
     </header>
 
-    <!-- App embed (iframe carrega /iara do app real) -->
     <main id="view-main" class="view">
       <div class="iframe-shell">
         <div id="preloader" class="preloader">
@@ -33,20 +34,18 @@
         </div>
         <iframe
           id="appFrame"
-          title="Iara AI"
-          allow="clipboard-read; clipboard-write; autoplay"
+          title="J.A.R.V.I.S."
+          allow="clipboard-read; clipboard-write; autoplay; microphone; camera"
           referrerpolicy="no-referrer-when-downgrade"
         ></iframe>
       </div>
     </main>
 
-    <!-- Settings overlay -->
     <main id="view-settings" class="view overlay hidden">
       <div class="settings-card">
-        <h1>Domínio do app</h1>
+        <h1>Domínio do JARVIS</h1>
         <p class="muted">
-          Configure o domínio onde a Iara está hospedada (produção, staging ou
-          domínio próprio).
+          Aponte o painel para o deploy do JARVIS (produção, staging ou domínio próprio).
         </p>
         <form id="domainForm" class="stack">
           <label>
@@ -59,6 +58,15 @@
               autocomplete="off"
             />
           </label>
+          <label>
+            Rota inicial
+            <input
+              id="pathInput"
+              type="text"
+              placeholder="/iara"
+              autocomplete="off"
+            />
+          </label>
           <p class="hint" id="domainHint"></p>
           <div class="row">
             <button type="button" id="resetDomain" class="ghost">Padrão</button>
@@ -66,7 +74,7 @@
           </div>
           <p id="domainStatus" class="status hidden"></p>
         </form>
-        <button id="backFromSettings" class="link back">← Voltar para a Iara</button>
+        <button id="backFromSettings" class="link back">← Voltar ao JARVIS</button>
       </div>
     </main>
 

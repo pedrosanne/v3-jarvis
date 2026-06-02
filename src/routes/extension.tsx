@@ -32,7 +32,7 @@ function ExtensionPage() {
       .then((blob) => {
         const a = document.createElement("a");
         a.href = URL.createObjectURL(blob);
-        a.download = "iara-ai-extension.zip";
+        a.download = "jarvis-extension.zip";
         a.click();
         URL.revokeObjectURL(a.href);
       })
@@ -48,18 +48,19 @@ function ExtensionPage() {
               <Chrome className="h-6 w-6" />
             </div>
             <div>
-              <h2 className="text-lg font-semibold">Iara AI para Chrome</h2>
+              <h2 className="text-lg font-semibold">J.A.R.V.I.S. — Painel lateral</h2>
               <p className="text-sm text-muted-foreground">
-                Abra a Iara em 1 clique, de qualquer aba.
+                O JARVIS completo fixo na lateral do navegador, sempre à mão.
               </p>
             </div>
           </div>
 
           <ul className="mt-5 space-y-2 text-sm">
             {[
-              "Lançador focado 100% na Iara AI",
-              "Botão secundário para abrir o app completo",
-              "Domínio configurável — funciona com qualquer deploy",
+              "Side panel nativo do Chrome — fica fixo na lateral da guia",
+              "Acesso direto à Iara AI, Journal, Risk, Analytics e mais",
+              "Pré-loader cinematográfico ao abrir",
+              "Domínio e rota inicial configuráveis",
               "Compatível com Chrome, Edge, Brave, Arc e Opera",
             ].map((f) => (
               <li key={f} className="flex items-start gap-2 text-foreground">
@@ -84,11 +85,12 @@ function ExtensionPage() {
             <h3 className="text-base font-semibold">Domínio personalizado</h3>
           </div>
           <p className="text-sm text-muted-foreground">
-            A extensão aponta por padrão para a URL pública do app. Para usar com seu próprio
-            domínio (produção, staging, self-hosted), clique no ícone <strong>⚙</strong> no canto
-            superior direito do popup e informe a URL base (ex.{" "}
-            <code className="rounded bg-muted px-1.5 py-0.5">https://app.seudominio.com</code>). O
-            valor fica salvo localmente — basta atualizar quando trocar de deploy.
+            A extensão aponta por padrão para a URL pública do JARVIS. Para usar com seu próprio
+            domínio, abra o painel lateral, clique no ícone <strong>⚙</strong> e informe a URL base
+            (ex.{" "}
+            <code className="rounded bg-muted px-1.5 py-0.5">https://app.seudominio.com</code>) e a
+            rota inicial (ex. <code className="rounded bg-muted px-1.5 py-0.5">/iara</code> ou{" "}
+            <code className="rounded bg-muted px-1.5 py-0.5">/</code>).
           </p>
         </section>
 
@@ -104,9 +106,13 @@ function ExtensionPage() {
               Ative o <strong>Modo do desenvolvedor</strong> no canto superior direito.
             </li>
             <li>
-              Clique em <strong>Carregar sem compactação</strong> e selecione a pasta descompactada.
+              Clique em <strong>Carregar sem compactação</strong> e selecione a pasta
+              descompactada.
             </li>
-            <li>Fixe a extensão na barra. Clique nela e use o botão grande para abrir a Iara.</li>
+            <li>
+              Fixe a extensão na barra e clique no ícone — o JARVIS abre no <strong>painel
+              lateral</strong> da guia atual. Arraste a borda para ajustar a largura.
+            </li>
           </ol>
         </section>
       </div>

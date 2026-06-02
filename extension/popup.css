@@ -12,8 +12,12 @@
   --radius: 8px;
 }
 * { box-sizing: border-box; }
-html, body { margin: 0; padding: 0; }
-html, body { width: 780px; height: 600px; overflow: hidden; }
+html, body {
+  margin: 0; padding: 0;
+  width: 100%; height: 100%;
+  min-width: 320px;
+  overflow: hidden;
+}
 body {
   font: 13px/1.5 ui-monospace, "SF Mono", Menlo, Consolas, monospace;
   color: var(--fg);
@@ -25,14 +29,13 @@ body {
   flex-direction: column;
 }
 
-/* Topbar */
 .topbar {
   display: flex; align-items: center; justify-content: space-between;
   padding: 8px 12px;
   border-bottom: 1px solid var(--border);
   background: rgba(5,10,16,.85); backdrop-filter: blur(6px);
   flex-shrink: 0;
-  height: 40px;
+  height: 44px;
 }
 .brand {
   display: flex; align-items: center; gap: 8px;
@@ -54,8 +57,8 @@ body {
 .topbar-actions { display: flex; gap: 4px; }
 .icon-btn {
   background: transparent; border: 1px solid var(--border);
-  color: var(--fg); width: 26px; height: 26px;
-  border-radius: 6px; cursor: pointer; font-size: 13px;
+  color: var(--fg); width: 28px; height: 28px;
+  border-radius: 6px; cursor: pointer; font-size: 14px;
   display: inline-flex; align-items: center; justify-content: center;
   transition: all .15s;
 }
@@ -65,12 +68,10 @@ body {
   box-shadow: 0 0 12px -2px rgba(34,211,238,.4);
 }
 
-/* Main view fills remaining space */
 .view { flex: 1; min-height: 0; padding: 0; position: relative; }
 .hidden { display: none !important; }
 .muted { color: var(--muted); }
 
-/* Iframe shell — fills the popup */
 .iframe-shell {
   position: relative;
   width: 100%; height: 100%;
@@ -83,7 +84,6 @@ body {
   color-scheme: dark;
 }
 
-/* Video preloader overlay shown until the intro video finishes */
 .preloader {
   position: absolute; inset: 0;
   z-index: 2;
@@ -99,29 +99,28 @@ body {
   pointer-events: none;
 }
 
-/* Settings overlay */
 .overlay {
-  position: absolute; inset: 40px 0 0 0;
-  background: rgba(5,8,16,.92); backdrop-filter: blur(8px);
+  position: absolute; inset: 44px 0 0 0;
+  background: rgba(5,8,16,.94); backdrop-filter: blur(8px);
   z-index: 10;
-  padding: 24px;
+  padding: 18px;
   overflow-y: auto;
 }
 .settings-card {
   max-width: 480px; margin: 0 auto;
   border: 1px solid var(--border);
   background: rgba(10,15,26,.7);
-  border-radius: 12px; padding: 22px;
+  border-radius: 12px; padding: 18px;
   box-shadow: 0 12px 40px -16px rgba(34,211,238,.35);
 }
 .settings-card h1 {
-  font-size: 16px; margin: 0 0 6px;
+  font-size: 15px; margin: 0 0 6px;
   color: var(--primary); letter-spacing: .12em; text-transform: uppercase;
 }
 .stack { display: flex; flex-direction: column; gap: 12px; margin-top: 14px; }
 .stack label {
   display: flex; flex-direction: column; gap: 6px;
-  font-size: 11px; letter-spacing: .15em; text-transform: uppercase;
+  font-size: 10px; letter-spacing: .15em; text-transform: uppercase;
   color: var(--muted);
 }
 .stack input {
@@ -136,7 +135,7 @@ body {
   box-shadow: 0 0 0 3px rgba(34,211,238,.15);
 }
 .hint { font-size: 11px; color: var(--muted); margin: 0; }
-.row { display: flex; gap: 8px; justify-content: flex-end; }
+.row { display: flex; gap: 8px; justify-content: flex-end; flex-wrap: wrap; }
 button { font: inherit; cursor: pointer; }
 .primary {
   background: var(--primary); color: var(--primary-fg);

@@ -1,11 +1,11 @@
-// Iara AI extension popup — embeds /iara directly via iframe.
-// The popup is sized to Chrome's max (780x600) and the entire Iara experience
-// (broker check, account ID, print upload, slide-to-hack, terminal, signals)
-// runs inside the iframe with full functionality.
+// JARVIS side panel — embeds the full app via iframe.
+// Rebranded from Iara to JARVIS. The panel auto-resizes to whatever width
+// the user drags the Chrome side panel to.
 
-const DEFAULT_APP_URL = "https://v1-jarvis.lovable.app";
-const IARA_PATH = "/iara";
-const STORAGE_KEY = "iara_app_url";
+const DEFAULT_APP_URL = "https://v3-jarvis.lovable.app";
+const DEFAULT_PATH = "/iara";
+const URL_KEY = "jarvis_app_url";
+const PATH_KEY = "jarvis_app_path";
 
 const $ = (id) => document.getElementById(id);
 
@@ -15,21 +15,26 @@ function normalize(url) {
   if (!/^https?:\/\//i.test(u)) u = "https://" + u;
   return u.replace(/\/+$/, "");
 }
+function normalizePath(p) {
+  if (!p) return DEFAULT_PATH;
+  let path = p.trim();
+  if (!path.startsWith("/")) path = "/" + path;
+  return path.replace(/\/+$/, "") || "/";
+}
 
-function getStoredUrl() {
+function getStored(key) {
   return new Promise((resolve) => {
     try {
-      chrome.storage.local.get([STORAGE_KEY], (r) => resolve(r[STORAGE_KEY] || ""));
+      chrome.storage.local.get([key], (r) => resolve(r[key] || ""));
     } catch {
       resolve("");
     }
   });
 }
-
-function setStoredUrl(url) {
+function setStored(key, value) {
   return new Promise((resolve) => {
     try {
-      chrome.storage.local.set({ [STORAGE_KEY]: url }, resolve);
+      chrome.storage.local.set({ [key]: value }, resolve);
     } catch {
       resolve();
     }
@@ -37,7 +42,10 @@ function setStoredUrl(url) {
 }
 
 async function currentBase() {
-  return (await getStoredUrl()) || DEFAULT_APP_URL;
+  return (await getStored(URL_KEY)) || DEFAULT_APP_URL;
+}
+async function currentPath() {
+  return (await getStored(PATH_KEY)) || DEFAULT_PATH;
 }
 
 function openTab(url) {
@@ -48,17 +56,15 @@ function openTab(url) {
   }
 }
 
-async function loadIara() {
+async function loadJarvis() {
   const base = await currentBase();
-  const url = base + IARA_PATH;
+  const path = await currentPath();
+  const url = base + path;
   const iframe = $("appFrame");
   const preloader = $("preloader");
   const video = $("preloaderVideo");
 
-  // Reset overlay state
   preloader.classList.remove("fade-out", "hidden");
-
-  // Start loading the iframe immediately in the background
   iframe.src = url;
 
   let finished = false;
@@ -69,14 +75,10 @@ async function loadIara() {
     setTimeout(() => preloader.classList.add("hidden"), 500);
   };
 
-  // Hide overlay when the intro video ends
   video.addEventListener("ended", finish, { once: true });
   video.addEventListener("error", finish, { once: true });
-
-  // Safety fallback in case the video can't play
   setTimeout(finish, 15000);
 
-  // Attempt autoplay (muted is already set in HTML for autoplay policy)
   try {
     const p = video.play();
     if (p && typeof p.catch === "function") p.catch(() => finish());
@@ -85,16 +87,18 @@ async function loadIara() {
   }
 }
 
-// --- Topbar actions ---
 $("openTab").addEventListener("click", async () => {
-  const base = await currentBase();
-  openTab(base + IARA_PATH);
+  openTab((await currentBase()) + (await currentPath()));
+});
+
+$("reloadFrame").addEventListener("click", () => {
+  loadJarvis();
 });
 
 $("openSettings").addEventListener("click", async () => {
-  const input = $("domainInput");
-  input.value = await currentBase();
-  $("domainHint").textContent = `Padrão: ${DEFAULT_APP_URL}`;
+  $("domainInput").value = await currentBase();
+  $("pathInput").value = await currentPath();
+  $("domainHint").textContent = `Padrão: ${DEFAULT_APP_URL}${DEFAULT_PATH}`;
   $("domainStatus").className = "status hidden";
   $("view-settings").classList.remove("hidden");
 });
@@ -104,10 +108,12 @@ $("backFromSettings").addEventListener("click", () => {
 });
 
 $("resetDomain").addEventListener("click", async () => {
-  await setStoredUrl("");
+  await setStored(URL_KEY, "");
+  await setStored(PATH_KEY, "");
   $("domainInput").value = DEFAULT_APP_URL;
+  $("pathInput").value = DEFAULT_PATH;
   const s = $("domainStatus");
-  s.textContent = "Domínio restaurado para o padrão.";
+  s.textContent = "Restaurado para o padrão.";
   s.className = "status ok";
 });
 
@@ -115,6 +121,7 @@ $("domainForm").addEventListener("submit", async (e) => {
   e.preventDefault();
   const s = $("domainStatus");
   const url = normalize($("domainInput").value);
+  const path = normalizePath($("pathInput").value);
   try {
     new URL(url);
   } catch {
@@ -122,14 +129,12 @@ $("domainForm").addEventListener("submit", async (e) => {
     s.className = "status err";
     return;
   }
-  await setStoredUrl(url);
-  s.textContent = `Salvo · usando ${url}`;
+  await setStored(URL_KEY, url);
+  await setStored(PATH_KEY, path);
+  s.textContent = `Salvo · ${url}${path}`;
   s.className = "status ok";
-  $("domainInput").value = url;
-  // Recarrega a Iara com o novo domínio e fecha o painel
-  await loadIara();
+  await loadJarvis();
   setTimeout(() => $("view-settings").classList.add("hidden"), 600);
 });
 
-// Boot
-loadIara();
+loadJarvis();
