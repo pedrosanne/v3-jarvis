@@ -1,23 +1,13 @@
-// Iara AI extension popup — focused launcher with configurable domain.
-//
-// The extension does NOT embed the app: the Iara experience needs real-time
-// loops, image paste, drag&drop, and a big canvas that won't fit a 360px popup.
-// Instead we open /iara in a new tab, on a configurable base URL so the same
-// extension works against any deployment (production, staging, custom domain,
-// self-hosted).
+// Iara AI extension popup — embeds /iara directly via iframe.
+// The popup is sized to Chrome's max (780x600) and the entire Iara experience
+// (broker check, account ID, print upload, slide-to-hack, terminal, signals)
+// runs inside the iframe with full functionality.
 
 const DEFAULT_APP_URL = "https://v1-jarvis.lovable.app";
 const IARA_PATH = "/iara";
 const STORAGE_KEY = "iara_app_url";
 
 const $ = (id) => document.getElementById(id);
-const views = {
-  main: $("view-main"),
-  settings: $("view-settings"),
-};
-function show(name) {
-  Object.entries(views).forEach(([k, el]) => el.classList.toggle("hidden", k !== name));
-}
 
 function normalize(url) {
   if (!url) return "";
@@ -58,15 +48,30 @@ function openTab(url) {
   }
 }
 
-// --- ACTIONS ---
-$("openIara").addEventListener("click", async () => {
+async function loadIara() {
+  const base = await currentBase();
+  const url = base + IARA_PATH;
+  const iframe = $("appFrame");
+  const loader = $("loader");
+  loader.classList.remove("fade-out");
+  // Cache-bust opcional para garantir recarga após mudança de domínio
+  iframe.src = url;
+  // Esconde o loader quando o iframe terminar de carregar (ou após timeout)
+  let hidden = false;
+  const hide = () => {
+    if (hidden) return;
+    hidden = true;
+    loader.classList.add("fade-out");
+    setTimeout(() => loader.classList.add("hidden"), 400);
+  };
+  iframe.addEventListener("load", hide, { once: true });
+  setTimeout(hide, 6000); // fallback se o evento load demorar
+}
+
+// --- Topbar actions ---
+$("openTab").addEventListener("click", async () => {
   const base = await currentBase();
   openTab(base + IARA_PATH);
-});
-
-$("openFullApp").addEventListener("click", async () => {
-  const base = await currentBase();
-  openTab(base + "/");
 });
 
 $("openSettings").addEventListener("click", async () => {
@@ -74,10 +79,12 @@ $("openSettings").addEventListener("click", async () => {
   input.value = await currentBase();
   $("domainHint").textContent = `Padrão: ${DEFAULT_APP_URL}`;
   $("domainStatus").className = "status hidden";
-  show("settings");
+  $("view-settings").classList.remove("hidden");
 });
 
-$("backFromSettings").addEventListener("click", () => show("main"));
+$("backFromSettings").addEventListener("click", () => {
+  $("view-settings").classList.add("hidden");
+});
 
 $("resetDomain").addEventListener("click", async () => {
   await setStoredUrl("");
@@ -92,7 +99,6 @@ $("domainForm").addEventListener("submit", async (e) => {
   const s = $("domainStatus");
   const url = normalize($("domainInput").value);
   try {
-    // Validate
     new URL(url);
   } catch {
     s.textContent = "URL inválida.";
@@ -103,6 +109,10 @@ $("domainForm").addEventListener("submit", async (e) => {
   s.textContent = `Salvo · usando ${url}`;
   s.className = "status ok";
   $("domainInput").value = url;
+  // Recarrega a Iara com o novo domínio e fecha o painel
+  await loadIara();
+  setTimeout(() => $("view-settings").classList.add("hidden"), 600);
 });
 
-show("main");
+// Boot
+loadIara();
