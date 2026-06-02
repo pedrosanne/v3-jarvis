@@ -1,17 +1,22 @@
 {
   "manifest_version": 3,
-  "name": "Iara AI — Scalper Neural",
-  "version": "2.1.0",
-  "description": "A Iara AI completa dentro da extensão — print, hack, sinal em segundos.",
-  "permissions": ["storage"],
+  "name": "J.A.R.V.I.S. — Neural Trading OS",
+  "version": "3.0.0",
+  "description": "Painel lateral do JARVIS — Iara AI, Journal, Risk, Analytics direto na lateral do navegador.",
+  "permissions": ["storage", "sidePanel"],
+  "side_panel": {
+    "default_path": "popup.html"
+  },
   "action": {
-    "default_popup": "popup.html",
+    "default_title": "Abrir JARVIS",
     "default_icon": {
       "16": "icon.png",
       "48": "icon.png",
       "128": "icon.png"
-    },
-    "default_title": "Iara AI"
+    }
+  },
+  "background": {
+    "service_worker": "background.js"
   },
   "icons": {
     "16": "icon.png",
