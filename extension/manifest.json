@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Iara AI — Scalper Neural",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "A Iara AI completa dentro da extensão — print, hack, sinal em segundos.",
   "permissions": ["storage"],
   "action": {

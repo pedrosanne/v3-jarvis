@@ -52,20 +52,37 @@ async function loadIara() {
   const base = await currentBase();
   const url = base + IARA_PATH;
   const iframe = $("appFrame");
-  const loader = $("loader");
-  loader.classList.remove("fade-out");
-  // Cache-bust opcional para garantir recarga após mudança de domínio
+  const preloader = $("preloader");
+  const video = $("preloaderVideo");
+
+  // Reset overlay state
+  preloader.classList.remove("fade-out", "hidden");
+
+  // Start loading the iframe immediately in the background
   iframe.src = url;
-  // Esconde o loader quando o iframe terminar de carregar (ou após timeout)
-  let hidden = false;
-  const hide = () => {
-    if (hidden) return;
-    hidden = true;
-    loader.classList.add("fade-out");
-    setTimeout(() => loader.classList.add("hidden"), 400);
+
+  let finished = false;
+  const finish = () => {
+    if (finished) return;
+    finished = true;
+    preloader.classList.add("fade-out");
+    setTimeout(() => preloader.classList.add("hidden"), 500);
   };
-  iframe.addEventListener("load", hide, { once: true });
-  setTimeout(hide, 6000); // fallback se o evento load demorar
+
+  // Hide overlay when the intro video ends
+  video.addEventListener("ended", finish, { once: true });
+  video.addEventListener("error", finish, { once: true });
+
+  // Safety fallback in case the video can't play
+  setTimeout(finish, 15000);
+
+  // Attempt autoplay (muted is already set in HTML for autoplay policy)
+  try {
+    const p = video.play();
+    if (p && typeof p.catch === "function") p.catch(() => finish());
+  } catch {
+    finish();
+  }
 }
 
 // --- Topbar actions ---
