@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "Iara AI — Scalper Neural",
-  "version": "1.1.0",
-  "description": "Abra a Iara AI direto do navegador. Sinal de scalp em segundos. Domínio configurável.",
+  "version": "2.0.0",
+  "description": "A Iara AI completa dentro da extensão — print, hack, sinal em segundos.",
   "permissions": ["storage"],
   "action": {
     "default_popup": "popup.html",
