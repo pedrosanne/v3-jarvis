@@ -1073,6 +1073,7 @@ function IaraPage() {
                     onChange={(v) => {
                       setAsset(v);
                       setTouchedSelect(true);
+                      setAssetPicked(true);
                     }}
                     disabled={running || selectsLocked}
                   />
@@ -1084,6 +1085,7 @@ function IaraPage() {
                     onChange={(t) => {
                       setTf(t);
                       setTouchedSelect(true);
+                      setTfPicked(true);
                     }}
                     disabled={running || selectsLocked}
                     locked={selectsLocked}
