@@ -177,7 +177,7 @@ function IaraPage() {
   const accountSectionRef = useRef<HTMLDivElement>(null);
   const printSectionRef = useRef<HTMLDivElement>(null);
   const slideSectionRef = useRef<HTMLDivElement>(null);
-  function scrollToRef(ref: React.RefObject<HTMLDivElement | null>) {
+  function scrollToRef(ref: RefObject<HTMLDivElement | null>) {
     if (typeof window === "undefined") return;
     const el = ref.current;
     if (!el) return;
