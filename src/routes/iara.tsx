@@ -918,7 +918,7 @@ function IaraPage() {
                 )}
 
               </div>
-              <div className="grid w-full grid-cols-2 gap-2 sm:gap-3 lg:flex lg:w-auto lg:flex-wrap lg:items-end">
+              <div ref={slideSectionRef} className="grid w-full grid-cols-2 gap-2 sm:gap-3 lg:flex lg:w-auto lg:flex-wrap lg:items-end">
                 <Field label="Ativo" locked={selectsLocked} hint={!brokerApproved ? "Verifique a corretora" : "Envie o print primeiro"}>
                   <AssetPickerDialog
                     value={asset}
