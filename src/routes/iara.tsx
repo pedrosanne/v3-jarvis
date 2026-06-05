@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useMemo, useRef, useState, type RefObject } from "react";
 import { AppLayout } from "@/components/app-layout";
+import { JarvisVoice, type JarvisStep } from "@/components/jarvis-voice";
 import { cn } from "@/lib/utils";
 import {
   Activity,
@@ -347,6 +348,39 @@ function IaraPage() {
   const printLocked = !brokerApproved || !accountApproved;
   const selectsLocked = !brokerApproved || !accountApproved || !chartPrint;
   const slideLocked = !brokerApproved || !accountApproved || !chartPrint || !touchedSelect;
+
+  // JARVIS voice guide — etapa ativa em foco
+  const [voiceMuted, setVoiceMuted] = useState(false);
+  const [voiceArmed, setVoiceArmed] = useState(false);
+  const [assetPicked, setAssetPicked] = useState(false);
+  const [tfPicked, setTfPicked] = useState(false);
+  useEffect(() => {
+    if (voiceArmed) return;
+    const arm = () => {
+      setVoiceArmed(true);
+      window.removeEventListener("pointerdown", arm);
+      window.removeEventListener("keydown", arm);
+    };
+    window.addEventListener("pointerdown", arm, { once: true });
+    window.addEventListener("keydown", arm, { once: true });
+    return () => {
+      window.removeEventListener("pointerdown", arm);
+      window.removeEventListener("keydown", arm);
+    };
+  }, [voiceArmed]);
+  const activeStep: JarvisStep | null = !voiceArmed
+    ? null
+    : !brokerApproved
+      ? "broker-url"
+      : !accountApproved
+        ? "account-id"
+        : !chartPrint
+          ? "screenshot"
+          : !assetPicked
+            ? "asset"
+            : !tfPicked
+              ? "timeframe"
+              : "slide-hack";
 
   // Auto-scroll lento enquanto a análise roda
   const scrollTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -852,6 +886,7 @@ function IaraPage() {
           <div className="relative overflow-hidden rounded-2xl border border-cyan-500/20 bg-[#070b10] p-4 text-cyan-200 shadow-[0_0_60px_-15px_rgba(34,211,238,0.4)] sm:p-5">
             <div className="absolute inset-0 opacity-[0.08] [background-image:linear-gradient(rgba(34,211,238,.6)_1px,transparent_1px),linear-gradient(90deg,rgba(34,211,238,.6)_1px,transparent_1px)] [background-size:24px_24px]" />
             <div className="relative flex flex-col gap-4">
+              <JarvisVoice step={activeStep} muted={voiceMuted} onToggleMute={() => setVoiceMuted((m) => !m)} />
               <BrokerUrlGate
                 url={brokerUrl}
                 setUrl={setBrokerUrl}
@@ -1038,6 +1073,7 @@ function IaraPage() {
                     onChange={(v) => {
                       setAsset(v);
                       setTouchedSelect(true);
+                      setAssetPicked(true);
                     }}
                     disabled={running || selectsLocked}
                   />
@@ -1049,6 +1085,7 @@ function IaraPage() {
                     onChange={(t) => {
                       setTf(t);
                       setTouchedSelect(true);
+                      setTfPicked(true);
                     }}
                     disabled={running || selectsLocked}
                     locked={selectsLocked}
