@@ -254,6 +254,18 @@ function IaraPage() {
   }
   useEffect(() => () => stopAutoScroll(), []);
 
+  // Auto-scroll para a próxima etapa quando cada uma é concluída
+  useEffect(() => {
+    if (brokerStatus === "approved") scrollToRef(accountSectionRef);
+  }, [brokerStatus]);
+  useEffect(() => {
+    if (accountStatus === "approved") scrollToRef(printSectionRef);
+  }, [accountStatus]);
+  useEffect(() => {
+    if (chartPrint) scrollToRef(slideSectionRef);
+  }, [chartPrint]);
+
+
   // Broker verification ----------------------------------------------------
   const ALLOWED_BROKERS = ["forexoficial.com", "ilov.pro", "deffy.com.br"];
 
