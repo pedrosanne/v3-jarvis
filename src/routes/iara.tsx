@@ -1607,10 +1607,15 @@ function BrokerUrlGate({
         ? "border-cyan-400/50 shadow-[0_0_40px_-10px_rgba(34,211,238,0.6)]"
         : "border-cyan-500/30";
 
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   function trigger(value: string) {
     setUrl(value);
-    if (value.trim().length >= 4) onStart(value);
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    if (value.trim().length >= 4) {
+      debounceRef.current = setTimeout(() => onStart(value), 350);
+    }
   }
+
 
   return (
     <div
