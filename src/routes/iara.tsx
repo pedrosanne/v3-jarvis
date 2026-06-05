@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useMemo, useRef, useState, type RefObject } from "react";
 import { AppLayout } from "@/components/app-layout";
+import { JarvisVoice, type JarvisStep } from "@/components/jarvis-voice";
 import { cn } from "@/lib/utils";
 import {
   Activity,
