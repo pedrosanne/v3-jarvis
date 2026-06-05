@@ -786,6 +786,8 @@ function IaraPage() {
               >
 
               <div
+                ref={printSectionRef}
+
                 onDragOver={(e) => {
                   e.preventDefault();
                   setDragOver(true);
