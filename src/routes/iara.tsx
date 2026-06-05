@@ -173,6 +173,22 @@ function IaraPage() {
   // Sequencial reveal dos painéis (Terminal → Data Stream → Notícias)
   const [revealStep, setRevealStep] = useState(0);
   const revealTimersRef = useRef<ReturnType<typeof setTimeout>[]>([]);
+  // Auto-scroll entre etapas do funil
+  const accountSectionRef = useRef<HTMLDivElement>(null);
+  const printSectionRef = useRef<HTMLDivElement>(null);
+  const slideSectionRef = useRef<HTMLDivElement>(null);
+  function scrollToRef(ref: React.RefObject<HTMLDivElement>) {
+    if (typeof window === "undefined") return;
+    const el = ref.current;
+    if (!el) return;
+    window.setTimeout(() => {
+      const rect = el.getBoundingClientRect();
+      const top = window.scrollY + rect.top - 90;
+      window.scrollTo({ top, behavior: "smooth" });
+      sfxWhoosh();
+    }, 350);
+  }
+
 
 
   // Broker URL gate
