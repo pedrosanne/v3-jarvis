@@ -755,11 +755,13 @@ function IaraPage() {
               />
 
               <div
+                ref={accountSectionRef}
                 className={cn(
                   "transition-opacity duration-500",
                   !brokerApproved && "pointer-events-none select-none opacity-40 blur-[1px]",
                 )}
               >
+
                 <AccountIdGate
                   accountId={accountId}
                   setAccountId={setAccountId}
