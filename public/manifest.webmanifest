@@ -1,0 +1,27 @@
+{
+  "name": "J.A.R.V.I.S. — Neural Trading OS",
+  "short_name": "JARVIS",
+  "description": "Scalper neural assistant for day traders. Iara AI, Journal, Risk and Analytics in one app.",
+  "start_url": "/iara",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#05080f",
+  "theme_color": "#0a0f1a",
+  "categories": ["finance", "productivity", "utilities"],
+  "lang": "pt-BR",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
