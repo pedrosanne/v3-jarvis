@@ -10,8 +10,8 @@ import { useProfile, useUpdateProfile } from "@/hooks/use-profile";
 export const Route = createFileRoute("/settings")({
   head: () => ({
     meta: [
-      { title: "Settings — DayTrader Pro" },
-      { name: "description", content: "Manage your account, brokers, and risk defaults." },
+      { title: "Ajustes — J.A.R.V.I.S." },
+      { name: "description", content: "Gerencie sua conta, corretoras e padrões de risco." },
     ],
   }),
   component: Settings,
@@ -60,9 +60,9 @@ function Settings() {
   }
 
   return (
-    <AppLayout title="Settings">
+    <AppLayout title="Ajustes">
       <div className="mx-auto max-w-4xl space-y-6">
-        <Panel title="Profile">
+        <Panel title="Perfil">
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <label className="flex flex-col gap-1.5">
               <span className="text-xs font-medium text-muted-foreground">Nome</span>

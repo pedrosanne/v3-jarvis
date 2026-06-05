@@ -3,14 +3,14 @@ import { useMemo, useState } from "react";
 import { AppLayout } from "@/components/app-layout";
 import { BarsChart, DonutChart, EquityCurveChart, Panel } from "@/components/dashboard-widgets";
 import { FilterPanel, applyFilters, defaultFilters } from "@/components/filter-panel";
-import { computeKPIs, groupBy } from "@/lib/trading-data";
+import { computeKPIs, groupBy, sideLabel } from "@/lib/trading-data";
 import { useTrades } from "@/hooks/use-trades";
 
 export const Route = createFileRoute("/analytics")({
   head: () => ({
     meta: [
-      { title: "Analytics — DayTrader Pro" },
-      { name: "description", content: "Deep analytics on strategy, asset, and session performance." },
+      { title: "Análises — J.A.R.V.I.S." },
+      { name: "description", content: "Análises detalhadas por estratégia, ativo e expiração em opções binárias." },
     ],
   }),
   component: Analytics,
@@ -29,36 +29,36 @@ function Analytics() {
     name,
     value: arr.length,
   }));
-  const bySession = Array.from(groupBy(trades, (t) => t.session).entries()).map(([session, arr]) => ({
+  const byExpiration = Array.from(groupBy(trades, (t) => t.session).entries()).map(([session, arr]) => ({
     session,
     pnl: +arr.reduce((s, t) => s + t.pnl, 0).toFixed(2),
   }));
   const sideSplit = Array.from(groupBy(trades, (t) => t.side).entries()).map(([name, arr]) => ({
-    name,
+    name: sideLabel(name),
     value: arr.length,
   }));
 
   return (
-    <AppLayout title="Analytics">
+    <AppLayout title="Análises">
       <div className="space-y-6">
         <FilterPanel filters={filters} onChange={setFilters} />
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
-          <Panel title="Equity Curve" className="lg:col-span-2">
+          <Panel title="Curva de Capital" className="lg:col-span-2">
             <EquityCurveChart data={k.equityCurve} />
           </Panel>
-          <Panel title="Long vs Short">
+          <Panel title="CALL vs PUT">
             <DonutChart data={sideSplit} />
           </Panel>
         </div>
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-          <Panel title="Asset Performance">
+          <Panel title="Desempenho por Ativo">
             <BarsChart data={byAsset} xKey="asset" yKey="pnl" horizontal />
           </Panel>
-          <Panel title="Session P&L">
-            <BarsChart data={bySession} xKey="session" yKey="pnl" />
+          <Panel title="Resultado por Expiração">
+            <BarsChart data={byExpiration} xKey="session" yKey="pnl" />
           </Panel>
         </div>
-        <Panel title="Trades by Strategy">
+        <Panel title="Operações por Estratégia">
           <DonutChart data={byStrategy} />
         </Panel>
       </div>
