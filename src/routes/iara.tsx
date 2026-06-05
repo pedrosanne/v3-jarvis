@@ -349,6 +349,39 @@ function IaraPage() {
   const selectsLocked = !brokerApproved || !accountApproved || !chartPrint;
   const slideLocked = !brokerApproved || !accountApproved || !chartPrint || !touchedSelect;
 
+  // JARVIS voice guide — etapa ativa em foco
+  const [voiceMuted, setVoiceMuted] = useState(false);
+  const [voiceArmed, setVoiceArmed] = useState(false);
+  const [assetPicked, setAssetPicked] = useState(false);
+  const [tfPicked, setTfPicked] = useState(false);
+  useEffect(() => {
+    if (voiceArmed) return;
+    const arm = () => {
+      setVoiceArmed(true);
+      window.removeEventListener("pointerdown", arm);
+      window.removeEventListener("keydown", arm);
+    };
+    window.addEventListener("pointerdown", arm, { once: true });
+    window.addEventListener("keydown", arm, { once: true });
+    return () => {
+      window.removeEventListener("pointerdown", arm);
+      window.removeEventListener("keydown", arm);
+    };
+  }, [voiceArmed]);
+  const activeStep: JarvisStep | null = !voiceArmed
+    ? null
+    : !brokerApproved
+      ? "broker-url"
+      : !accountApproved
+        ? "account-id"
+        : !chartPrint
+          ? "screenshot"
+          : !assetPicked
+            ? "asset"
+            : !tfPicked
+              ? "timeframe"
+              : "slide-hack";
+
   // Auto-scroll lento enquanto a análise roda
   const scrollTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   function startAutoScroll() {
