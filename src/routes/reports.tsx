@@ -10,8 +10,8 @@ import { useTrades } from "@/hooks/use-trades";
 export const Route = createFileRoute("/reports")({
   head: () => ({
     meta: [
-      { title: "Reports — DayTrader Pro" },
-      { name: "description", content: "Monthly performance reports for your trading account." },
+      { title: "Relatórios — J.A.R.V.I.S." },
+      { name: "description", content: "Relatórios mensais de desempenho em opções binárias." },
     ],
   }),
   component: Reports,
@@ -41,30 +41,30 @@ function Reports() {
   }, [trades]);
 
   return (
-    <AppLayout title="Monthly Reports">
+    <AppLayout title="Relatórios Mensais">
       <div className="space-y-6">
         <FilterPanel filters={filters} onChange={setFilters} />
         <Panel
-          title="Monthly P&L"
+          title="Resultado Mensal"
           action={
             <button className="inline-flex h-9 items-center gap-1.5 rounded-md border border-input bg-background px-3 text-sm font-medium hover:bg-accent">
-              <Download className="h-4 w-4" /> Export PDF
+              <Download className="h-4 w-4" /> Exportar PDF
             </button>
           }
         >
           <BarsChart data={monthly.map((m) => ({ month: m.key, pnl: m.pnl }))} xKey="month" yKey="pnl" />
         </Panel>
-        <Panel title="Monthly Summary">
+        <Panel title="Resumo Mensal">
           <div className="overflow-x-auto">
             <table className="w-full min-w-[640px] text-sm">
               <thead>
                 <tr className="border-b border-border text-left text-xs uppercase tracking-wide text-muted-foreground">
-                  <th className="py-2 pr-4 font-medium">Month</th>
-                  <th className="py-2 pr-4 font-medium">Trades</th>
-                  <th className="py-2 pr-4 font-medium">Wins</th>
-                  <th className="py-2 pr-4 font-medium">Losses</th>
-                  <th className="py-2 pr-4 font-medium">Win Rate</th>
-                  <th className="py-2 pr-4 text-right font-medium">P&L</th>
+                  <th className="py-2 pr-4 font-medium">Mês</th>
+                  <th className="py-2 pr-4 font-medium">Operações</th>
+                  <th className="py-2 pr-4 font-medium">Ganhos</th>
+                  <th className="py-2 pr-4 font-medium">Perdas</th>
+                  <th className="py-2 pr-4 font-medium">Taxa de Acerto</th>
+                  <th className="py-2 pr-4 text-right font-medium">Resultado</th>
                   <th className="py-2 pr-2 text-right font-medium"></th>
                 </tr>
               </thead>

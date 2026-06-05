@@ -34,7 +34,7 @@ export function rowToTrade(r: TradeRow): Trade {
     asset: r.asset,
     side: r.side,
     strategy: r.strategy,
-    session: (r.session as Trade["session"]) ?? "New York",
+    session: (r.session as Trade["session"]) ?? "M5",
     broker: r.broker,
     account: r.account,
     qty: Number(r.qty),
@@ -82,15 +82,10 @@ export type NewTradeInput = {
   notes?: string | null;
 };
 
+// Opções binárias: pnl = exit - entry - fees; rr armazena o payout %
 export function computePnl(t: NewTradeInput): { pnl: number; rr: number } {
-  const direction = t.side === "Long" ? 1 : -1;
-  const grossPnl = (t.exit_price - t.entry_price) * direction * t.qty;
-  const pnl = +(grossPnl - (t.fees ?? 0)).toFixed(2);
-  let rr = 0;
-  if (t.stop_loss && t.stop_loss !== t.entry_price) {
-    const risk = Math.abs(t.entry_price - t.stop_loss) * t.qty;
-    if (risk > 0) rr = +(Math.abs(grossPnl) / risk).toFixed(2);
-  }
+  const pnl = +(t.exit_price - t.entry_price - (t.fees ?? 0)).toFixed(2);
+  const rr = t.take_profit ? Number(t.take_profit) : 0; // payout %
   return { pnl, rr };
 }
 

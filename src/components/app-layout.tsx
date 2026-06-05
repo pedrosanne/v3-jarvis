@@ -22,15 +22,15 @@ import { useAuth } from "@/hooks/use-auth";
 import { useProfile } from "@/hooks/use-profile";
 
 const NAV = [
-  { to: "/", label: "Command", icon: LayoutDashboard },
-  { to: "/iara", label: "Iara AI", icon: Brain },
-  { to: "/journal", label: "Journal", icon: BookOpen },
-  { to: "/entry", label: "Entry", icon: PlusCircle },
-  { to: "/analytics", label: "Analytics", icon: BarChart3 },
-  { to: "/risk", label: "Risk", icon: ShieldAlert },
-  { to: "/reports", label: "Reports", icon: FileText },
-  { to: "/extension", label: "Extension", icon: Chrome },
-  { to: "/settings", label: "Settings", icon: Settings },
+  { to: "/", label: "Painel", icon: LayoutDashboard },
+  { to: "/iara", label: "Jarvis IA", icon: Brain },
+  { to: "/journal", label: "Diário", icon: BookOpen },
+  { to: "/entry", label: "Registrar", icon: PlusCircle },
+  { to: "/analytics", label: "Análises", icon: BarChart3 },
+  { to: "/risk", label: "Risco", icon: ShieldAlert },
+  { to: "/reports", label: "Relatórios", icon: FileText },
+  { to: "/extension", label: "Extensão", icon: Chrome },
+  { to: "/settings", label: "Ajustes", icon: Settings },
 ] as const;
 
 function useClock() {
@@ -59,13 +59,13 @@ export function AppLayout({ title, children }: { title: string; children: ReactN
       <div className="flex min-h-screen items-center justify-center">
         <div className="flex items-center gap-3 text-sm uppercase tracking-[0.3em] text-primary">
           <span className="hud-dot" />
-          Booting J.A.R.V.I.S.
+          Inicializando J.A.R.V.I.S.
         </div>
       </div>
     );
   }
 
-  const displayName = profile?.display_name || user.email?.split("@")[0] || "Operator";
+  const displayName = profile?.display_name || user.email?.split("@")[0] || "Operador";
   const initials = displayName
     .split(" ")
     .map((n) => n[0])
@@ -134,7 +134,7 @@ export function AppLayout({ title, children }: { title: string; children: ReactN
           <button
             className="rounded-md p-2 text-muted-foreground hover:bg-primary/10 hover:text-primary lg:hidden"
             onClick={() => setOpen(true)}
-            aria-label="Open menu"
+            aria-label="Abrir menu"
           >
             <Menu className="h-5 w-5" />
           </button>
@@ -160,7 +160,7 @@ export function AppLayout({ title, children }: { title: string; children: ReactN
           <div className="relative hidden md:block">
             <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-primary/60" />
             <input
-              placeholder="Query system…"
+              placeholder="Consultar sistema…"
               className="h-9 w-56 rounded-md border border-primary/25 bg-[oklch(0.18_0.06_240/0.5)] pl-9 pr-3 text-xs uppercase tracking-wider text-foreground placeholder:text-muted-foreground/70 outline-none focus:border-primary focus:ring-1 focus:ring-primary"
             />
           </div>

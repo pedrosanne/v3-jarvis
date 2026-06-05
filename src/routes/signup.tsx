@@ -51,16 +51,16 @@ function SignupPage() {
             <span className="absolute -right-1 -top-1 h-2.5 w-2.5 animate-pulse rounded-full bg-primary" />
           </div>
           <h1 className="text-base font-semibold uppercase tracking-[0.3em] text-primary">
-            New Operator
+            Novo Operador
           </h1>
           <p className="text-[10px] uppercase tracking-[0.25em] text-muted-foreground">
-            Initialize J.A.R.V.I.S. profile
+            Inicializar perfil J.A.R.V.I.S.
           </p>
         </div>
         <form onSubmit={onSubmit} className="space-y-3">
           <input
             required
-            placeholder="CALLSIGN"
+            placeholder="NOME / APELIDO"
             value={name}
             onChange={(e) => setName(e.target.value)}
             maxLength={80}
@@ -69,7 +69,7 @@ function SignupPage() {
           <input
             type="email"
             required
-            placeholder="OPERATOR ID"
+            placeholder="E-MAIL DO OPERADOR"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             className="h-10 w-full rounded-md border border-primary/25 bg-[oklch(0.18_0.06_240/0.5)] px-3 text-xs uppercase tracking-wider outline-none placeholder:text-muted-foreground/70 focus:border-primary focus:ring-1 focus:ring-primary"
@@ -77,7 +77,7 @@ function SignupPage() {
           <input
             type="password"
             required
-            placeholder="ACCESS KEY (MIN. 6)"
+            placeholder="SENHA (MÍN. 6)"
             minLength={6}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
@@ -88,13 +88,13 @@ function SignupPage() {
             disabled={submitting}
             className="h-10 w-full rounded-md border border-primary/50 bg-primary/15 text-xs font-semibold uppercase tracking-[0.25em] text-primary shadow-[0_0_18px_-4px_oklch(0.85_0.17_200/0.7)] transition hover:bg-primary/25 disabled:opacity-60"
           >
-            {submitting ? "Initializing…" : "Initialize"}
+            {submitting ? "Inicializando…" : "Criar conta"}
           </button>
         </form>
         <div className="mt-4 text-center text-[11px] uppercase tracking-wider text-muted-foreground">
-          Already enrolled?{" "}
+          Já tem conta?{" "}
           <Link to="/login" className="font-medium text-primary hover:underline">
-            Authenticate
+            Entrar
           </Link>
         </div>
       </div>
