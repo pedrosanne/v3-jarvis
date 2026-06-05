@@ -110,13 +110,124 @@ const ASSETS = ASSET_CATALOG.map((a) => a.symbol);
 const findAsset = (sym: string) => ASSET_CATALOG.find((a) => a.symbol === sym) ?? ASSET_CATALOG[0];
 
 
-const TIMEFRAMES = [
-  { label: "M1", seconds: 60 },
-  { label: "M5", seconds: 300 },
-  { label: "M15", seconds: 900 },
-  { label: "M30", seconds: 1800 },
-  { label: "H1", seconds: 3600 },
+type Timeframe = { label: string; seconds: number; desc: string };
+
+const TIMEFRAMES: Timeframe[] = [
+  { label: "M1", seconds: 60, desc: "Scalping ultra-rápido" },
+  { label: "M5", seconds: 300, desc: "Day trade padrão" },
+  { label: "M15", seconds: 900, desc: "Swing intradiário" },
+  { label: "M30", seconds: 1800, desc: "Tendência curta" },
+  { label: "H1", seconds: 3600, desc: "Posicional 1h" },
 ];
+
+function TimeframePicker({
+  value,
+  onChange,
+  disabled,
+  locked,
+}: {
+  value: Timeframe;
+  onChange: (t: Timeframe) => void;
+  disabled?: boolean;
+  locked?: boolean;
+}) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!open) return;
+    const onDoc = (e: MouseEvent) => {
+      if (!ref.current?.contains(e.target as Node)) setOpen(false);
+    };
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setOpen(false);
+    };
+    document.addEventListener("mousedown", onDoc);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("mousedown", onDoc);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [open]);
+
+  return (
+    <div ref={ref} className="relative w-full lg:w-36">
+      <button
+        type="button"
+        disabled={disabled}
+        onClick={() => setOpen((o) => !o)}
+        className={cn(
+          "group flex w-full items-center justify-between gap-2 rounded-md border border-cyan-500/40 bg-gradient-to-b from-black/70 to-cyan-950/30 px-3 py-2 font-mono text-sm text-cyan-100 shadow-[0_0_0_1px_rgba(34,211,238,0.05),0_0_20px_-8px_rgba(34,211,238,0.6)_inset] outline-none transition-all hover:border-cyan-400/70 hover:shadow-[0_0_0_1px_rgba(34,211,238,0.15),0_0_24px_-6px_rgba(34,211,238,0.8)_inset] focus:border-cyan-300",
+          open && "border-cyan-300 shadow-[0_0_0_1px_rgba(34,211,238,0.25),0_0_28px_-4px_rgba(34,211,238,1)_inset]",
+          (disabled || locked) && "cursor-not-allowed opacity-60",
+        )}
+      >
+        <span className="flex items-center gap-2">
+          <Clock className="h-3.5 w-3.5 text-cyan-300" />
+          <span className="font-bold tracking-[0.18em] text-cyan-100">{value.label}</span>
+          <span className="hidden text-[10px] uppercase tracking-widest text-cyan-400/60 sm:inline">
+            · {value.seconds < 3600 ? `${value.seconds / 60}m` : `${value.seconds / 3600}h`}
+          </span>
+        </span>
+        <ChevronDown
+          className={cn("h-4 w-4 text-cyan-300 transition-transform duration-200", open && "rotate-180")}
+        />
+      </button>
+
+      {open && (
+        <div className="absolute left-0 right-0 z-50 mt-2 overflow-hidden rounded-lg border border-cyan-400/40 bg-gradient-to-b from-black/95 to-cyan-950/80 p-1 shadow-[0_8px_32px_-4px_rgba(0,0,0,0.8),0_0_24px_-4px_rgba(34,211,238,0.4)] backdrop-blur-xl">
+          {/* HUD header */}
+          <div className="flex items-center justify-between border-b border-cyan-500/20 px-2 py-1.5 font-mono text-[9px] uppercase tracking-[0.25em] text-cyan-300/80">
+            <span className="flex items-center gap-1.5">
+              <span className="inline-block h-1.5 w-1.5 animate-pulse rounded-full bg-cyan-300 shadow-[0_0_8px_rgba(34,211,238,0.9)]" />
+              Timeframe
+            </span>
+            <span className="text-cyan-400/50">iara.tf</span>
+          </div>
+          <div className="py-1">
+            {TIMEFRAMES.map((t) => {
+              const active = t.label === value.label;
+              return (
+                <button
+                  key={t.label}
+                  type="button"
+                  onClick={() => {
+                    onChange(t);
+                    setOpen(false);
+                  }}
+                  className={cn(
+                    "group/item relative flex w-full items-center justify-between gap-3 rounded-md px-2.5 py-2 text-left font-mono transition-all",
+                    active
+                      ? "bg-gradient-to-r from-cyan-500/30 via-cyan-400/15 to-transparent text-cyan-100 ring-1 ring-cyan-400/40"
+                      : "text-cyan-200/80 hover:bg-cyan-500/10 hover:text-cyan-100",
+                  )}
+                >
+                  {active && (
+                    <span className="absolute inset-y-1 left-0 w-0.5 rounded-full bg-cyan-300 shadow-[0_0_10px_rgba(34,211,238,1)]" />
+                  )}
+                  <span className="flex items-baseline gap-2 pl-2">
+                    <span className="text-sm font-bold tracking-[0.15em]">{t.label}</span>
+                    <span className="text-[10px] uppercase tracking-widest text-cyan-400/60">
+                      {t.desc}
+                    </span>
+                  </span>
+                  {active ? (
+                    <Check className="h-3.5 w-3.5 text-cyan-300" />
+                  ) : (
+                    <span className="font-mono text-[10px] text-cyan-400/40">
+                      {t.seconds < 3600 ? `${t.seconds / 60}m` : `${t.seconds / 3600}h`}
+                    </span>
+                  )}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 
 type Phase =
   | "idle"
