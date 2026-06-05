@@ -421,3 +421,23 @@
   box-shadow: 0 0 10px oklch(0.82 0.16 200 / 0.7);
   height: 100%;
 }
+
+/* Prevent iOS Safari auto-zoom on focus of inputs (requires >=16px font-size). */
+@media screen and (max-width: 768px) {
+  input,
+  select,
+  textarea {
+    font-size: 16px !important;
+  }
+}
+
+/* Disable double-tap zoom on interactive elements. */
+button,
+a,
+[role="button"],
+input,
+select,
+textarea,
+label {
+  touch-action: manipulation;
+}
