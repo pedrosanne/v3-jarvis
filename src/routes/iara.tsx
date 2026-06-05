@@ -1044,23 +1044,17 @@ function IaraPage() {
                 </Field>
 
                 <Field label="Tempo" locked={selectsLocked}>
-                  <select
-                    value={tf.label}
-                    onChange={(e) => {
-                      setTf(TIMEFRAMES.find((t) => t.label === e.target.value) ?? TIMEFRAMES[1]);
+                  <TimeframePicker
+                    value={tf}
+                    onChange={(t) => {
+                      setTf(t);
                       setTouchedSelect(true);
                     }}
                     disabled={running || selectsLocked}
-                    className={cn(
-                      "w-full rounded-md border border-cyan-500/30 bg-black/40 px-3 py-2 font-mono text-sm text-cyan-200 outline-none focus:border-cyan-400 lg:w-28",
-                      selectsLocked && "cursor-not-allowed",
-                    )}
-                  >
-                    {TIMEFRAMES.map((t) => (
-                      <option key={t.label}>{t.label}</option>
-                    ))}
-                  </select>
+                    locked={selectsLocked}
+                  />
                 </Field>
+
                 {!running ? (
                   <SlideToHack
                     onUnlock={runIara}
