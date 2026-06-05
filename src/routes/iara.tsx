@@ -1226,7 +1226,7 @@ function SignalModal({
   onClose: () => void;
 }) {
   const isBuy = signal.side === "BUY";
-  const accent = isBuy ? "emerald" : "red";
+  
   const [confirmOpen, setConfirmOpen] = useState(false);
 
   const requestClose = () => {
