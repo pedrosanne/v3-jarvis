@@ -1250,34 +1250,41 @@ function SignalModal({
     };
   }, []);
 
+  const accentHex = isBuy ? "#22d3ee" : "#ef4444";
+  const accentHex2 = isBuy ? "#7dffd4" : "#fb923c";
+
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-md"
-      style={{ background: "rgba(2,6,10,0.7)" }}
+      style={{ background: "rgba(2,6,10,0.78)" }}
       onClick={requestClose}
     >
       <div
         onClick={(e) => e.stopPropagation()}
         className={cn(
-          "relative w-full max-w-md overflow-hidden rounded-3xl border bg-[#070b10] shadow-2xl",
+          "relative w-full max-w-md overflow-hidden rounded-3xl border bg-gradient-to-b from-[#050a12] via-[#070b14] to-[#04080d] shadow-2xl",
           isBuy
-            ? "border-cyan-500/40 shadow-[0_0_80px_-10px_rgba(34,211,238,0.6)]"
-            : "border-red-500/40 shadow-[0_0_80px_-10px_rgba(239,68,68,0.6)]",
+            ? "border-cyan-400/50 shadow-[0_0_120px_-10px_rgba(34,211,238,0.7)]"
+            : "border-red-500/50 shadow-[0_0_120px_-10px_rgba(239,68,68,0.7)]",
         )}
       >
-        {/* Animated gradient accent */}
+        {/* Ambient gradient orb */}
         <div
-          className={cn(
-            "absolute -top-32 left-1/2 h-64 w-64 -translate-x-1/2 rounded-full blur-3xl",
-            isBuy ? "bg-cyan-500/30" : "bg-red-500/30",
-          )}
+          className="absolute -top-40 left-1/2 h-80 w-80 -translate-x-1/2 rounded-full blur-3xl animate-pulse"
+          style={{ background: `radial-gradient(circle, ${accentHex}55 0%, transparent 70%)` }}
         />
-        <div className="absolute inset-0 opacity-[0.06] [background-image:linear-gradient(rgba(34,211,238,.6)_1px,transparent_1px),linear-gradient(90deg,rgba(34,211,238,.6)_1px,transparent_1px)] [background-size:20px_20px]" />
+        {/* Subtle grid */}
+        <div className="absolute inset-0 opacity-[0.06] [background-image:linear-gradient(rgba(125,211,252,.6)_1px,transparent_1px),linear-gradient(90deg,rgba(125,211,252,.6)_1px,transparent_1px)] [background-size:24px_24px]" />
+        {/* Corner brackets */}
+        <div className="pointer-events-none absolute left-3 top-3 h-5 w-5 border-l-2 border-t-2" style={{ borderColor: `${accentHex}aa` }} />
+        <div className="pointer-events-none absolute right-3 top-3 h-5 w-5 border-r-2 border-t-2" style={{ borderColor: `${accentHex}aa` }} />
+        <div className="pointer-events-none absolute bottom-3 left-3 h-5 w-5 border-b-2 border-l-2" style={{ borderColor: `${accentHex}aa` }} />
+        <div className="pointer-events-none absolute bottom-3 right-3 h-5 w-5 border-b-2 border-r-2" style={{ borderColor: `${accentHex}aa` }} />
 
         <button
           onClick={requestClose}
           aria-label="Fechar"
-          className="absolute right-3 top-3 z-10 rounded-full bg-white/5 p-1.5 text-white/60 transition hover:bg-white/10 hover:text-white"
+          className="absolute right-4 top-4 z-30 rounded-full bg-white/5 p-1.5 text-white/60 ring-1 ring-white/10 backdrop-blur transition hover:bg-white/10 hover:text-white"
         >
           <X className="h-4 w-4" />
         </button>
@@ -1286,7 +1293,7 @@ function SignalModal({
         {confirmOpen && (
           <div
             onClick={(e) => e.stopPropagation()}
-            className="absolute inset-0 z-20 flex items-center justify-center bg-black/70 p-5 backdrop-blur-sm"
+            className="absolute inset-0 z-40 flex items-center justify-center bg-black/80 p-5 backdrop-blur-sm"
           >
             <div className="w-full max-w-xs rounded-2xl border border-white/10 bg-[#0b1116] p-5 text-center shadow-2xl">
               <div className="mx-auto flex h-11 w-11 items-center justify-center rounded-full bg-amber-500/15 ring-1 ring-amber-400/40">
@@ -1318,79 +1325,86 @@ function SignalModal({
         )}
 
         <div className="relative p-6 sm:p-7">
-          {/* Header */}
-          <div
-            className={cn(
-              "flex items-center justify-center gap-2 font-mono text-[10px] uppercase tracking-[0.3em]",
-              isBuy ? "text-cyan-300" : "text-red-300",
-            )}
-          >
-            <span className="relative flex h-2 w-2">
-              <span
-                className={cn(
-                  "absolute inline-flex h-full w-full animate-ping rounded-full opacity-75",
-                  isBuy ? "bg-cyan-400" : "bg-red-400",
-                )}
-              />
-              <span
-                className={cn(
-                  "relative inline-flex h-2 w-2 rounded-full",
-                  isBuy ? "bg-cyan-500" : "bg-red-500",
-                )}
-              />
-            </span>
-            Sinal Iara Detectado
+          {/* Header HUD */}
+          <div className="flex items-center justify-between font-mono text-[9px] uppercase tracking-[0.28em]">
+            <div className="flex items-center gap-2" style={{ color: accentHex }}>
+              <span className="relative flex h-2 w-2">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full opacity-75" style={{ background: accentHex }} />
+                <span className="relative inline-flex h-2 w-2 rounded-full" style={{ background: accentHex }} />
+              </span>
+              J.A.R.V.I.S. // SIGNAL LOCKED
+            </div>
+            <div className="text-white/30">#{Math.floor(Math.random() * 9000 + 1000)}</div>
           </div>
+
+          {/* 3D Floating Signal Icon */}
+          <Signal3DIcon isBuy={isBuy} />
 
           {/* Side big */}
-          <div className="mt-5 text-center">
-            <div
-              className={cn(
-                "mx-auto flex h-16 w-16 items-center justify-center rounded-2xl",
-                isBuy ? "bg-cyan-500/15 text-cyan-300" : "bg-red-500/15 text-red-300",
-              )}
-            >
-              {isBuy ? (
-                <TrendingUp className="h-8 w-8" />
-              ) : (
-                <TrendingDown className="h-8 w-8" />
-              )}
+          <div className="text-center">
+            <div className="relative inline-block">
+              <div
+                className="font-mono text-5xl font-black tracking-tight text-white sm:text-6xl"
+                style={{
+                  textShadow: `0 0 30px ${accentHex}, 0 0 60px ${accentHex}80`,
+                  letterSpacing: "0.02em",
+                }}
+              >
+                {signal.side}
+              </div>
+              <div
+                className="absolute -inset-x-4 -bottom-1 h-px"
+                style={{ background: `linear-gradient(90deg, transparent, ${accentHex}, transparent)` }}
+              />
             </div>
-            <div className="mt-3 font-mono text-4xl font-black tracking-tight text-white sm:text-5xl">
-              {signal.side}
-            </div>
-            <div className="mt-1 font-mono text-lg font-semibold text-white/80">{asset}</div>
-            <div className="mt-1 text-xs text-white/40">
-              {tf} · expira às {signal.expiry}
+            <div className="mt-3 font-mono text-lg font-bold tracking-wider text-white/90">{asset}</div>
+            <div className="mt-1 flex items-center justify-center gap-2 font-mono text-[10px] uppercase tracking-[0.25em] text-white/40">
+              <span className="rounded border border-white/10 bg-white/5 px-1.5 py-0.5 text-white/70">{tf}</span>
+              <span>expira às {signal.expiry}</span>
             </div>
           </div>
 
-          {/* Confidence bar */}
-          <div className="mt-6">
-            <div className="flex items-center justify-between font-mono text-[10px] uppercase tracking-widest text-white/50">
-              <span>Confiança</span>
-              <span className={cn("font-bold", isBuy ? "text-cyan-300" : "text-red-300")}>
-                {signal.confidence}%
+          {/* Confidence bar — HUD style */}
+          <div className="mt-6 rounded-xl border border-white/10 bg-black/40 p-3">
+            <div className="flex items-center justify-between font-mono text-[10px] uppercase tracking-widest">
+              <span className="text-white/50">Confiança Neural</span>
+              <span className="font-bold tabular-nums" style={{ color: accentHex }}>
+                {signal.confidence.toString().padStart(2, "0")}%
               </span>
             </div>
-            <div className="mt-1.5 h-1 overflow-hidden rounded-full bg-white/5">
+            <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-white/[0.04] ring-1 ring-white/5">
               <div
-                className={cn(
-                  "h-full rounded-full",
-                  isBuy
-                    ? "bg-gradient-to-r from-cyan-500 to-cyan-300"
-                    : "bg-gradient-to-r from-red-500 to-orange-300",
-                )}
-                style={{ width: `${signal.confidence}%` }}
+                className="h-full rounded-full transition-all duration-1000"
+                style={{
+                  width: `${signal.confidence}%`,
+                  background: `linear-gradient(90deg, ${accentHex} 0%, ${accentHex2} 100%)`,
+                  boxShadow: `0 0 12px ${accentHex}`,
+                }}
               />
+            </div>
+            {/* Tick markers */}
+            <div className="mt-1 flex justify-between font-mono text-[8px] text-white/20">
+              {[0, 25, 50, 75, 100].map((v) => (
+                <span key={v}>{v}</span>
+              ))}
             </div>
           </div>
 
           {/* Levels */}
-          <div className="mt-6 grid grid-cols-3 gap-2">
+          <div className="mt-4 grid grid-cols-3 gap-2">
             <Level label="Entrada" value={signal.entry} tone="white" />
             <Level label="Stop Loss" value={signal.sl} tone="red" />
             <Level label="Take Profit" value={signal.tp} tone="green" />
+          </div>
+
+          {/* Data telemetry strip */}
+          <div className="mt-3 flex items-center justify-between rounded-lg border border-white/5 bg-black/30 px-3 py-1.5 font-mono text-[9px] uppercase tracking-widest text-white/40">
+            <span className="flex items-center gap-1.5">
+              <span className="inline-block h-1 w-1 animate-pulse rounded-full" style={{ background: accentHex }} />
+              feed live
+            </span>
+            <span>lat: 12ms</span>
+            <span>vol: ●●●○○</span>
           </div>
 
           {/* CTA */}
@@ -1405,14 +1419,17 @@ function SignalModal({
               toast.success("Sinal copiado", { description: "Abrindo corretora..." });
             }}
             className={cn(
-              "group mt-6 flex w-full items-center justify-center gap-2 rounded-xl px-5 py-3.5 font-mono text-sm font-bold uppercase tracking-wider text-black transition",
-              isBuy
-                ? "bg-cyan-400 hover:bg-cyan-300 shadow-[0_0_30px_-5px_rgba(34,211,238,0.8)]"
-                : "bg-red-400 hover:bg-red-300 shadow-[0_0_30px_-5px_rgba(239,68,68,0.8)]",
+              "group relative mt-5 flex w-full items-center justify-center gap-2 overflow-hidden rounded-xl px-5 py-3.5 font-mono text-sm font-bold uppercase tracking-[0.18em] text-black transition-all hover:scale-[1.02]",
             )}
+            style={{
+              background: `linear-gradient(135deg, ${accentHex} 0%, ${accentHex2} 100%)`,
+              boxShadow: `0 0 40px -5px ${accentHex}, inset 0 1px 0 rgba(255,255,255,0.4)`,
+            }}
           >
-            <Copy className="h-4 w-4" /> Copiar Sinal
-            <ExternalLink className="h-3.5 w-3.5 opacity-60 transition group-hover:translate-x-0.5" />
+            {/* Shimmer */}
+            <span className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/40 to-transparent transition-transform duration-1000 group-hover:translate-x-full" />
+            <Copy className="relative h-4 w-4" /> <span className="relative">Copiar Sinal</span>
+            <ExternalLink className="relative h-3.5 w-3.5 opacity-70 transition group-hover:translate-x-0.5" />
           </a>
 
           <div className="mt-3 flex items-center justify-center gap-2 text-[10px] text-white/40">
@@ -1423,6 +1440,94 @@ function SignalModal({
     </div>
   );
 }
+
+function Signal3DIcon({ isBuy }: { isBuy: boolean }) {
+  const accent = isBuy ? "#22d3ee" : "#ef4444";
+  const accent2 = isBuy ? "#a7f3d0" : "#fb923c";
+  const accentDark = isBuy ? "#0e7490" : "#991b1b";
+
+  return (
+    <div className="relative mx-auto my-6 flex h-44 w-44 items-center justify-center">
+      {/* Rotating outer ring with notches */}
+      <svg className="absolute inset-0 h-full w-full animate-[spin_18s_linear_infinite]" viewBox="0 0 200 200">
+        <defs>
+          <radialGradient id={`ringGrad-${isBuy}`} cx="50%" cy="50%" r="50%">
+            <stop offset="60%" stopColor="transparent" />
+            <stop offset="100%" stopColor={accent} stopOpacity="0.4" />
+          </radialGradient>
+        </defs>
+        <circle cx="100" cy="100" r="92" fill="none" stroke={accent} strokeOpacity="0.35" strokeWidth="1" strokeDasharray="2 6" />
+        {Array.from({ length: 12 }).map((_, i) => {
+          const a = (i / 12) * Math.PI * 2;
+          const x1 = 100 + Math.cos(a) * 84;
+          const y1 = 100 + Math.sin(a) * 84;
+          const x2 = 100 + Math.cos(a) * 90;
+          const y2 = 100 + Math.sin(a) * 90;
+          return <line key={i} x1={x1} y1={y1} x2={x2} y2={y2} stroke={accent} strokeOpacity="0.6" strokeWidth="1.5" />;
+        })}
+      </svg>
+
+      {/* Counter-rotating mid ring */}
+      <svg className="absolute inset-3 h-[calc(100%-1.5rem)] w-[calc(100%-1.5rem)] animate-[spin_12s_linear_infinite_reverse]" viewBox="0 0 200 200">
+        <circle cx="100" cy="100" r="78" fill="none" stroke={accent} strokeOpacity="0.5" strokeWidth="1.2" strokeDasharray="14 4 2 4" />
+        <circle cx="100" cy="8" r="3" fill={accent} />
+        <circle cx="192" cy="100" r="2" fill={accent2} />
+      </svg>
+
+      {/* Pulsing glow ring */}
+      <div
+        className="absolute inset-6 rounded-full animate-pulse"
+        style={{
+          background: `radial-gradient(circle, ${accent}50 0%, transparent 65%)`,
+          filter: "blur(8px)",
+        }}
+      />
+
+      {/* 3D core orb */}
+      <div
+        className="relative flex h-24 w-24 items-center justify-center rounded-full"
+        style={{
+          background: `radial-gradient(circle at 30% 25%, ${accent2} 0%, ${accent} 35%, ${accentDark} 100%)`,
+          boxShadow: `
+            0 0 40px ${accent}aa,
+            0 0 80px ${accent}66,
+            inset -8px -10px 20px rgba(0,0,0,0.5),
+            inset 8px 10px 20px rgba(255,255,255,0.25)
+          `,
+        }}
+      >
+        {/* Inner highlight */}
+        <div
+          className="absolute left-3 top-2 h-6 w-6 rounded-full opacity-70 blur-md"
+          style={{ background: "rgba(255,255,255,0.8)" }}
+        />
+        {/* Arrow */}
+        {isBuy ? (
+          <TrendingUp className="relative h-12 w-12 text-white drop-shadow-[0_2px_6px_rgba(0,0,0,0.6)]" strokeWidth={2.5} />
+        ) : (
+          <TrendingDown className="relative h-12 w-12 text-white drop-shadow-[0_2px_6px_rgba(0,0,0,0.6)]" strokeWidth={2.5} />
+        )}
+        {/* bottom rim shadow for 3D depth */}
+        <div
+          className="pointer-events-none absolute -bottom-4 left-1/2 h-3 w-16 -translate-x-1/2 rounded-full blur-md"
+          style={{ background: `${accent}aa`, opacity: 0.7 }}
+        />
+      </div>
+
+      {/* Orbiting particles */}
+      <div className="absolute inset-0 animate-[spin_8s_linear_infinite]">
+        <div className="absolute left-1/2 top-0 h-2 w-2 -translate-x-1/2 rounded-full" style={{ background: accent2, boxShadow: `0 0 10px ${accent}` }} />
+      </div>
+      <div className="absolute inset-0 animate-[spin_10s_linear_infinite_reverse]">
+        <div className="absolute bottom-0 left-1/2 h-1.5 w-1.5 -translate-x-1/2 rounded-full" style={{ background: accent, boxShadow: `0 0 8px ${accent}` }} />
+      </div>
+      <div className="absolute inset-0 animate-[spin_14s_linear_infinite]">
+        <div className="absolute right-2 top-1/2 h-1 w-1 -translate-y-1/2 rounded-full" style={{ background: accent2 }} />
+      </div>
+    </div>
+  );
+}
+
 
 function Level({
   label,
