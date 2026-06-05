@@ -34,7 +34,7 @@ export function rowToTrade(r: TradeRow): Trade {
     asset: r.asset,
     side: r.side,
     strategy: r.strategy,
-    session: (r.session as Trade["session"]) ?? "New York",
+    session: (r.session as Trade["session"]) ?? "M5",
     broker: r.broker,
     account: r.account,
     qty: Number(r.qty),
