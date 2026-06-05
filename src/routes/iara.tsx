@@ -1715,13 +1715,18 @@ function BrokerUrlGate({
         : "border-cyan-500/30";
 
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  // Only trigger verification when a valid TLD is present (.com, .net, .com.br, .online, etc.)
+  // Accepts 2-24 char TLDs, optionally followed by a country code (.com.br, .co.uk...)
+  const TLD_RE = /\.[a-z]{2,24}(?:\.[a-z]{2,8})?(?:[\/:?#]|$)/i;
   function trigger(value: string) {
     setUrl(value);
     if (debounceRef.current) clearTimeout(debounceRef.current);
-    if (value.trim().length >= 4) {
-      debounceRef.current = setTimeout(() => onStart(value), 350);
+    const cleaned = value.trim().replace(/^https?:\/\//i, "");
+    if (cleaned.length >= 4 && TLD_RE.test(cleaned)) {
+      debounceRef.current = setTimeout(() => onStart(value), 450);
     }
   }
+
 
 
   return (
