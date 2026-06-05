@@ -886,6 +886,7 @@ function IaraPage() {
           <div className="relative overflow-hidden rounded-2xl border border-cyan-500/20 bg-[#070b10] p-4 text-cyan-200 shadow-[0_0_60px_-15px_rgba(34,211,238,0.4)] sm:p-5">
             <div className="absolute inset-0 opacity-[0.08] [background-image:linear-gradient(rgba(34,211,238,.6)_1px,transparent_1px),linear-gradient(90deg,rgba(34,211,238,.6)_1px,transparent_1px)] [background-size:24px_24px]" />
             <div className="relative flex flex-col gap-4">
+              <JarvisVoice step={activeStep} muted={voiceMuted} onToggleMute={() => setVoiceMuted((m) => !m)} />
               <BrokerUrlGate
                 url={brokerUrl}
                 setUrl={setBrokerUrl}
