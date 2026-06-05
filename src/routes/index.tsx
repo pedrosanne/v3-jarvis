@@ -40,8 +40,8 @@ import { useTrades } from "@/hooks/use-trades";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Command Deck — DayTrader Pro" },
-      { name: "description", content: "Futuristic real-time HUD for professional day traders." },
+      { title: "Painel — J.A.R.V.I.S." },
+      { name: "description", content: "Painel HUD em tempo real para traders de opções binárias." },
     ],
   }),
   component: Dashboard,
@@ -108,16 +108,16 @@ function Dashboard() {
 
   // synthetic system metrics for HUD vibe
   const radarData = [
-    { axis: "Speed", v: Math.min(100, 40 + k.winRate * 0.6) },
+    { axis: "Velocidade", v: Math.min(100, 40 + k.winRate * 0.6) },
     { axis: "Edge", v: Math.min(100, k.profitFactor * 35) },
-    { axis: "Risk", v: Math.max(10, 100 - k.maxDrawdown / 50) },
+    { axis: "Risco", v: Math.max(10, 100 - k.maxDrawdown / 50) },
     { axis: "Volume", v: Math.min(100, k.trades * 1.5) },
-    { axis: "R:R", v: Math.min(100, k.rr * 40) },
-    { axis: "Hit%", v: k.winRate },
+    { axis: "Payout", v: Math.min(100, (k.avgPayout || 0)) },
+    { axis: "Acerto%", v: k.winRate },
   ];
 
   return (
-    <AppLayout title="Command Deck">
+    <AppLayout title="Painel de Controle">
       <div className="hud-theme -mx-3 -my-5 min-h-[calc(100vh-4rem)] px-3 py-5 sm:-mx-4 sm:-my-6 sm:px-4 sm:py-6 lg:-mx-8 lg:px-8">
         <div className="space-y-5">
           {/* Top status bar */}
@@ -126,7 +126,7 @@ function Dashboard() {
           <FilterPanel filters={filters} onChange={setFilters} />
 
           {isLoading && (
-            <HudPanel title="Telemetry">
+            <HudPanel title="Telemetria">
               <div className="py-8 text-center text-sm" style={{ color: "var(--hud-text-dim)" }}>
                 Sincronizando feed…
               </div>
@@ -134,10 +134,10 @@ function Dashboard() {
           )}
 
           {!isLoading && trades.length === 0 && (
-            <HudPanel title="No telemetry">
+            <HudPanel title="Sem telemetria">
               <div className="py-8 text-center">
                 <p className="text-sm" style={{ color: "var(--hud-text-dim)" }}>
-                  Registre o primeiro trade em <span className="hud-glow-text">Trade Entry</span> para ativar o painel.
+                  Registre a primeira operação em <span className="hud-glow-text">Nova Operação</span> para ativar o painel.
                 </p>
               </div>
             </HudPanel>
@@ -145,16 +145,16 @@ function Dashboard() {
 
           {/* KPI row */}
           <div className="grid grid-cols-2 gap-4 xl:grid-cols-4">
-            <HudKpi label="Total P&L" value={fmtMoney(k.totalPnL)} sub={`${k.trades} ops`} icon={<DollarSign className="h-4 w-4" />} positive={k.totalPnL >= 0} />
-            <HudKpi label="Win Rate" value={`${k.winRate.toFixed(1)}%`} sub={`${k.wins}W / ${k.losses}L`} icon={<Target className="h-4 w-4" />} positive={k.winRate >= 50} />
-            <HudKpi label="Profit Factor" value={k.profitFactor.toFixed(2)} sub={`R:R ${k.rr.toFixed(2)}`} icon={<Activity className="h-4 w-4" />} positive={k.profitFactor >= 1} />
-            <HudKpi label="Drawdown" value={fmtMoney(-k.maxDrawdown)} sub="Peak → Trough" icon={<TrendingDown className="h-4 w-4" />} positive={false} />
+            <HudKpi label="Resultado Total" value={fmtMoney(k.totalPnL)} sub={`${k.trades} ops`} icon={<DollarSign className="h-4 w-4" />} positive={k.totalPnL >= 0} />
+            <HudKpi label="Taxa de Acerto" value={`${k.winRate.toFixed(1)}%`} sub={`${k.wins}G / ${k.losses}P`} icon={<Target className="h-4 w-4" />} positive={k.winRate >= 55} />
+            <HudKpi label="Fator de Lucro" value={k.profitFactor.toFixed(2)} sub={`Payout médio ${(k.avgPayout || 0).toFixed(0)}%`} icon={<Activity className="h-4 w-4" />} positive={k.profitFactor >= 1} />
+            <HudKpi label="Drawdown" value={fmtMoney(-k.maxDrawdown)} sub="Pico → Vale" icon={<TrendingDown className="h-4 w-4" />} positive={false} />
           </div>
 
           {/* Main HUD row: equity left, reactor center, radar right */}
           <div className="grid grid-cols-1 gap-4 lg:grid-cols-12">
             <div className="lg:col-span-5">
-              <HudPanel title="Equity Curve · LIVE" rightSlot={<LiveDot />}>
+              <HudPanel title="Curva de Capital · AO VIVO" rightSlot={<LiveDot />}>
                 <div className="hud-scan h-64 w-full">
                   <ResponsiveContainer>
                     <AreaChart data={k.equityCurve} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
@@ -186,13 +186,13 @@ function Dashboard() {
             </div>
 
             <div className="lg:col-span-3">
-              <HudPanel title="Reactor Core">
+              <HudPanel title="Reator">
                 <Reactor pnl={dayPnL} score={k.winRate} />
               </HudPanel>
             </div>
 
             <div className="lg:col-span-4">
-              <HudPanel title="Strategy Radar">
+              <HudPanel title="Radar de Estratégias">
                 <div className="h-64 w-full">
                   <ResponsiveContainer>
                     <RadarChart data={radarData}>
@@ -214,15 +214,15 @@ function Dashboard() {
 
           {/* P&L mini cards */}
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-            <PnlMini label="Daily" value={dayPnL} />
-            <PnlMini label="Weekly" value={weekPnL} />
-            <PnlMini label="Monthly" value={monthPnL} />
+            <PnlMini label="Hoje" value={dayPnL} />
+            <PnlMini label="Semana" value={weekPnL} />
+            <PnlMini label="Mês" value={monthPnL} />
           </div>
 
           {/* Assets + Sessions + Monthly */}
           <div className="grid grid-cols-1 gap-4 lg:grid-cols-12">
             <div className="lg:col-span-5">
-              <HudPanel title="Asset Performance">
+              <HudPanel title="Desempenho por Ativo">
                 <div className="h-64 w-full">
                   <ResponsiveContainer>
                     <BarChart data={byAsset} layout="vertical" margin={{ top: 4, right: 12, left: 0, bottom: 0 }}>
@@ -251,7 +251,7 @@ function Dashboard() {
             </div>
 
             <div className="lg:col-span-3">
-              <HudPanel title="Session Mix">
+              <HudPanel title="Mix de Expirações">
                 <div className="h-64 w-full">
                   <ResponsiveContainer>
                     <PieChart>
@@ -284,7 +284,7 @@ function Dashboard() {
             </div>
 
             <div className="lg:col-span-4">
-              <HudPanel title="Monthly Flux">
+              <HudPanel title="Fluxo Mensal">
                 <div className="h-64 w-full">
                   <ResponsiveContainer>
                     <BarChart data={monthly.map((m) => ({ month: m.key, pnl: m.pnl }))} margin={{ top: 4, right: 8, left: 0, bottom: 0 }}>
@@ -314,15 +314,15 @@ function Dashboard() {
           </div>
 
           {/* Strategy grid */}
-          <HudPanel title="Strategy Matrix" rightSlot={<span className="text-[10px]" style={{ color: "var(--hud-text-dim)" }}>{byStrategy.length} ACTIVE</span>}>
+          <HudPanel title="Matriz de Estratégias" rightSlot={<span className="text-[10px]" style={{ color: "var(--hud-text-dim)" }}>{byStrategy.length} ATIVAS</span>}>
             <div className="overflow-x-auto">
               <table className="w-full min-w-[560px] text-sm">
                 <thead>
                   <tr className="border-b text-left text-[10px] uppercase tracking-[0.18em]" style={{ borderColor: "var(--hud-border)", color: "var(--hud-cyan)" }}>
-                    <th className="py-2 pr-4 font-medium">Strategy</th>
-                    <th className="py-2 pr-4 font-medium">Trades</th>
-                    <th className="py-2 pr-4 font-medium">Win Rate</th>
-                    <th className="py-2 pr-4 text-right font-medium">P&L</th>
+                    <th className="py-2 pr-4 font-medium">Estratégia</th>
+                    <th className="py-2 pr-4 font-medium">Operações</th>
+                    <th className="py-2 pr-4 font-medium">Taxa de Acerto</th>
+                    <th className="py-2 pr-4 text-right font-medium">Resultado</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -369,7 +369,7 @@ function StatusBar({ now, trades }: { now: Date; trades: number }) {
       </span>
       <Sep />
       <span style={{ color: "var(--hud-text-dim)" }}>
-        SYS <span className="hud-glow-text">{date}</span> · <span className="hud-glow-text">{time}</span>
+        SIST <span className="hud-glow-text">{date}</span> · <span className="hud-glow-text">{time}</span>
       </span>
       <Sep />
       <span style={{ color: "var(--hud-text-dim)" }}>
@@ -385,7 +385,7 @@ function StatusBar({ now, trades }: { now: Date; trades: number }) {
       </span>
       <div className="ml-auto flex items-center gap-2">
         <span className="hud-dot" />
-        <span className="hud-glow-text">LIVE</span>
+        <span className="hud-glow-text">AO VIVO</span>
       </div>
     </div>
   );
@@ -397,9 +397,9 @@ function Sep() {
 
 function LiveDot() {
   return (
-    <span className="flex items-center gap-1.5 text-[10px] uppercase tracking-[0.18em]" style={{ color: "var(--hud-cyan)" }}>
-      <span className="hud-dot" /> Streaming
-    </span>
+      <span className="flex items-center gap-1.5 text-[10px] uppercase tracking-[0.18em]" style={{ color: "var(--hud-cyan)" }}>
+        <span className="hud-dot" /> Transmitindo
+      </span>
   );
 }
 
@@ -529,16 +529,16 @@ function Reactor({ pnl, score }: { pnl: number; score: number }) {
       >
         <Zap className="h-5 w-5 hud-flicker" style={{ color: ringColor }} />
         <div className="mt-1 text-[10px] uppercase tracking-[0.2em]" style={{ color: "var(--hud-cyan)" }}>
-          Today
+          Hoje
         </div>
         <div className="text-base font-bold" style={{ color: ringColor, textShadow: `0 0 12px ${ringColor}` }}>
           {fmtMoney(pnl)}
         </div>
       </div>
       <div className="absolute bottom-1 left-0 right-0 flex justify-center gap-3 text-[10px] uppercase tracking-[0.18em]" style={{ color: "var(--hud-text-dim)" }}>
-        <span>SCORE <span className="hud-glow-text">{score.toFixed(0)}</span></span>
+        <span>ÍNDICE <span className="hud-glow-text">{score.toFixed(0)}</span></span>
         <span>·</span>
-        <span className="flex items-center gap-1"><Radar className="h-3 w-3" /> ACTIVE</span>
+        <span className="flex items-center gap-1"><Radar className="h-3 w-3" /> ATIVO</span>
       </div>
     </div>
   );
