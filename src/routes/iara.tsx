@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, type RefObject } from "react";
 import { AppLayout } from "@/components/app-layout";
 import { cn } from "@/lib/utils";
 import {
@@ -173,6 +173,22 @@ function IaraPage() {
   // Sequencial reveal dos painéis (Terminal → Data Stream → Notícias)
   const [revealStep, setRevealStep] = useState(0);
   const revealTimersRef = useRef<ReturnType<typeof setTimeout>[]>([]);
+  // Auto-scroll entre etapas do funil
+  const accountSectionRef = useRef<HTMLDivElement>(null);
+  const printSectionRef = useRef<HTMLDivElement>(null);
+  const slideSectionRef = useRef<HTMLDivElement>(null);
+  function scrollToRef(ref: RefObject<HTMLDivElement | null>) {
+    if (typeof window === "undefined") return;
+    const el = ref.current;
+    if (!el) return;
+    window.setTimeout(() => {
+      const rect = el.getBoundingClientRect();
+      const top = window.scrollY + rect.top - 90;
+      window.scrollTo({ top, behavior: "smooth" });
+      sfxWhoosh();
+    }, 350);
+  }
+
 
 
   // Broker URL gate
@@ -237,6 +253,18 @@ function IaraPage() {
     }
   }
   useEffect(() => () => stopAutoScroll(), []);
+
+  // Auto-scroll para a próxima etapa quando cada uma é concluída
+  useEffect(() => {
+    if (brokerStatus === "approved") scrollToRef(accountSectionRef);
+  }, [brokerStatus]);
+  useEffect(() => {
+    if (accountStatus === "approved") scrollToRef(printSectionRef);
+  }, [accountStatus]);
+  useEffect(() => {
+    if (chartPrint) scrollToRef(slideSectionRef);
+  }, [chartPrint]);
+
 
   // Broker verification ----------------------------------------------------
   const ALLOWED_BROKERS = ["forexoficial.com", "ilov.pro", "deffy.com.br"];
@@ -727,11 +755,13 @@ function IaraPage() {
               />
 
               <div
+                ref={accountSectionRef}
                 className={cn(
                   "transition-opacity duration-500",
                   !brokerApproved && "pointer-events-none select-none opacity-40 blur-[1px]",
                 )}
               >
+
                 <AccountIdGate
                   accountId={accountId}
                   setAccountId={setAccountId}
@@ -756,6 +786,8 @@ function IaraPage() {
               >
 
               <div
+                ref={printSectionRef}
+
                 onDragOver={(e) => {
                   e.preventDefault();
                   setDragOver(true);
@@ -886,7 +918,7 @@ function IaraPage() {
                 )}
 
               </div>
-              <div className="grid w-full grid-cols-2 gap-2 sm:gap-3 lg:flex lg:w-auto lg:flex-wrap lg:items-end">
+              <div ref={slideSectionRef} className="grid w-full grid-cols-2 gap-2 sm:gap-3 lg:flex lg:w-auto lg:flex-wrap lg:items-end">
                 <Field label="Ativo" locked={selectsLocked} hint={!brokerApproved ? "Verifique a corretora" : "Envie o print primeiro"}>
                   <AssetPickerDialog
                     value={asset}
@@ -1575,10 +1607,15 @@ function BrokerUrlGate({
         ? "border-cyan-400/50 shadow-[0_0_40px_-10px_rgba(34,211,238,0.6)]"
         : "border-cyan-500/30";
 
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   function trigger(value: string) {
     setUrl(value);
-    if (value.trim().length >= 4) onStart(value);
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    if (value.trim().length >= 4) {
+      debounceRef.current = setTimeout(() => onStart(value), 350);
+    }
   }
+
 
   return (
     <div
@@ -1825,10 +1862,15 @@ function AccountIdGate({
         ? "border-cyan-400/50 shadow-[0_0_40px_-10px_rgba(34,211,238,0.6)]"
         : "border-cyan-500/30";
 
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   function trigger(value: string) {
     setAccountId(value);
-    if (value.trim().length >= 12) onStart(value);
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    if (value.trim().length >= 12) {
+      debounceRef.current = setTimeout(() => onStart(value), 350);
+    }
   }
+
 
   return (
     <div
