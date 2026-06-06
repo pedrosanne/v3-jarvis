@@ -6,10 +6,17 @@
 // You can pass additional config via defineConfig({ vite: { ... }, etc... }) if needed.
 import { defineConfig } from "@lovable.dev/vite-tanstack-config";
 
+// The custom src/server.ts wrapper exports a Cloudflare Worker–shaped
+// `{ fetch }` handler. On Vercel we let Nitro use its default Node/Vercel
+// server entry instead (set NITRO_PRESET=vercel in the Vercel build command).
+const isVercel = process.env.NITRO_PRESET === "vercel" || !!process.env.VERCEL;
+
 export default defineConfig({
-  tanstackStart: {
-    // Redirect TanStack Start's bundled server entry to src/server.ts (our SSR error wrapper).
-    // nitro/vite builds from this
-    server: { entry: "server" },
-  },
+  tanstackStart: isVercel
+    ? undefined
+    : {
+        // Redirect TanStack Start's bundled server entry to src/server.ts (our SSR error wrapper).
+        // nitro/vite builds from this
+        server: { entry: "server" },
+      },
 });
