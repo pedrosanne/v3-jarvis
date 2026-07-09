@@ -103,15 +103,15 @@ function Journal() {
                     </td>
                     <td className="px-3 py-2 text-muted-foreground">{t.strategy}</td>
                     <td className="px-3 py-2 text-muted-foreground">{t.session}</td>
-                    <td className="px-3 py-2">${t.entry.toFixed(2)}</td>
-                    <td className="px-3 py-2">${t.exit.toFixed(2)}</td>
+                    <td className="px-3 py-2">R$ ${t.entry.toFixed(2)}</td>
+                    <td className="px-3 py-2">R$ ${t.exit.toFixed(2)}</td>
                     <td className="px-3 py-2">{t.rr?.toFixed(0)}%</td>
                     <td
                       className={`px-3 py-2 font-semibold ${
                         t.pnl >= 0 ? "text-emerald-600" : "text-rose-600"
                       }`}
                     >
-                      {t.pnl >= 0 ? "+" : ""}${t.pnl.toFixed(2)}
+                      {t.pnl >= 0 ? "+" : ""}R$ ${t.pnl.toFixed(2)}
                     </td>
                     <td className="px-3 py-2 text-right">
                       <button

@@ -124,7 +124,7 @@ export function EquityCurveChart({ data }: { data: { date: string; equity: numbe
           <YAxis tick={{ fontSize: 11 }} stroke="oklch(0.5 0.03 270)" width={50} />
           <Tooltip
             contentStyle={{ borderRadius: 8, border: "1px solid oklch(0.92 0.01 270)", fontSize: 12 }}
-            formatter={(v: number) => `$${v.toLocaleString()}`}
+            formatter={(v: number) => `R$ ${v.toLocaleString("pt-BR")}`}
           />
           <Area
             type="monotone"

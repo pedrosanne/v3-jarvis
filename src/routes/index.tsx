@@ -56,7 +56,7 @@ const RED = "oklch(0.72 0.24 25)";
 
 function fmtMoney(n: number) {
   const sign = n < 0 ? "-" : "";
-  return `${sign}$${Math.abs(n).toLocaleString("en-US", { maximumFractionDigits: 0 })}`;
+  return `${sign}R$ ${Math.abs(n).toLocaleString("pt-BR", { maximumFractionDigits: 0 })}`;
 }
 
 function useClock() {
@@ -176,7 +176,7 @@ function Dashboard() {
                           fontSize: 12,
                           boxShadow: "0 0 20px oklch(0.82 0.16 200 / 0.3)",
                         }}
-                        formatter={(v: number) => `$${v.toLocaleString()}`}
+                        formatter={(v: number) => `R$ ${v.toLocaleString("pt-BR")}`}
                       />
                       <Area type="monotone" dataKey="equity" stroke={CYAN} strokeWidth={2.5} fill="url(#hudEquity)" />
                     </AreaChart>
@@ -358,7 +358,7 @@ function Dashboard() {
 /* -------- HUD subcomponents -------- */
 
 function StatusBar({ now, trades }: { now: Date; trades: number }) {
-  const time = now.toLocaleTimeString("en-US", { hour12: false });
+  const time = now.toLocaleTimeString("pt-BR", { hour12: false });
   const date = now.toISOString().slice(0, 10);
   return (
     <div className="hud-panel flex flex-wrap items-center gap-3 px-4 py-2.5 text-[11px] uppercase tracking-[0.18em]">
