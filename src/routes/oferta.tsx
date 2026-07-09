@@ -567,7 +567,7 @@ function OfertaPage() {
                 "Procura “robô mágico que dobra a banca em 1 dia”. Isso não existe.",
                 "Não vai seguir os sinais e ainda quer culpar a ferramenta.",
                 "Quer ficar rico sem esforço, sem estudo e sem paciência.",
-                "Não está disposto a investir R$ 4.997 em algo que devolve isso em 1 mês bom.",
+                "Não está disposto a investir R$ 997 agora — sabendo que amanhã pode custar R$ 4.997.",
               ].map((t) => (
                 <li key={t} className="flex items-start gap-3">
                   <X className="mt-0.5 h-5 w-5 shrink-0 text-red-400" />
