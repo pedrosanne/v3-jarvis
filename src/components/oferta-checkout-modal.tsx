@@ -90,12 +90,19 @@ export function OfertaCheckoutModal({ open, onClose, priceLabel = "R$ 997" }: Pr
     document.addEventListener("keydown", onKey);
     const prev = document.body.style.overflow;
     document.body.style.overflow = "hidden";
-    setTimeout(() => firstInputRef.current?.focus(), 60);
     return () => {
       document.removeEventListener("keydown", onKey);
       document.body.style.overflow = prev;
     };
-  }, [open, onClose]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open]);
+
+  // Foca no primeiro campo somente ao abrir — sem depender de onClose (evita "roubo" de foco a cada re-render do pai)
+  useEffect(() => {
+    if (!open) return;
+    const t = setTimeout(() => firstInputRef.current?.focus(), 60);
+    return () => clearTimeout(t);
+  }, [open]);
 
   const errors = {
     name: !validName(name) ? "Digite seu nome completo (nome + sobrenome)." : "",
