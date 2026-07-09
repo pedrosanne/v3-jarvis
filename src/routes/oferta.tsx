@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Activity,
   Brain,
@@ -22,30 +22,36 @@ import { cn } from "@/lib/utils";
 export const Route = createFileRoute("/oferta")({
   head: () => ({
     meta: [
-      { title: "JARVIS — Co-piloto de IA para Traders | R$ 4.997" },
+      { title: "JARVIS — Lançamento: R$ 997 para os 30 primeiros" },
       {
         name: "description",
         content:
-          "O primeiro co-piloto de IA que analisa o mercado por você em 8 segundos. Sinais com precisão cirúrgica, 24h, sem emoção. Acesso vitalício por R$ 4.997.",
+          "Condição de lançamento: os 30 primeiros ativam o JARVIS por R$ 997 (de R$ 4.997). Depois disso, o preço volta ao valor normal. Acesso vitalício + garantia de 7 dias.",
       },
-      { property: "og:title", content: "JARVIS — Co-piloto de IA para Traders" },
+      { property: "og:title", content: "JARVIS — R$ 997 no lançamento (30 primeiros)" },
       {
         property: "og:description",
         content:
-          "Analise o mercado em 8s com IA. Sinais com confidence ≥ 87% em qualquer corretora. Garantia incondicional de 7 dias.",
+          "Preço de lançamento: R$ 997 para os 30 primeiros. Depois volta a R$ 4.997. Co-piloto de IA para traders, com garantia de 7 dias.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:title", content: "JARVIS — Co-piloto de IA para Traders" },
+      { name: "twitter:title", content: "JARVIS — R$ 997 no lançamento" },
       {
         name: "twitter:description",
         content:
-          "Analise o mercado em 8s com IA. Sinais com confidence ≥ 87% em qualquer corretora.",
+          "Os 30 primeiros ativam o JARVIS por R$ 997 (de R$ 4.997). Depois o preço volta ao normal.",
       },
     ],
   }),
   component: OfertaPage,
 });
+
+// ---------- Config de lançamento ----------
+const LAUNCH_PRICE = 997;
+const REGULAR_PRICE = 4997;
+const TOTAL_SLOTS = 30;
+const SLOTS_REMAINING = 23; // ajustar conforme vendas
 
 // ---------- Wave canvas (mini, sem áudio) ----------
 function WaveCanvas({ className, intensity = 1 }: { className?: string; intensity?: number }) {
@@ -127,19 +133,23 @@ function WaveCanvas({ className, intensity = 1 }: { className?: string; intensit
   return <canvas ref={ref} className={className} />;
 }
 
-// ---------- Countdown ----------
-function useCountdown(endsAt: number) {
-  const [now, setNow] = useState(() => Date.now());
+// ---------- Countdown (SSR-safe) ----------
+function useCountdown(endsAt: number | null) {
+  const [now, setNow] = useState<number | null>(null);
   useEffect(() => {
+    setNow(Date.now());
     const t = setInterval(() => setNow(Date.now()), 1000);
     return () => clearInterval(t);
   }, []);
+  if (now === null || endsAt === null) return { h: 0, m: 0, s: 0, ready: false };
   const diff = Math.max(0, endsAt - now);
   const h = Math.floor(diff / 3_600_000);
   const m = Math.floor((diff % 3_600_000) / 60_000);
   const s = Math.floor((diff % 60_000) / 1000);
-  return { h, m, s };
+  return { h, m, s, ready: true };
 }
+
+const pad = (n: number) => String(n).padStart(2, "0");
 
 // ---------- BG grid ----------
 function GridBackdrop() {
@@ -165,17 +175,21 @@ function scrollToId(id: string) {
 
 // ============================================================
 function OfertaPage() {
-  // 48h de "lote" a partir do primeiro carregamento (por navegador)
-  const endsAt = useMemo(() => {
-    if (typeof window === "undefined") return Date.now() + 48 * 3600 * 1000;
+  // Countdown de 48h persistido por navegador — SSR-safe
+  const [endsAt, setEndsAt] = useState<number | null>(null);
+  useEffect(() => {
     const k = "oferta_ends_v1";
     const saved = Number(localStorage.getItem(k) || 0);
-    if (saved > Date.now()) return saved;
+    if (saved > Date.now()) {
+      setEndsAt(saved);
+      return;
+    }
     const next = Date.now() + 48 * 3600 * 1000;
     localStorage.setItem(k, String(next));
-    return next;
+    setEndsAt(next);
   }, []);
-  const { h, m, s } = useCountdown(endsAt);
+  const { h, m, s, ready } = useCountdown(endsAt);
+  const timer = ready ? `${pad(h)}:${pad(m)}:${pad(s)}` : "--:--:--";
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-[#04070c] text-cyan-50 antialiased">
@@ -186,33 +200,38 @@ function OfertaPage() {
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-2 text-[11px] font-mono uppercase tracking-[0.22em] text-cyan-200 sm:text-xs">
           <span className="flex items-center gap-2">
             <span className="inline-block h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-300 shadow-[0_0_8px_2px_rgba(110,231,183,0.8)]" />
-            Lote atual • 17/50 vagas restantes
+            Lançamento • {SLOTS_REMAINING}/{TOTAL_SLOTS} vagas a R$ 997
           </span>
           <span className="hidden items-center gap-2 sm:flex">
             <Clock className="h-3.5 w-3.5 text-cyan-300" />
-            Oferta expira em{" "}
-            <span className="font-bold text-cyan-100">
-              {String(h).padStart(2, "0")}:{String(m).padStart(2, "0")}:{String(s).padStart(2, "0")}
-            </span>
+            Preço sobe em <span className="font-bold text-cyan-100">{timer}</span>
           </span>
         </div>
       </div>
 
+
+
       {/* HERO */}
       <section className="relative z-10 mx-auto flex max-w-6xl flex-col items-center px-4 pt-16 pb-24 text-center sm:pt-24">
-        <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-cyan-400/30 bg-cyan-500/10 px-4 py-1.5 font-mono text-[10px] uppercase tracking-[0.28em] text-cyan-200 shadow-[0_0_24px_-6px_rgba(34,211,238,0.8)]">
-          <Sparkles className="h-3 w-3" /> JARVIS v4.2 • Núcleo neural ativo
+        <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-amber-300/40 bg-amber-400/10 px-4 py-1.5 font-mono text-[10px] uppercase tracking-[0.28em] text-amber-200 shadow-[0_0_24px_-6px_rgba(251,191,36,0.7)]">
+          <Sparkles className="h-3 w-3" /> Condição de lançamento • 30 primeiros
         </div>
 
         <h1 className="max-w-4xl text-balance text-4xl font-black leading-[1.05] tracking-tight sm:text-6xl">
-          O primeiro co-piloto de <span className="bg-gradient-to-r from-cyan-200 via-cyan-100 to-cyan-300 bg-clip-text text-transparent drop-shadow-[0_0_24px_rgba(34,211,238,0.4)]">IA</span> que analisa o mercado
-          <br className="hidden sm:block" /> por você — em <span className="text-cyan-300">8 segundos</span>, com precisão cirúrgica.
+          Ative o JARVIS por{" "}
+          <span className="bg-gradient-to-r from-amber-200 via-amber-100 to-amber-300 bg-clip-text text-transparent drop-shadow-[0_0_24px_rgba(251,191,36,0.5)]">
+            R$ 997
+          </span>
+          <br className="hidden sm:block" />
+          <span className="text-cyan-300">antes do preço voltar a R$ 4.997.</span>
         </h1>
 
         <p className="mt-6 max-w-2xl text-balance text-base text-cyan-100/80 sm:text-lg">
-          JARVIS é o assistente que fundos institucionais pagam milhões para ter.
-          Agora ele opera do <b>seu lado</b> — 24h, sem emoção, sem cansar.
+          Estamos abrindo <b className="text-amber-200">apenas 30 vagas</b> nessa condição para validar
+          o núcleo neural v4.2 com operadores reais. Depois disso, o acesso volta ao valor cheio de
+          <b> R$ 4.997</b> — sem exceção, sem &quot;cupom&quot;, sem &quot;me manda no direct&quot;.
         </p>
+
 
         {/* Wave visual */}
         <div className="relative mt-10 h-64 w-full max-w-3xl overflow-hidden rounded-2xl border border-cyan-500/25 bg-gradient-to-b from-cyan-950/40 via-[#04080d] to-[#04080d] shadow-[0_0_80px_-20px_rgba(34,211,238,0.6)]">
@@ -230,9 +249,9 @@ function OfertaPage() {
         <div className="mt-10 flex flex-col items-center gap-3 sm:flex-row">
           <button
             onClick={() => scrollToId("oferta")}
-            className="group relative inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-cyan-400 via-cyan-300 to-cyan-400 px-8 py-4 font-bold uppercase tracking-[0.18em] text-black shadow-[0_0_40px_-6px_rgba(34,211,238,0.9)] transition-transform hover:scale-[1.03]"
+            className="group relative inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-amber-300 via-amber-200 to-amber-300 px-8 py-4 font-bold uppercase tracking-[0.18em] text-black shadow-[0_0_40px_-6px_rgba(251,191,36,0.9)] transition-transform hover:scale-[1.03]"
           >
-            <Zap className="h-4 w-4" /> Quero ativar meu JARVIS
+            <Zap className="h-4 w-4" /> Garantir vaga por R$ 997
             <span className="ml-1 transition-transform group-hover:translate-x-1">→</span>
           </button>
           <a
@@ -242,6 +261,7 @@ function OfertaPage() {
             Ver demo ao vivo
           </a>
         </div>
+
 
         <div className="mt-8 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 font-mono text-[11px] uppercase tracking-[0.2em] text-cyan-300/70">
           <span className="inline-flex items-center gap-1.5"><ShieldCheck className="h-3.5 w-3.5" /> Garantia 7 dias</span>
@@ -478,24 +498,34 @@ function OfertaPage() {
                 {fmt(21200)}
               </span>
             </div>
-            <div className="flex items-center justify-between gap-4 bg-gradient-to-r from-cyan-500/20 via-cyan-400/10 to-transparent px-5 py-6 sm:px-8">
-              <span className="font-mono text-[11px] uppercase tracking-[0.24em] text-cyan-100">
-                Seu investimento hoje
+            <div className="flex items-center justify-between gap-4 border-t border-cyan-500/15 px-5 py-4 sm:px-8">
+              <span className="font-mono text-[11px] uppercase tracking-[0.24em] text-cyan-200/80">
+                Preço normal
               </span>
-              <span className="text-2xl font-black text-cyan-100 drop-shadow-[0_0_16px_rgba(34,211,238,0.7)] sm:text-3xl">
-                {fmt(4997)}
+              <span className="font-mono text-base text-cyan-100/70 line-through decoration-red-400/70">
+                {fmt(REGULAR_PRICE)}
+              </span>
+            </div>
+            <div className="flex items-center justify-between gap-4 bg-gradient-to-r from-amber-400/20 via-amber-300/10 to-transparent px-5 py-6 sm:px-8">
+              <span className="font-mono text-[11px] uppercase tracking-[0.24em] text-amber-100">
+                Lançamento • 30 primeiros
+              </span>
+              <span className="text-2xl font-black text-amber-100 drop-shadow-[0_0_16px_rgba(251,191,36,0.7)] sm:text-3xl">
+                {fmt(LAUNCH_PRICE)}
               </span>
             </div>
           </div>
 
+
           <div className="mt-8 text-center">
             <button
               onClick={() => scrollToId("oferta")}
-              className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-cyan-400 to-cyan-300 px-7 py-3 font-bold uppercase tracking-[0.18em] text-black shadow-[0_0_40px_-6px_rgba(34,211,238,0.9)] transition-transform hover:scale-[1.03]"
+              className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-amber-300 to-amber-200 px-7 py-3 font-bold uppercase tracking-[0.18em] text-black shadow-[0_0_40px_-6px_rgba(251,191,36,0.9)] transition-transform hover:scale-[1.03]"
             >
-              <Zap className="h-4 w-4" /> Quero garantir o meu
+              <Zap className="h-4 w-4" /> Garantir uma das 30 vagas
             </button>
           </div>
+
         </div>
       </section>
 
@@ -537,7 +567,7 @@ function OfertaPage() {
                 "Procura “robô mágico que dobra a banca em 1 dia”. Isso não existe.",
                 "Não vai seguir os sinais e ainda quer culpar a ferramenta.",
                 "Quer ficar rico sem esforço, sem estudo e sem paciência.",
-                "Não está disposto a investir R$ 4.997 em algo que devolve isso em 1 mês bom.",
+                "Não está disposto a investir R$ 997 agora — sabendo que amanhã pode custar R$ 4.997.",
               ].map((t) => (
                 <li key={t} className="flex items-start gap-3">
                   <X className="mt-0.5 h-5 w-5 shrink-0 text-red-400" />
@@ -567,39 +597,47 @@ function OfertaPage() {
 
       {/* OFERTA / CHECKOUT */}
       <section id="oferta" className="relative z-10 mx-auto max-w-4xl px-4 py-24">
-        <div className="relative overflow-hidden rounded-3xl border border-cyan-400/40 bg-gradient-to-b from-cyan-950/50 via-[#04080d] to-[#04080d] p-8 shadow-[0_0_120px_-20px_rgba(34,211,238,0.9)] sm:p-12">
-          <div className="pointer-events-none absolute inset-0 opacity-[0.06] [background-image:linear-gradient(rgba(34,211,238,.6)_1px,transparent_1px),linear-gradient(90deg,rgba(34,211,238,.6)_1px,transparent_1px)] [background-size:22px_22px]" />
-          <div className="pointer-events-none absolute -top-24 left-1/2 h-64 w-[120%] -translate-x-1/2 rounded-full bg-cyan-400/10 blur-3xl" />
+        <div className="relative overflow-hidden rounded-3xl border border-amber-300/50 bg-gradient-to-b from-amber-950/30 via-[#04080d] to-[#04080d] p-8 shadow-[0_0_120px_-20px_rgba(251,191,36,0.7)] sm:p-12">
+          <div className="pointer-events-none absolute inset-0 opacity-[0.06] [background-image:linear-gradient(rgba(251,191,36,.6)_1px,transparent_1px),linear-gradient(90deg,rgba(251,191,36,.6)_1px,transparent_1px)] [background-size:22px_22px]" />
+          <div className="pointer-events-none absolute -top-24 left-1/2 h-64 w-[120%] -translate-x-1/2 rounded-full bg-amber-400/10 blur-3xl" />
 
           <div className="relative text-center">
-            <div className="inline-flex items-center gap-2 rounded-full border border-cyan-400/40 bg-black/40 px-3 py-1 font-mono text-[10px] uppercase tracking-[0.28em] text-cyan-200">
-              <Clock className="h-3 w-3" /> Expira em {String(h).padStart(2, "0")}:{String(m).padStart(2, "0")}:{String(s).padStart(2, "0")}
+            <div className="inline-flex items-center gap-2 rounded-full border border-amber-300/50 bg-black/40 px-3 py-1 font-mono text-[10px] uppercase tracking-[0.28em] text-amber-200">
+              <Clock className="h-3 w-3" /> Lançamento encerra em {timer}
             </div>
 
             <h2 className="mt-6 text-3xl font-black sm:text-5xl">
-              Ativar meu JARVIS <span className="text-cyan-300">agora</span>.
+              Garantir minha vaga no{" "}
+              <span className="text-amber-300 drop-shadow-[0_0_18px_rgba(251,191,36,0.6)]">
+                lançamento
+              </span>
+              .
             </h2>
+            <p className="mx-auto mt-3 max-w-xl text-sm text-cyan-100/70">
+              Depois das <b className="text-amber-200">30 vagas</b> preenchidas, o acesso volta ao
+              preço cheio de <b>{fmt(REGULAR_PRICE)}</b>. Não haverá nova rodada nessa condição.
+            </p>
 
             <div className="mt-8 flex flex-col items-center gap-1">
               <div className="font-mono text-sm text-cyan-100/70 line-through decoration-red-400/70">
-                De {fmt(21200)}
+                De {fmt(REGULAR_PRICE)}
               </div>
-              <div className="text-5xl font-black text-cyan-100 drop-shadow-[0_0_28px_rgba(34,211,238,0.9)] sm:text-6xl">
-                {fmt(4997)}
+              <div className="text-6xl font-black text-amber-100 drop-shadow-[0_0_28px_rgba(251,191,36,0.9)] sm:text-7xl">
+                {fmt(LAUNCH_PRICE)}
               </div>
               <div className="mt-2 font-mono text-xs uppercase tracking-[0.24em] text-cyan-300/80">
-                ou <b className="text-cyan-100">12x de R$ 497,00</b> no cartão
+                ou <b className="text-cyan-100">10x de R$ 99,70</b> sem juros no cartão
               </div>
               <div className="mt-1 font-mono text-[10px] uppercase tracking-[0.24em] text-emerald-300">
-                PIX à vista • 5% de desconto extra
+                PIX à vista • acesso liberado em segundos
               </div>
             </div>
 
             <a
               href={CHECKOUT_URL}
-              className="group mt-10 inline-flex w-full max-w-md items-center justify-center gap-2 rounded-full bg-gradient-to-r from-cyan-400 via-cyan-300 to-cyan-400 px-8 py-5 text-base font-black uppercase tracking-[0.16em] text-black shadow-[0_0_60px_-6px_rgba(34,211,238,1)] transition-transform hover:scale-[1.02] sm:text-lg"
+              className="group mt-10 inline-flex w-full max-w-md items-center justify-center gap-2 rounded-full bg-gradient-to-r from-amber-300 via-amber-200 to-amber-300 px-8 py-5 text-base font-black uppercase tracking-[0.16em] text-black shadow-[0_0_60px_-6px_rgba(251,191,36,1)] transition-transform hover:scale-[1.02] sm:text-lg"
             >
-              <Zap className="h-5 w-5" /> Ativar meu JARVIS agora
+              <Zap className="h-5 w-5" /> Ativar JARVIS por R$ 997
               <span className="ml-1 transition-transform group-hover:translate-x-1">→</span>
             </a>
 
@@ -609,19 +647,45 @@ function OfertaPage() {
               <span>Visa • Master • Elo • PIX</span>
             </div>
 
-            <div className="mt-8 rounded-xl border border-cyan-500/20 bg-black/40 px-4 py-3 font-mono text-[11px] uppercase tracking-[0.22em] text-cyan-200/80">
-              <span className="inline-block h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-300 align-middle" />{" "}
-              Restam <b className="text-cyan-100">17</b> das 50 vagas deste lote
+            {/* Progress de vagas */}
+            <div className="mt-8 rounded-xl border border-amber-300/30 bg-black/50 px-5 py-4">
+              <div className="flex items-center justify-between font-mono text-[11px] uppercase tracking-[0.22em] text-amber-200/90">
+                <span className="inline-flex items-center gap-2">
+                  <span className="inline-block h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-300" />
+                  Vagas restantes
+                </span>
+                <span>
+                  <b className="text-amber-100">{SLOTS_REMAINING}</b> / {TOTAL_SLOTS}
+                </span>
+              </div>
+              <div className="mt-3 h-2 w-full overflow-hidden rounded-full bg-cyan-950/60">
+                <div
+                  className="h-full rounded-full bg-gradient-to-r from-amber-400 via-amber-300 to-amber-200 shadow-[0_0_16px_rgba(251,191,36,0.9)]"
+                  style={{ width: `${((TOTAL_SLOTS - SLOTS_REMAINING) / TOTAL_SLOTS) * 100}%` }}
+                />
+              </div>
+              <div className="mt-2 text-left font-mono text-[10px] uppercase tracking-[0.22em] text-cyan-300/70">
+                {TOTAL_SLOTS - SLOTS_REMAINING} pessoas já ativaram nas últimas horas
+              </div>
             </div>
           </div>
         </div>
       </section>
+
 
       {/* FAQ */}
       <section className="relative z-10 mx-auto max-w-3xl px-4 pb-24">
         <h2 className="text-center text-3xl font-bold sm:text-4xl">Perguntas frequentes</h2>
         <div className="mt-10 space-y-3">
           {[
+            {
+              q: "Por que R$ 997 se o preço normal é R$ 4.997?",
+              a: "É a nossa condição de lançamento para os 30 primeiros operadores. Queremos rodar o núcleo neural v4.2 com traders reais, coletar cases e depoimentos. Após as 30 vagas serem preenchidas, o preço volta automaticamente para R$ 4.997 — sem exceção.",
+            },
+            {
+              q: "O preço volta mesmo depois das 30 vagas?",
+              a: "Volta. Não há segunda rodada, não há cupom, não há 'me manda no direct'. Quem entrar depois paga R$ 4.997.",
+            },
             {
               q: "Preciso ter experiência com trading?",
               a: "Não é obrigatório, mas ajuda. O JARVIS entrega o sinal pronto (entrada, stop e alvo). Iniciantes aprendem operando junto; experientes tiram o máximo desde o dia 1.",
@@ -644,7 +708,7 @@ function OfertaPage() {
             },
             {
               q: "Posso parcelar? Tem PIX?",
-              a: "Sim. Até 12x no cartão de R$ 497,00, ou PIX à vista com 5% de desconto extra.",
+              a: "Sim. Até 10x de R$ 99,70 sem juros no cartão, ou PIX à vista com liberação imediata.",
             },
           ].map((f) => (
             <details
@@ -668,17 +732,18 @@ function OfertaPage() {
             <WaveCanvas className="absolute inset-0 h-full w-full" intensity={1.3} />
           </div>
           <h2 className="text-3xl font-black sm:text-5xl">
-            Duas opções. <span className="text-cyan-300">Só uma vira o jogo.</span>
+            R$ 997 <span className="text-amber-300">hoje</span>. <br className="sm:hidden" />
+            R$ 4.997 <span className="text-red-400">depois das 30 vagas</span>.
           </h2>
           <p className="mx-auto mt-4 max-w-xl text-cyan-100/80">
-            Continuar operando sozinho e torcer para dar certo — ou operar com o JARVIS
-            ao seu lado, com uma IA institucional trabalhando 24h por você.
+            Você não vai receber outro e-mail lembrando dessa condição. Ou você entra agora,
+            ou paga 5x mais no próximo lote. A escolha é sua.
           </p>
           <a
             href={CHECKOUT_URL}
-            className="mt-10 inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-cyan-400 to-cyan-300 px-8 py-4 font-black uppercase tracking-[0.18em] text-black shadow-[0_0_60px_-6px_rgba(34,211,238,1)] transition-transform hover:scale-[1.03]"
+            className="mt-10 inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-amber-300 to-amber-200 px-8 py-4 font-black uppercase tracking-[0.18em] text-black shadow-[0_0_60px_-6px_rgba(251,191,36,1)] transition-transform hover:scale-[1.03]"
           >
-            <Zap className="h-5 w-5" /> Quero o JARVIS agora →
+            <Zap className="h-5 w-5" /> Garantir minha vaga por R$ 997 →
           </a>
         </div>
       </section>
