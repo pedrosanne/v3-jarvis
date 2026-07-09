@@ -175,17 +175,21 @@ function scrollToId(id: string) {
 
 // ============================================================
 function OfertaPage() {
-  // 48h de "lote" a partir do primeiro carregamento (por navegador)
-  const endsAt = useMemo(() => {
-    if (typeof window === "undefined") return Date.now() + 48 * 3600 * 1000;
+  // Countdown de 48h persistido por navegador — SSR-safe
+  const [endsAt, setEndsAt] = useState<number | null>(null);
+  useEffect(() => {
     const k = "oferta_ends_v1";
     const saved = Number(localStorage.getItem(k) || 0);
-    if (saved > Date.now()) return saved;
+    if (saved > Date.now()) {
+      setEndsAt(saved);
+      return;
+    }
     const next = Date.now() + 48 * 3600 * 1000;
     localStorage.setItem(k, String(next));
-    return next;
+    setEndsAt(next);
   }, []);
-  const { h, m, s } = useCountdown(endsAt);
+  const { h, m, s, ready } = useCountdown(endsAt);
+  const timer = ready ? `${pad(h)}:${pad(m)}:${pad(s)}` : "--:--:--";
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-[#04070c] text-cyan-50 antialiased">
@@ -196,17 +200,16 @@ function OfertaPage() {
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-2 text-[11px] font-mono uppercase tracking-[0.22em] text-cyan-200 sm:text-xs">
           <span className="flex items-center gap-2">
             <span className="inline-block h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-300 shadow-[0_0_8px_2px_rgba(110,231,183,0.8)]" />
-            Lote atual • 17/50 vagas restantes
+            Lançamento • {SLOTS_REMAINING}/{TOTAL_SLOTS} vagas a R$ 997
           </span>
           <span className="hidden items-center gap-2 sm:flex">
             <Clock className="h-3.5 w-3.5 text-cyan-300" />
-            Oferta expira em{" "}
-            <span className="font-bold text-cyan-100">
-              {String(h).padStart(2, "0")}:{String(m).padStart(2, "0")}:{String(s).padStart(2, "0")}
-            </span>
+            Preço sobe em <span className="font-bold text-cyan-100">{timer}</span>
           </span>
         </div>
       </div>
+
+
 
       {/* HERO */}
       <section className="relative z-10 mx-auto flex max-w-6xl flex-col items-center px-4 pt-16 pb-24 text-center sm:pt-24">
