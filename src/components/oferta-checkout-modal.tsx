@@ -16,11 +16,21 @@ import {
   X,
   Zap,
   Bitcoin,
+  Rocket,
+  Users,
+  EyeOff,
+  Eye,
+  Trophy,
+  Megaphone,
+  Wallet,
+  Award,
+  ArrowRight,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-type Step = 1 | 2 | 3;
+type Step = 1 | 2 | 3 | 4 | 5;
 type PayMethod = "pix" | "card" | "crypto";
+type ResellMode = "appear" | "anon";
 
 interface Props {
   open: boolean;
@@ -54,6 +64,8 @@ export function OfertaCheckoutModal({ open, onClose, priceLabel = "R$ 997" }: Pr
   const [touched, setTouched] = useState<{ [k: string]: boolean }>({});
   const [method, setMethod] = useState<PayMethod | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const [resellMode, setResellMode] = useState<ResellMode | null>(null);
+  const [upsellAccepted, setUpsellAccepted] = useState(false);
   const firstInputRef = useRef<HTMLInputElement | null>(null);
 
   // Reset ao fechar
@@ -64,6 +76,8 @@ export function OfertaCheckoutModal({ open, onClose, priceLabel = "R$ 997" }: Pr
         setTouched({});
         setSubmitting(false);
         setMethod(null);
+        setResellMode(null);
+        setUpsellAccepted(false);
       }, 250);
       return () => clearTimeout(t);
     }
@@ -93,12 +107,14 @@ export function OfertaCheckoutModal({ open, onClose, priceLabel = "R$ 997" }: Pr
   // Progresso gamificado
   const progress = useMemo(() => {
     let p = 0;
-    if (validName(name)) p += 20;
-    if (validEmail(email)) p += 20;
-    if (validPhone(phone)) p += 20;
-    if (step >= 2) p = Math.max(p, 66);
-    if (method) p = Math.max(p, 90);
-    if (step === 3) p = 100;
+    if (validName(name)) p += 12;
+    if (validEmail(email)) p += 12;
+    if (validPhone(phone)) p += 12;
+    if (step >= 2) p = Math.max(p, 50);
+    if (method) p = Math.max(p, 65);
+    if (step >= 3) p = Math.max(p, 75);
+    if (step >= 4) p = Math.max(p, 90);
+    if (step === 5) p = 100;
     return p;
   }, [name, email, phone, step, method]);
 
@@ -168,11 +184,13 @@ export function OfertaCheckoutModal({ open, onClose, priceLabel = "R$ 997" }: Pr
         {/* Steps */}
         <div className="relative px-6 pt-5">
           <div className="flex items-center justify-between font-mono text-[10px] uppercase tracking-[0.24em]">
-            <StepDot n={1} active={step >= 1} done={step > 1} label="Seus dados" />
+            <StepDot n={1} active={step >= 1} done={step > 1} label="Dados" />
             <div className="mx-2 h-px flex-1 bg-gradient-to-r from-cyan-500/20 via-cyan-400/60 to-cyan-500/20" />
             <StepDot n={2} active={step >= 2} done={step > 2} label="Pagamento" />
             <div className="mx-2 h-px flex-1 bg-gradient-to-r from-cyan-500/20 via-cyan-400/60 to-cyan-500/20" />
-            <StepDot n={3} active={step === 3} done={step === 3} label="Acesso" />
+            <StepDot n={3} active={step >= 3} done={step > 3} label="Vaga" />
+            <div className="mx-2 h-px flex-1 bg-gradient-to-r from-cyan-500/20 via-cyan-400/60 to-cyan-500/20" />
+            <StepDot n={4} active={step >= 4} done={step > 4} label="Bônus" />
           </div>
           <div className="mt-4 h-1.5 w-full overflow-hidden rounded-full bg-cyan-950/60">
             <div
