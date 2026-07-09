@@ -133,19 +133,23 @@ function WaveCanvas({ className, intensity = 1 }: { className?: string; intensit
   return <canvas ref={ref} className={className} />;
 }
 
-// ---------- Countdown ----------
-function useCountdown(endsAt: number) {
-  const [now, setNow] = useState(() => Date.now());
+// ---------- Countdown (SSR-safe) ----------
+function useCountdown(endsAt: number | null) {
+  const [now, setNow] = useState<number | null>(null);
   useEffect(() => {
+    setNow(Date.now());
     const t = setInterval(() => setNow(Date.now()), 1000);
     return () => clearInterval(t);
   }, []);
+  if (now === null || endsAt === null) return { h: 0, m: 0, s: 0, ready: false };
   const diff = Math.max(0, endsAt - now);
   const h = Math.floor(diff / 3_600_000);
   const m = Math.floor((diff % 3_600_000) / 60_000);
   const s = Math.floor((diff % 60_000) / 1000);
-  return { h, m, s };
+  return { h, m, s, ready: true };
 }
+
+const pad = (n: number) => String(n).padStart(2, "0");
 
 // ---------- BG grid ----------
 function GridBackdrop() {
