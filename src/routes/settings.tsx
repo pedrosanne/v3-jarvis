@@ -85,8 +85,8 @@ function Settings() {
             <label className="flex flex-col gap-1.5">
               <span className="text-xs font-medium text-muted-foreground">Moeda base</span>
               <select className={inputCls} value={baseCurrency} onChange={(e) => setBaseCurrency(e.target.value)}>
-                <option>USD</option>
                 <option>BRL</option>
+                <option>USD</option>
                 <option>EUR</option>
                 <option>GBP</option>
               </select>
