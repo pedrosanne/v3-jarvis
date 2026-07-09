@@ -18,7 +18,6 @@ import {
   Newspaper,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { OfertaCheckoutModal } from "@/components/oferta-checkout-modal";
 
 export const Route = createFileRoute("/oferta")({
   head: () => ({
