@@ -520,11 +520,12 @@ function OfertaPage() {
           <div className="mt-8 text-center">
             <button
               onClick={() => scrollToId("oferta")}
-              className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-cyan-400 to-cyan-300 px-7 py-3 font-bold uppercase tracking-[0.18em] text-black shadow-[0_0_40px_-6px_rgba(34,211,238,0.9)] transition-transform hover:scale-[1.03]"
+              className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-amber-300 to-amber-200 px-7 py-3 font-bold uppercase tracking-[0.18em] text-black shadow-[0_0_40px_-6px_rgba(251,191,36,0.9)] transition-transform hover:scale-[1.03]"
             >
-              <Zap className="h-4 w-4" /> Quero garantir o meu
+              <Zap className="h-4 w-4" /> Garantir uma das 30 vagas
             </button>
           </div>
+
         </div>
       </section>
 
