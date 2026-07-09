@@ -192,11 +192,6 @@ function OfertaPage() {
       document.getElementById("oferta")?.scrollIntoView({ behavior: "smooth", block: "start" });
     }
   };
-  const goToCheckout = () => {
-    if (typeof window !== "undefined") {
-      window.location.href = "https://www.xbotting.com.br/checkout/8edf01ca-eb3e-4355-a02b-8234ad2db794";
-    }
-  };
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-[#04070c] text-cyan-50 antialiased">
