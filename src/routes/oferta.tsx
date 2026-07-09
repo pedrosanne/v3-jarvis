@@ -498,15 +498,24 @@ function OfertaPage() {
                 {fmt(21200)}
               </span>
             </div>
-            <div className="flex items-center justify-between gap-4 bg-gradient-to-r from-cyan-500/20 via-cyan-400/10 to-transparent px-5 py-6 sm:px-8">
-              <span className="font-mono text-[11px] uppercase tracking-[0.24em] text-cyan-100">
-                Seu investimento hoje
+            <div className="flex items-center justify-between gap-4 border-t border-cyan-500/15 px-5 py-4 sm:px-8">
+              <span className="font-mono text-[11px] uppercase tracking-[0.24em] text-cyan-200/80">
+                Preço normal
               </span>
-              <span className="text-2xl font-black text-cyan-100 drop-shadow-[0_0_16px_rgba(34,211,238,0.7)] sm:text-3xl">
-                {fmt(4997)}
+              <span className="font-mono text-base text-cyan-100/70 line-through decoration-red-400/70">
+                {fmt(REGULAR_PRICE)}
+              </span>
+            </div>
+            <div className="flex items-center justify-between gap-4 bg-gradient-to-r from-amber-400/20 via-amber-300/10 to-transparent px-5 py-6 sm:px-8">
+              <span className="font-mono text-[11px] uppercase tracking-[0.24em] text-amber-100">
+                Lançamento • 30 primeiros
+              </span>
+              <span className="text-2xl font-black text-amber-100 drop-shadow-[0_0_16px_rgba(251,191,36,0.7)] sm:text-3xl">
+                {fmt(LAUNCH_PRICE)}
               </span>
             </div>
           </div>
+
 
           <div className="mt-8 text-center">
             <button
