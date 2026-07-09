@@ -249,9 +249,9 @@ function OfertaPage() {
         <div className="mt-10 flex flex-col items-center gap-3 sm:flex-row">
           <button
             onClick={() => scrollToId("oferta")}
-            className="group relative inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-cyan-400 via-cyan-300 to-cyan-400 px-8 py-4 font-bold uppercase tracking-[0.18em] text-black shadow-[0_0_40px_-6px_rgba(34,211,238,0.9)] transition-transform hover:scale-[1.03]"
+            className="group relative inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-amber-300 via-amber-200 to-amber-300 px-8 py-4 font-bold uppercase tracking-[0.18em] text-black shadow-[0_0_40px_-6px_rgba(251,191,36,0.9)] transition-transform hover:scale-[1.03]"
           >
-            <Zap className="h-4 w-4" /> Quero ativar meu JARVIS
+            <Zap className="h-4 w-4" /> Garantir vaga por R$ 997
             <span className="ml-1 transition-transform group-hover:translate-x-1">→</span>
           </button>
           <a
@@ -261,6 +261,7 @@ function OfertaPage() {
             Ver demo ao vivo
           </a>
         </div>
+
 
         <div className="mt-8 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 font-mono text-[11px] uppercase tracking-[0.2em] text-cyan-300/70">
           <span className="inline-flex items-center gap-1.5"><ShieldCheck className="h-3.5 w-3.5" /> Garantia 7 dias</span>
