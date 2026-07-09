@@ -190,6 +190,11 @@ function OfertaPage() {
 
   const [modalOpen, setModalOpen] = useState(false);
   const openCheckout = () => setModalOpen(true);
+  const scrollToPricing = () => {
+    if (typeof document !== "undefined") {
+      document.getElementById("oferta")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  };
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-[#04070c] text-cyan-50 antialiased">
@@ -248,7 +253,7 @@ function OfertaPage() {
 
         <div className="mt-10 flex flex-col items-center gap-3 sm:flex-row">
           <button
-            onClick={openCheckout}
+            onClick={scrollToPricing}
             className="group relative inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-amber-300 via-amber-200 to-amber-300 px-8 py-4 font-bold uppercase tracking-[0.18em] text-black shadow-[0_0_40px_-6px_rgba(251,191,36,0.9)] transition-transform hover:scale-[1.03]"
           >
             <Zap className="h-4 w-4" /> Garantir vaga por R$ 997
@@ -519,7 +524,7 @@ function OfertaPage() {
 
           <div className="mt-8 text-center">
             <button
-              onClick={openCheckout}
+              onClick={scrollToPricing}
               className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-amber-300 to-amber-200 px-7 py-3 font-bold uppercase tracking-[0.18em] text-black shadow-[0_0_40px_-6px_rgba(251,191,36,0.9)] transition-transform hover:scale-[1.03]"
             >
               <Zap className="h-4 w-4" /> Garantir uma das 30 vagas
