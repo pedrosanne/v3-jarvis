@@ -13,6 +13,7 @@ import { Route as SignupRouteImport } from './routes/signup'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as RiskRouteImport } from './routes/risk'
 import { Route as ReportsRouteImport } from './routes/reports'
+import { Route as OfertaRouteImport } from './routes/oferta'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as JournalRouteImport } from './routes/journal'
 import { Route as JarvisRouteImport } from './routes/jarvis'
@@ -39,6 +40,11 @@ const RiskRoute = RiskRouteImport.update({
 const ReportsRoute = ReportsRouteImport.update({
   id: '/reports',
   path: '/reports',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OfertaRoute = OfertaRouteImport.update({
+  id: '/oferta',
+  path: '/oferta',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LoginRoute = LoginRouteImport.update({
@@ -85,6 +91,7 @@ export interface FileRoutesByFullPath {
   '/jarvis': typeof JarvisRoute
   '/journal': typeof JournalRoute
   '/login': typeof LoginRoute
+  '/oferta': typeof OfertaRoute
   '/reports': typeof ReportsRoute
   '/risk': typeof RiskRoute
   '/settings': typeof SettingsRoute
@@ -98,6 +105,7 @@ export interface FileRoutesByTo {
   '/jarvis': typeof JarvisRoute
   '/journal': typeof JournalRoute
   '/login': typeof LoginRoute
+  '/oferta': typeof OfertaRoute
   '/reports': typeof ReportsRoute
   '/risk': typeof RiskRoute
   '/settings': typeof SettingsRoute
@@ -112,6 +120,7 @@ export interface FileRoutesById {
   '/jarvis': typeof JarvisRoute
   '/journal': typeof JournalRoute
   '/login': typeof LoginRoute
+  '/oferta': typeof OfertaRoute
   '/reports': typeof ReportsRoute
   '/risk': typeof RiskRoute
   '/settings': typeof SettingsRoute
@@ -127,6 +136,7 @@ export interface FileRouteTypes {
     | '/jarvis'
     | '/journal'
     | '/login'
+    | '/oferta'
     | '/reports'
     | '/risk'
     | '/settings'
@@ -140,6 +150,7 @@ export interface FileRouteTypes {
     | '/jarvis'
     | '/journal'
     | '/login'
+    | '/oferta'
     | '/reports'
     | '/risk'
     | '/settings'
@@ -153,6 +164,7 @@ export interface FileRouteTypes {
     | '/jarvis'
     | '/journal'
     | '/login'
+    | '/oferta'
     | '/reports'
     | '/risk'
     | '/settings'
@@ -167,6 +179,7 @@ export interface RootRouteChildren {
   JarvisRoute: typeof JarvisRoute
   JournalRoute: typeof JournalRoute
   LoginRoute: typeof LoginRoute
+  OfertaRoute: typeof OfertaRoute
   ReportsRoute: typeof ReportsRoute
   RiskRoute: typeof RiskRoute
   SettingsRoute: typeof SettingsRoute
@@ -201,6 +214,13 @@ declare module '@tanstack/react-router' {
       path: '/reports'
       fullPath: '/reports'
       preLoaderRoute: typeof ReportsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/oferta': {
+      id: '/oferta'
+      path: '/oferta'
+      fullPath: '/oferta'
+      preLoaderRoute: typeof OfertaRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/login': {
@@ -263,6 +283,7 @@ const rootRouteChildren: RootRouteChildren = {
   JarvisRoute: JarvisRoute,
   JournalRoute: JournalRoute,
   LoginRoute: LoginRoute,
+  OfertaRoute: OfertaRoute,
   ReportsRoute: ReportsRoute,
   RiskRoute: RiskRoute,
   SettingsRoute: SettingsRoute,
