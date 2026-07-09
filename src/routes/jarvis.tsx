@@ -444,9 +444,7 @@ function JARVISPage() {
     setBrokerStatus("checking");
     setBrokerProgress(0);
 
-    const allowed = !!domain && ALLOWED_BROKERS.some(
-      (d) => domain === d || domain.endsWith("." + d),
-    );
+    const allowed = !!domain;
 
     const steps = [
       { label: "Resolvendo DNS", ms: 550 },
