@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "J.A.R.V.I.S. — Neural Trading OS",
   "version": "3.0.0",
-  "description": "Painel lateral do JARVIS — Iara AI, Journal, Risk, Analytics direto na lateral do navegador.",
+  "description": "Painel lateral do JARVIS — JARVIS AI, Journal, Risk, Analytics direto na lateral do navegador.",
   "permissions": ["storage", "sidePanel"],
   "side_panel": {
     "default_path": "popup.html"

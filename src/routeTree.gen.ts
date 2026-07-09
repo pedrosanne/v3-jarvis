@@ -15,7 +15,7 @@ import { Route as RiskRouteImport } from './routes/risk'
 import { Route as ReportsRouteImport } from './routes/reports'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as JournalRouteImport } from './routes/journal'
-import { Route as IaraRouteImport } from './routes/iara'
+import { Route as JarvisRouteImport } from './routes/jarvis'
 import { Route as ExtensionRouteImport } from './routes/extension'
 import { Route as EntryRouteImport } from './routes/entry'
 import { Route as AnalyticsRouteImport } from './routes/analytics'
@@ -51,9 +51,9 @@ const JournalRoute = JournalRouteImport.update({
   path: '/journal',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IaraRoute = IaraRouteImport.update({
-  id: '/iara',
-  path: '/iara',
+const JarvisRoute = JarvisRouteImport.update({
+  id: '/jarvis',
+  path: '/jarvis',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ExtensionRoute = ExtensionRouteImport.update({
@@ -82,7 +82,7 @@ export interface FileRoutesByFullPath {
   '/analytics': typeof AnalyticsRoute
   '/entry': typeof EntryRoute
   '/extension': typeof ExtensionRoute
-  '/iara': typeof IaraRoute
+  '/jarvis': typeof JarvisRoute
   '/journal': typeof JournalRoute
   '/login': typeof LoginRoute
   '/reports': typeof ReportsRoute
@@ -95,7 +95,7 @@ export interface FileRoutesByTo {
   '/analytics': typeof AnalyticsRoute
   '/entry': typeof EntryRoute
   '/extension': typeof ExtensionRoute
-  '/iara': typeof IaraRoute
+  '/jarvis': typeof JarvisRoute
   '/journal': typeof JournalRoute
   '/login': typeof LoginRoute
   '/reports': typeof ReportsRoute
@@ -109,7 +109,7 @@ export interface FileRoutesById {
   '/analytics': typeof AnalyticsRoute
   '/entry': typeof EntryRoute
   '/extension': typeof ExtensionRoute
-  '/iara': typeof IaraRoute
+  '/jarvis': typeof JarvisRoute
   '/journal': typeof JournalRoute
   '/login': typeof LoginRoute
   '/reports': typeof ReportsRoute
@@ -124,7 +124,7 @@ export interface FileRouteTypes {
     | '/analytics'
     | '/entry'
     | '/extension'
-    | '/iara'
+    | '/jarvis'
     | '/journal'
     | '/login'
     | '/reports'
@@ -137,7 +137,7 @@ export interface FileRouteTypes {
     | '/analytics'
     | '/entry'
     | '/extension'
-    | '/iara'
+    | '/jarvis'
     | '/journal'
     | '/login'
     | '/reports'
@@ -150,7 +150,7 @@ export interface FileRouteTypes {
     | '/analytics'
     | '/entry'
     | '/extension'
-    | '/iara'
+    | '/jarvis'
     | '/journal'
     | '/login'
     | '/reports'
@@ -164,7 +164,7 @@ export interface RootRouteChildren {
   AnalyticsRoute: typeof AnalyticsRoute
   EntryRoute: typeof EntryRoute
   ExtensionRoute: typeof ExtensionRoute
-  IaraRoute: typeof IaraRoute
+  JarvisRoute: typeof JarvisRoute
   JournalRoute: typeof JournalRoute
   LoginRoute: typeof LoginRoute
   ReportsRoute: typeof ReportsRoute
@@ -217,11 +217,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof JournalRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/iara': {
-      id: '/iara'
-      path: '/iara'
-      fullPath: '/iara'
-      preLoaderRoute: typeof IaraRouteImport
+    '/jarvis': {
+      id: '/jarvis'
+      path: '/jarvis'
+      fullPath: '/jarvis'
+      preLoaderRoute: typeof JarvisRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/extension': {
@@ -260,7 +260,7 @@ const rootRouteChildren: RootRouteChildren = {
   AnalyticsRoute: AnalyticsRoute,
   EntryRoute: EntryRoute,
   ExtensionRoute: ExtensionRoute,
-  IaraRoute: IaraRoute,
+  JarvisRoute: JarvisRoute,
   JournalRoute: JournalRoute,
   LoginRoute: LoginRoute,
   ReportsRoute: ReportsRoute,
@@ -271,13 +271,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
