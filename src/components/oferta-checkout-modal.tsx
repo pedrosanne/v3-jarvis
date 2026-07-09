@@ -184,11 +184,13 @@ export function OfertaCheckoutModal({ open, onClose, priceLabel = "R$ 997" }: Pr
         {/* Steps */}
         <div className="relative px-6 pt-5">
           <div className="flex items-center justify-between font-mono text-[10px] uppercase tracking-[0.24em]">
-            <StepDot n={1} active={step >= 1} done={step > 1} label="Seus dados" />
+            <StepDot n={1} active={step >= 1} done={step > 1} label="Dados" />
             <div className="mx-2 h-px flex-1 bg-gradient-to-r from-cyan-500/20 via-cyan-400/60 to-cyan-500/20" />
             <StepDot n={2} active={step >= 2} done={step > 2} label="Pagamento" />
             <div className="mx-2 h-px flex-1 bg-gradient-to-r from-cyan-500/20 via-cyan-400/60 to-cyan-500/20" />
-            <StepDot n={3} active={step === 3} done={step === 3} label="Acesso" />
+            <StepDot n={3} active={step >= 3} done={step > 3} label="Vaga" />
+            <div className="mx-2 h-px flex-1 bg-gradient-to-r from-cyan-500/20 via-cyan-400/60 to-cyan-500/20" />
+            <StepDot n={4} active={step >= 4} done={step > 4} label="Bônus" />
           </div>
           <div className="mt-4 h-1.5 w-full overflow-hidden rounded-full bg-cyan-950/60">
             <div
