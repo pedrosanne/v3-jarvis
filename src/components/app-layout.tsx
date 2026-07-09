@@ -23,7 +23,7 @@ import { useProfile } from "@/hooks/use-profile";
 
 const NAV = [
   { to: "/", label: "Painel", icon: LayoutDashboard },
-  { to: "/iara", label: "Jarvis IA", icon: Brain },
+  { to: "/jarvis", label: "Jarvis IA", icon: Brain },
   { to: "/journal", label: "Diário", icon: BookOpen },
   { to: "/entry", label: "Registrar", icon: PlusCircle },
   { to: "/analytics", label: "Análises", icon: BarChart3 },

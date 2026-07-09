@@ -2,12 +2,12 @@ import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import { Volume2, VolumeX } from "lucide-react";
 
-import brokerUrlAsset from "@/assets/iara-audio/broker-url.mp3.asset.json";
-import accountIdAsset from "@/assets/iara-audio/account-id.mp3.asset.json";
-import assetAsset from "@/assets/iara-audio/asset.mp3.asset.json";
-import timeframeAsset from "@/assets/iara-audio/timeframe.mp3.asset.json";
-import screenshotAsset from "@/assets/iara-audio/screenshot.mp3.asset.json";
-import slideHackAsset from "@/assets/iara-audio/slide-hack.mp3.asset.json";
+import brokerUrlAsset from "@/assets/jarvis-audio/broker-url.mp3.asset.json";
+import accountIdAsset from "@/assets/jarvis-audio/account-id.mp3.asset.json";
+import assetAsset from "@/assets/jarvis-audio/asset.mp3.asset.json";
+import timeframeAsset from "@/assets/jarvis-audio/timeframe.mp3.asset.json";
+import screenshotAsset from "@/assets/jarvis-audio/screenshot.mp3.asset.json";
+import slideHackAsset from "@/assets/jarvis-audio/slide-hack.mp3.asset.json";
 
 export type JarvisStep =
   | "broker-url"

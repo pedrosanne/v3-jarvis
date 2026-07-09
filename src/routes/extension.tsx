@@ -5,17 +5,17 @@ import { AppLayout } from "@/components/app-layout";
 export const Route = createFileRoute("/extension")({
   head: () => ({
     meta: [
-      { title: "Extensão Chrome — Iara AI" },
+      { title: "Extensão Chrome — JARVIS AI" },
       {
         name: "description",
         content:
-          "Baixe a extensão da Iara AI para Chrome e abra o scalper neural com 1 clique em qualquer aba.",
+          "Baixe a extensão da JARVIS AI para Chrome e abra o scalper neural com 1 clique em qualquer aba.",
       },
-      { property: "og:title", content: "Extensão Chrome — Iara AI" },
+      { property: "og:title", content: "Extensão Chrome — JARVIS AI" },
       {
         property: "og:description",
         content:
-          "Lançador rápido da Iara AI com suporte a domínio personalizado.",
+          "Lançador rápido da JARVIS AI com suporte a domínio personalizado.",
       },
     ],
   }),
@@ -58,7 +58,7 @@ function ExtensionPage() {
           <ul className="mt-5 space-y-2 text-sm">
             {[
               "Side panel nativo do Chrome — fica fixo na lateral da guia",
-              "Acesso direto à Iara AI, Journal, Risk, Analytics e mais",
+              "Acesso direto à JARVIS AI, Journal, Risk, Analytics e mais",
               "Pré-loader cinematográfico ao abrir",
               "Domínio e rota inicial configuráveis",
               "Compatível com Chrome, Edge, Brave, Arc e Opera",
@@ -89,7 +89,7 @@ function ExtensionPage() {
             domínio, abra o painel lateral, clique no ícone <strong>⚙</strong> e informe a URL base
             (ex.{" "}
             <code className="rounded bg-muted px-1.5 py-0.5">https://app.seudominio.com</code>) e a
-            rota inicial (ex. <code className="rounded bg-muted px-1.5 py-0.5">/iara</code> ou{" "}
+            rota inicial (ex. <code className="rounded bg-muted px-1.5 py-0.5">/jarvis</code> ou{" "}
             <code className="rounded bg-muted px-1.5 py-0.5">/</code>).
           </p>
         </section>

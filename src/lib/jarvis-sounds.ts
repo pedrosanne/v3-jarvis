@@ -1,5 +1,5 @@
 /**
- * Iara JARVIS-style sound engine.
+ * JARVIS JARVIS-style sound engine.
  * 100% sintetizado via Web Audio API — sem assets externos.
  * Cada função dispara um efeito curto, não-bloqueante.
  */

@@ -1,8 +1,8 @@
 {
   "name": "J.A.R.V.I.S. — Neural Trading OS",
   "short_name": "JARVIS",
-  "description": "Scalper neural assistant for day traders. Iara AI, Journal, Risk and Analytics in one app.",
-  "start_url": "/iara",
+  "description": "Scalper neural assistant for day traders. JARVIS AI, Journal, Risk and Analytics in one app.",
+  "start_url": "/jarvis",
   "scope": "/",
   "display": "standalone",
   "orientation": "portrait",

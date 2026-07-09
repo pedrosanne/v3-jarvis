@@ -61,13 +61,13 @@ import {
   sfxSignalReady,
   sfxAbort,
   sfxType,
-} from "@/lib/iara-sounds";
+} from "@/lib/jarvis-sounds";
 
 
 
 
-export const Route = createFileRoute("/iara")({
-  component: IaraPage,
+export const Route = createFileRoute("/jarvis")({
+  component: JARVISPage,
 });
 
 type AssetCategory = "Forex" | "Cripto" | "Ações";
@@ -183,7 +183,7 @@ function TimeframePicker({
               <span className="inline-block h-1.5 w-1.5 animate-pulse rounded-full bg-cyan-300 shadow-[0_0_8px_rgba(34,211,238,0.9)]" />
               Timeframe
             </span>
-            <span className="text-cyan-400/50">iara.tf</span>
+            <span className="text-cyan-400/50">jarvis.tf</span>
           </div>
           <div className="py-1">
             {TIMEFRAMES.map((t) => {
@@ -259,7 +259,7 @@ const NEWS_FEED = [
 
 const BROKERS = ["MetaTrader 5", "TradingView", "Binance", "XP", "Clear", "BTG"];
 
-function IaraPage() {
+function JARVISPage() {
   const [asset, setAsset] = useState(ASSETS[0]);
   const [tf, setTf] = useState(TIMEFRAMES[1]);
   const [phase, setPhase] = useState<Phase>("idle");
@@ -334,13 +334,13 @@ function IaraPage() {
   // Onboarding gating — libera funções uma de cada vez na primeira sessão.
   const [touchedSelect, setTouchedSelect] = useState(false);
   useEffect(() => {
-    if (typeof window !== "undefined" && localStorage.getItem("iara_onboarded_v1") === "1") {
+    if (typeof window !== "undefined" && localStorage.getItem("jarvis_onboarded_v1") === "1") {
       setTouchedSelect(true);
     }
   }, []);
   useEffect(() => {
     if (chartPrint && touchedSelect && typeof window !== "undefined") {
-      localStorage.setItem("iara_onboarded_v1", "1");
+      localStorage.setItem("jarvis_onboarded_v1", "1");
     }
   }, [chartPrint, touchedSelect]);
   const brokerApproved = brokerStatus === "approved";
@@ -453,7 +453,7 @@ function IaraPage() {
       { label: "Validando certificado TLS", ms: 650 },
       { label: "Consultando registro CVM/CySEC", ms: 800 },
       { label: "Auditando licença de operação", ms: 750 },
-      { label: "Cross-check whitelist Iara", ms: 700 },
+      { label: "Cross-check whitelist JARVIS", ms: 700 },
     ];
     setBrokerSteps(steps.map((s) => ({ label: s.label, done: false })));
 
@@ -505,7 +505,7 @@ function IaraPage() {
   // Carrega URL salva como padrão e dispara verificação automática
   useEffect(() => {
     if (typeof window === "undefined") return;
-    const saved = localStorage.getItem("iara_broker_url_v1");
+    const saved = localStorage.getItem("jarvis_broker_url_v1");
     if (saved) {
       setSavedBrokerUrl(saved);
       setBrokerUrl(saved);
@@ -517,14 +517,14 @@ function IaraPage() {
   function saveBrokerDefault() {
     if (typeof window === "undefined") return;
     if (brokerStatus !== "approved" || !brokerUrl) return;
-    localStorage.setItem("iara_broker_url_v1", brokerUrl);
+    localStorage.setItem("jarvis_broker_url_v1", brokerUrl);
     setSavedBrokerUrl(brokerUrl);
     toast.success("URL da corretora salva como padrão");
   }
 
   function clearBrokerDefault() {
     if (typeof window === "undefined") return;
-    localStorage.removeItem("iara_broker_url_v1");
+    localStorage.removeItem("jarvis_broker_url_v1");
     setSavedBrokerUrl(null);
     toast.message("URL padrão removida");
   }
@@ -559,7 +559,7 @@ function IaraPage() {
       { label: "Autenticando ID da conta", ms: 700 },
       { label: "Sincronizando feed de ativos em tempo real", ms: 850 },
       { label: "Validando permissões de leitura", ms: 700 },
-      { label: "Indexando book L2 na neural Iara", ms: 800 },
+      { label: "Indexando book L2 na neural JARVIS", ms: 800 },
     ];
     setAccountSteps(steps.map((s) => ({ label: s.label, done: false })));
 
@@ -615,7 +615,7 @@ function IaraPage() {
 
   useEffect(() => {
     if (typeof window === "undefined") return;
-    const saved = localStorage.getItem("iara_account_id_v1");
+    const saved = localStorage.getItem("jarvis_account_id_v1");
     if (saved) {
       setSavedAccountId(saved);
       setAccountId(saved);
@@ -627,14 +627,14 @@ function IaraPage() {
   function saveAccountDefault() {
     if (typeof window === "undefined") return;
     if (accountStatus !== "approved" || !accountId) return;
-    localStorage.setItem("iara_account_id_v1", accountId);
+    localStorage.setItem("jarvis_account_id_v1", accountId);
     setSavedAccountId(accountId);
     toast.success("ID da conta salvo como padrão");
   }
 
   function clearAccountDefault() {
     if (typeof window === "undefined") return;
-    localStorage.removeItem("iara_account_id_v1");
+    localStorage.removeItem("jarvis_account_id_v1");
     setSavedAccountId(null);
     toast.message("ID padrão removido");
   }
@@ -703,7 +703,7 @@ function IaraPage() {
   }, []);
 
   const phaseLabel: Record<Phase, string> = {
-    idle: "Iara em standby",
+    idle: "JARVIS em standby",
     connecting: "Conectando aos servidores da corretora",
     scanning: "Escaneando book de ofertas em tempo real",
     intercepting: "Interceptando ordens de market makers",
@@ -744,7 +744,7 @@ function IaraPage() {
     if (logRef.current) logRef.current.scrollTop = logRef.current.scrollHeight;
   }, [logs]);
 
-  async function runIara() {
+  async function runJARVIS() {
     setSignal(null);
     setLogs([]);
     setProgress(0);
@@ -764,8 +764,8 @@ function IaraPage() {
         phase: "connecting",
         ms: 1800,
         lines: [
-          [`> iara --target=${asset} --tf=${tf.label} --mode=scalp`, "ok"],
-          [`[boot] Iniciando núcleo neural Iara v4.2.1`, "info"],
+          [`> jarvis --target=${asset} --tf=${tf.label} --mode=scalp`, "ok"],
+          [`[boot] Iniciando núcleo neural JARVIS v4.2.1`, "info"],
           [`[net]  Estabelecendo túnel VPN → 185.${rint(10, 250)}.${rint(10, 250)}.${rint(10, 250)}`, "info"],
           [`[net]  Handshake TLS com ${broker} ............ OK`, "ok"],
           [`[auth] Bypass autenticação L3 ............... OK`, "warn"],
@@ -806,7 +806,7 @@ function IaraPage() {
         phase: "deep",
         ms: 2400,
         lines: [
-          [`[ai] Carregando modelo Iara-Transformer 12.4B`, "info"],
+          [`[ai] Carregando modelo JARVIS-Transformer 12.4B`, "info"],
           [`[ai] Fusion: price-action + orderflow + news + onchain`, "info"],
           [`[ai] Backtest últimas 50k velas ............. 87.3% win`, "ok"],
           [`[ai] Monte Carlo 10.000 cenários — EV positiva`, "ok"],
@@ -879,7 +879,7 @@ function IaraPage() {
   const running = phase !== "idle" && phase !== "signal";
 
   return (
-    <AppLayout title="Iara — AI Scalper">
+    <AppLayout title="JARVIS — AI Scalper">
       <div className="grid w-full max-w-full gap-4 overflow-x-hidden lg:grid-cols-12">
         {/* Hero / Controls */}
         <div className="min-w-0 lg:col-span-12">
@@ -1057,7 +1057,7 @@ function IaraPage() {
                           </div>
                           <div className="mt-1 flex items-center justify-between font-mono text-[9px] uppercase tracking-widest text-cyan-300/80">
                             <span>analisando candles • volume • s/r</span>
-                            <span>iara.neural</span>
+                            <span>jarvis.neural</span>
                           </div>
                         </div>
                       </div>
@@ -1094,7 +1094,7 @@ function IaraPage() {
 
                 {!running ? (
                   <SlideToHack
-                    onUnlock={runIara}
+                    onUnlock={runJARVIS}
                     locked={slideLocked}
                     lockedHint={
                       !brokerApproved ? "Verifique a URL da corretora" : !chartPrint ? "Envie o print" : "Selecione ativo e tempo"
@@ -1139,14 +1139,14 @@ function IaraPage() {
         {/* Terminal */}
         {revealStep >= 1 && (
           <div className="min-w-0 animate-fade-in lg:col-span-7">
-            <Panel title="Terminal Iara" icon={Terminal}>
+            <Panel title="Terminal JARVIS" icon={Terminal}>
               <div
                 ref={logRef}
                 className="h-[320px] overflow-y-auto rounded-md bg-[#04070a] p-3 font-mono text-[11px] leading-relaxed sm:h-[440px] sm:p-4 sm:text-[12.5px]"
               >
                 {logs.length === 0 && (
                   <div className="text-cyan-500/40">
-                    $ inicializando núcleo Iara...
+                    $ inicializando núcleo JARVIS...
                   </div>
                 )}
                 {logs.map((l) => (
@@ -1222,7 +1222,7 @@ function IaraPage() {
         {!signal && revealStep === 0 && (
           <div className="min-w-0 lg:col-span-12">
             <div className="rounded-2xl border border-dashed border-border bg-card/50 p-6 text-center text-sm text-muted-foreground">
-              Nenhum sinal ativo. Inicie uma análise para que a Iara gere o próximo scalp.
+              Nenhum sinal ativo. Inicie uma análise para que a JARVIS gere o próximo scalp.
             </div>
           </div>
         )}
@@ -1235,7 +1235,7 @@ function IaraPage() {
           asset={asset}
           tf={tf.label}
           onClose={() => {
-            // força recarregar a página /iara do zero
+            // força recarregar a página /jarvis do zero
             window.location.reload();
           }}
         />
@@ -1925,7 +1925,7 @@ function BrokerUrlGate({
             </h3>
             <p className="mt-0.5 text-[12px] leading-snug text-cyan-300/70">
               {status === "idle" &&
-                "Iara aceita apenas corretoras regulamentadas e auditadas."}
+                "JARVIS aceita apenas corretoras regulamentadas e auditadas."}
               {checking && domain && (
                 <span className="font-mono text-cyan-300/90">{domain}</span>
               )}
@@ -2058,7 +2058,7 @@ function BrokerUrlGate({
           </div>
           <p>
             A corretora <span className="font-mono">{domain ?? "informada"}</span> não consta na
-            lista de parceiros autorizados pela Iara e não possui regulamentação verificável. Por
+            lista de parceiros autorizados pela JARVIS e não possui regulamentação verificável. Por
             segurança, a operação foi <strong>bloqueada</strong>.
           </p>
           <p className="mt-2">
@@ -2179,7 +2179,7 @@ function AccountIdGate({
             </h3>
             <p className="mt-0.5 text-[12px] leading-snug text-cyan-300/70">
               {status === "idle" &&
-                "A Iara precisa do ID da sua conta para puxar os dados dos ativos em tempo real diretamente da sua corretora."}
+                "A JARVIS precisa do ID da sua conta para puxar os dados dos ativos em tempo real diretamente da sua corretora."}
               {checking && (
                 <span className="font-mono text-cyan-300/90">
                   sincronizando feed em tempo real…
