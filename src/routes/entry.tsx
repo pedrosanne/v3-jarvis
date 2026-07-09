@@ -197,16 +197,16 @@ function Entry() {
           <div className="mt-4 grid grid-cols-1 gap-3 rounded-lg border border-border bg-background/40 p-3 sm:grid-cols-3">
             <div>
               <div className="text-[10px] uppercase tracking-wider text-muted-foreground">Entrada</div>
-              <div className="text-lg font-semibold">${stake.toFixed(2)}</div>
+              <div className="text-lg font-semibold">R$ ${stake.toFixed(2)}</div>
             </div>
             <div>
               <div className="text-[10px] uppercase tracking-wider text-muted-foreground">Retorno</div>
-              <div className="text-lg font-semibold">${exit.toFixed(2)}</div>
+              <div className="text-lg font-semibold">R$ ${exit.toFixed(2)}</div>
             </div>
             <div>
               <div className="text-[10px] uppercase tracking-wider text-muted-foreground">Resultado</div>
               <div className={`text-lg font-bold ${pnl >= 0 ? "text-emerald-500" : "text-rose-500"}`}>
-                {pnl >= 0 ? "+" : ""}${pnl.toFixed(2)}
+                {pnl >= 0 ? "+" : ""}R$ ${pnl.toFixed(2)}
               </div>
             </div>
           </div>

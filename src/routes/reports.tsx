@@ -81,7 +81,7 @@ function Reports() {
                         m.pnl >= 0 ? "text-emerald-600" : "text-rose-600"
                       }`}
                     >
-                      {m.pnl >= 0 ? "+" : ""}${m.pnl.toFixed(2)}
+                      {m.pnl >= 0 ? "+" : ""}R$ ${m.pnl.toFixed(2)}
                     </td>
                     <td className="py-3 pr-2 text-right">
                       <button className="text-muted-foreground hover:text-primary">
