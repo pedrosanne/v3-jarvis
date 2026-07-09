@@ -64,6 +64,8 @@ export function OfertaCheckoutModal({ open, onClose, priceLabel = "R$ 997" }: Pr
   const [touched, setTouched] = useState<{ [k: string]: boolean }>({});
   const [method, setMethod] = useState<PayMethod | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const [resellMode, setResellMode] = useState<ResellMode | null>(null);
+  const [upsellAccepted, setUpsellAccepted] = useState(false);
   const firstInputRef = useRef<HTMLInputElement | null>(null);
 
   // Reset ao fechar
@@ -74,6 +76,8 @@ export function OfertaCheckoutModal({ open, onClose, priceLabel = "R$ 997" }: Pr
         setTouched({});
         setSubmitting(false);
         setMethod(null);
+        setResellMode(null);
+        setUpsellAccepted(false);
       }, 250);
       return () => clearTimeout(t);
     }
