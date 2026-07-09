@@ -679,6 +679,14 @@ function OfertaPage() {
         <div className="mt-10 space-y-3">
           {[
             {
+              q: "Por que R$ 997 se o preço normal é R$ 4.997?",
+              a: "É a nossa condição de lançamento para os 30 primeiros operadores. Queremos rodar o núcleo neural v4.2 com traders reais, coletar cases e depoimentos. Após as 30 vagas serem preenchidas, o preço volta automaticamente para R$ 4.997 — sem exceção.",
+            },
+            {
+              q: "O preço volta mesmo depois das 30 vagas?",
+              a: "Volta. Não há segunda rodada, não há cupom, não há 'me manda no direct'. Quem entrar depois paga R$ 4.997.",
+            },
+            {
               q: "Preciso ter experiência com trading?",
               a: "Não é obrigatório, mas ajuda. O JARVIS entrega o sinal pronto (entrada, stop e alvo). Iniciantes aprendem operando junto; experientes tiram o máximo desde o dia 1.",
             },
@@ -700,7 +708,7 @@ function OfertaPage() {
             },
             {
               q: "Posso parcelar? Tem PIX?",
-              a: "Sim. Até 12x no cartão de R$ 497,00, ou PIX à vista com 5% de desconto extra.",
+              a: "Sim. Até 10x de R$ 99,70 sem juros no cartão, ou PIX à vista com liberação imediata.",
             },
           ].map((f) => (
             <details
