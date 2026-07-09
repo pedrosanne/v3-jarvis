@@ -16,11 +16,21 @@ import {
   X,
   Zap,
   Bitcoin,
+  Rocket,
+  Users,
+  EyeOff,
+  Eye,
+  Trophy,
+  Megaphone,
+  Wallet,
+  Award,
+  ArrowRight,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-type Step = 1 | 2 | 3;
+type Step = 1 | 2 | 3 | 4 | 5;
 type PayMethod = "pix" | "card" | "crypto";
+type ResellMode = "appear" | "anon";
 
 interface Props {
   open: boolean;
