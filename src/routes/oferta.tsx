@@ -732,17 +732,18 @@ function OfertaPage() {
             <WaveCanvas className="absolute inset-0 h-full w-full" intensity={1.3} />
           </div>
           <h2 className="text-3xl font-black sm:text-5xl">
-            Duas opções. <span className="text-cyan-300">Só uma vira o jogo.</span>
+            R$ 997 <span className="text-amber-300">hoje</span>. <br className="sm:hidden" />
+            R$ 4.997 <span className="text-red-400">depois das 30 vagas</span>.
           </h2>
           <p className="mx-auto mt-4 max-w-xl text-cyan-100/80">
-            Continuar operando sozinho e torcer para dar certo — ou operar com o JARVIS
-            ao seu lado, com uma IA institucional trabalhando 24h por você.
+            Você não vai receber outro e-mail lembrando dessa condição. Ou você entra agora,
+            ou paga 5x mais no próximo lote. A escolha é sua.
           </p>
           <a
             href={CHECKOUT_URL}
-            className="mt-10 inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-cyan-400 to-cyan-300 px-8 py-4 font-black uppercase tracking-[0.18em] text-black shadow-[0_0_60px_-6px_rgba(34,211,238,1)] transition-transform hover:scale-[1.03]"
+            className="mt-10 inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-amber-300 to-amber-200 px-8 py-4 font-black uppercase tracking-[0.18em] text-black shadow-[0_0_60px_-6px_rgba(251,191,36,1)] transition-transform hover:scale-[1.03]"
           >
-            <Zap className="h-5 w-5" /> Quero o JARVIS agora →
+            <Zap className="h-5 w-5" /> Garantir minha vaga por R$ 997 →
           </a>
         </div>
       </section>
