@@ -22,30 +22,36 @@ import { cn } from "@/lib/utils";
 export const Route = createFileRoute("/oferta")({
   head: () => ({
     meta: [
-      { title: "JARVIS — Co-piloto de IA para Traders | R$ 4.997" },
+      { title: "JARVIS — Lançamento: R$ 997 para os 30 primeiros" },
       {
         name: "description",
         content:
-          "O primeiro co-piloto de IA que analisa o mercado por você em 8 segundos. Sinais com precisão cirúrgica, 24h, sem emoção. Acesso vitalício por R$ 4.997.",
+          "Condição de lançamento: os 30 primeiros ativam o JARVIS por R$ 997 (de R$ 4.997). Depois disso, o preço volta ao valor normal. Acesso vitalício + garantia de 7 dias.",
       },
-      { property: "og:title", content: "JARVIS — Co-piloto de IA para Traders" },
+      { property: "og:title", content: "JARVIS — R$ 997 no lançamento (30 primeiros)" },
       {
         property: "og:description",
         content:
-          "Analise o mercado em 8s com IA. Sinais com confidence ≥ 87% em qualquer corretora. Garantia incondicional de 7 dias.",
+          "Preço de lançamento: R$ 997 para os 30 primeiros. Depois volta a R$ 4.997. Co-piloto de IA para traders, com garantia de 7 dias.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:title", content: "JARVIS — Co-piloto de IA para Traders" },
+      { name: "twitter:title", content: "JARVIS — R$ 997 no lançamento" },
       {
         name: "twitter:description",
         content:
-          "Analise o mercado em 8s com IA. Sinais com confidence ≥ 87% em qualquer corretora.",
+          "Os 30 primeiros ativam o JARVIS por R$ 997 (de R$ 4.997). Depois o preço volta ao normal.",
       },
     ],
   }),
   component: OfertaPage,
 });
+
+// ---------- Config de lançamento ----------
+const LAUNCH_PRICE = 997;
+const REGULAR_PRICE = 4997;
+const TOTAL_SLOTS = 30;
+const SLOTS_REMAINING = 23; // ajustar conforme vendas
 
 // ---------- Wave canvas (mini, sem áudio) ----------
 function WaveCanvas({ className, intensity = 1 }: { className?: string; intensity?: number }) {
