@@ -167,12 +167,8 @@ function GridBackdrop() {
 const fmt = (v: number) =>
   "R$ " + v.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
-const CHECKOUT_URL = "#comprar"; // placeholder até definir o gateway
 
-function scrollToId(id: string) {
-  const el = document.getElementById(id);
-  if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
-}
+
 
 // ============================================================
 function OfertaPage() {
