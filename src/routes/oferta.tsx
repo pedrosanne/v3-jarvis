@@ -597,39 +597,47 @@ function OfertaPage() {
 
       {/* OFERTA / CHECKOUT */}
       <section id="oferta" className="relative z-10 mx-auto max-w-4xl px-4 py-24">
-        <div className="relative overflow-hidden rounded-3xl border border-cyan-400/40 bg-gradient-to-b from-cyan-950/50 via-[#04080d] to-[#04080d] p-8 shadow-[0_0_120px_-20px_rgba(34,211,238,0.9)] sm:p-12">
-          <div className="pointer-events-none absolute inset-0 opacity-[0.06] [background-image:linear-gradient(rgba(34,211,238,.6)_1px,transparent_1px),linear-gradient(90deg,rgba(34,211,238,.6)_1px,transparent_1px)] [background-size:22px_22px]" />
-          <div className="pointer-events-none absolute -top-24 left-1/2 h-64 w-[120%] -translate-x-1/2 rounded-full bg-cyan-400/10 blur-3xl" />
+        <div className="relative overflow-hidden rounded-3xl border border-amber-300/50 bg-gradient-to-b from-amber-950/30 via-[#04080d] to-[#04080d] p-8 shadow-[0_0_120px_-20px_rgba(251,191,36,0.7)] sm:p-12">
+          <div className="pointer-events-none absolute inset-0 opacity-[0.06] [background-image:linear-gradient(rgba(251,191,36,.6)_1px,transparent_1px),linear-gradient(90deg,rgba(251,191,36,.6)_1px,transparent_1px)] [background-size:22px_22px]" />
+          <div className="pointer-events-none absolute -top-24 left-1/2 h-64 w-[120%] -translate-x-1/2 rounded-full bg-amber-400/10 blur-3xl" />
 
           <div className="relative text-center">
-            <div className="inline-flex items-center gap-2 rounded-full border border-cyan-400/40 bg-black/40 px-3 py-1 font-mono text-[10px] uppercase tracking-[0.28em] text-cyan-200">
-              <Clock className="h-3 w-3" /> Expira em {String(h).padStart(2, "0")}:{String(m).padStart(2, "0")}:{String(s).padStart(2, "0")}
+            <div className="inline-flex items-center gap-2 rounded-full border border-amber-300/50 bg-black/40 px-3 py-1 font-mono text-[10px] uppercase tracking-[0.28em] text-amber-200">
+              <Clock className="h-3 w-3" /> Lançamento encerra em {timer}
             </div>
 
             <h2 className="mt-6 text-3xl font-black sm:text-5xl">
-              Ativar meu JARVIS <span className="text-cyan-300">agora</span>.
+              Garantir minha vaga no{" "}
+              <span className="text-amber-300 drop-shadow-[0_0_18px_rgba(251,191,36,0.6)]">
+                lançamento
+              </span>
+              .
             </h2>
+            <p className="mx-auto mt-3 max-w-xl text-sm text-cyan-100/70">
+              Depois das <b className="text-amber-200">30 vagas</b> preenchidas, o acesso volta ao
+              preço cheio de <b>{fmt(REGULAR_PRICE)}</b>. Não haverá nova rodada nessa condição.
+            </p>
 
             <div className="mt-8 flex flex-col items-center gap-1">
               <div className="font-mono text-sm text-cyan-100/70 line-through decoration-red-400/70">
-                De {fmt(21200)}
+                De {fmt(REGULAR_PRICE)}
               </div>
-              <div className="text-5xl font-black text-cyan-100 drop-shadow-[0_0_28px_rgba(34,211,238,0.9)] sm:text-6xl">
-                {fmt(4997)}
+              <div className="text-6xl font-black text-amber-100 drop-shadow-[0_0_28px_rgba(251,191,36,0.9)] sm:text-7xl">
+                {fmt(LAUNCH_PRICE)}
               </div>
               <div className="mt-2 font-mono text-xs uppercase tracking-[0.24em] text-cyan-300/80">
-                ou <b className="text-cyan-100">12x de R$ 497,00</b> no cartão
+                ou <b className="text-cyan-100">10x de R$ 99,70</b> sem juros no cartão
               </div>
               <div className="mt-1 font-mono text-[10px] uppercase tracking-[0.24em] text-emerald-300">
-                PIX à vista • 5% de desconto extra
+                PIX à vista • acesso liberado em segundos
               </div>
             </div>
 
             <a
               href={CHECKOUT_URL}
-              className="group mt-10 inline-flex w-full max-w-md items-center justify-center gap-2 rounded-full bg-gradient-to-r from-cyan-400 via-cyan-300 to-cyan-400 px-8 py-5 text-base font-black uppercase tracking-[0.16em] text-black shadow-[0_0_60px_-6px_rgba(34,211,238,1)] transition-transform hover:scale-[1.02] sm:text-lg"
+              className="group mt-10 inline-flex w-full max-w-md items-center justify-center gap-2 rounded-full bg-gradient-to-r from-amber-300 via-amber-200 to-amber-300 px-8 py-5 text-base font-black uppercase tracking-[0.16em] text-black shadow-[0_0_60px_-6px_rgba(251,191,36,1)] transition-transform hover:scale-[1.02] sm:text-lg"
             >
-              <Zap className="h-5 w-5" /> Ativar meu JARVIS agora
+              <Zap className="h-5 w-5" /> Ativar JARVIS por R$ 997
               <span className="ml-1 transition-transform group-hover:translate-x-1">→</span>
             </a>
 
@@ -639,13 +647,31 @@ function OfertaPage() {
               <span>Visa • Master • Elo • PIX</span>
             </div>
 
-            <div className="mt-8 rounded-xl border border-cyan-500/20 bg-black/40 px-4 py-3 font-mono text-[11px] uppercase tracking-[0.22em] text-cyan-200/80">
-              <span className="inline-block h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-300 align-middle" />{" "}
-              Restam <b className="text-cyan-100">17</b> das 50 vagas deste lote
+            {/* Progress de vagas */}
+            <div className="mt-8 rounded-xl border border-amber-300/30 bg-black/50 px-5 py-4">
+              <div className="flex items-center justify-between font-mono text-[11px] uppercase tracking-[0.22em] text-amber-200/90">
+                <span className="inline-flex items-center gap-2">
+                  <span className="inline-block h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-300" />
+                  Vagas restantes
+                </span>
+                <span>
+                  <b className="text-amber-100">{SLOTS_REMAINING}</b> / {TOTAL_SLOTS}
+                </span>
+              </div>
+              <div className="mt-3 h-2 w-full overflow-hidden rounded-full bg-cyan-950/60">
+                <div
+                  className="h-full rounded-full bg-gradient-to-r from-amber-400 via-amber-300 to-amber-200 shadow-[0_0_16px_rgba(251,191,36,0.9)]"
+                  style={{ width: `${((TOTAL_SLOTS - SLOTS_REMAINING) / TOTAL_SLOTS) * 100}%` }}
+                />
+              </div>
+              <div className="mt-2 text-left font-mono text-[10px] uppercase tracking-[0.22em] text-cyan-300/70">
+                {TOTAL_SLOTS - SLOTS_REMAINING} pessoas já ativaram nas últimas horas
+              </div>
             </div>
           </div>
         </div>
       </section>
+
 
       {/* FAQ */}
       <section className="relative z-10 mx-auto max-w-3xl px-4 pb-24">
