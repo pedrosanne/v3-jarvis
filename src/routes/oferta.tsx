@@ -18,7 +18,6 @@ import {
   Newspaper,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { OfertaCheckoutModal } from "@/components/oferta-checkout-modal";
 
 export const Route = createFileRoute("/oferta")({
   head: () => ({
@@ -188,8 +187,6 @@ function OfertaPage() {
   const { h, m, s, ready } = useCountdown(endsAt);
   const timer = ready ? `${pad(h)}:${pad(m)}:${pad(s)}` : "--:--:--";
 
-  const [modalOpen, setModalOpen] = useState(false);
-  const openCheckout = () => setModalOpen(true);
   const scrollToPricing = () => {
     if (typeof document !== "undefined") {
       document.getElementById("oferta")?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -639,7 +636,7 @@ function OfertaPage() {
             </div>
 
             <a
-              href="#" onClick={(e) => { e.preventDefault(); openCheckout(); }}
+              href="https://www.xbotting.com.br/checkout/8edf01ca-eb3e-4355-a02b-8234ad2db794"
               className="group mt-10 inline-flex w-full max-w-md items-center justify-center gap-2 rounded-full bg-gradient-to-r from-amber-300 via-amber-200 to-amber-300 px-8 py-5 text-base font-black uppercase tracking-[0.16em] text-black shadow-[0_0_60px_-6px_rgba(251,191,36,1)] transition-transform hover:scale-[1.02] sm:text-lg"
             >
               <Zap className="h-5 w-5" /> Ativar JARVIS por R$ 997
@@ -745,7 +742,7 @@ function OfertaPage() {
             ou paga 5x mais no próximo lote. A escolha é sua.
           </p>
           <a
-            href="#" onClick={(e) => { e.preventDefault(); openCheckout(); }}
+            href="https://www.xbotting.com.br/checkout/8edf01ca-eb3e-4355-a02b-8234ad2db794"
             className="mt-10 inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-amber-300 to-amber-200 px-8 py-4 font-black uppercase tracking-[0.18em] text-black shadow-[0_0_60px_-6px_rgba(251,191,36,1)] transition-transform hover:scale-[1.03]"
           >
             <Zap className="h-5 w-5" /> Garantir minha vaga por R$ 997 →
@@ -768,8 +765,6 @@ function OfertaPage() {
           O JARVIS é uma ferramenta de análise e decisão — o usuário é responsável pelas próprias operações.
         </div>
       </footer>
-
-      <OfertaCheckoutModal open={modalOpen} onClose={() => setModalOpen(false)} priceLabel={fmt(LAUNCH_PRICE)} />
     </div>
   );
 }
