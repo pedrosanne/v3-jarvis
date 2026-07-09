@@ -192,6 +192,9 @@ function OfertaPage() {
   const { h, m, s, ready } = useCountdown(endsAt);
   const timer = ready ? `${pad(h)}:${pad(m)}:${pad(s)}` : "--:--:--";
 
+  const [modalOpen, setModalOpen] = useState(false);
+  const openCheckout = () => setModalOpen(true);
+
   return (
     <div className="relative min-h-screen overflow-hidden bg-[#04070c] text-cyan-50 antialiased">
       <GridBackdrop />
