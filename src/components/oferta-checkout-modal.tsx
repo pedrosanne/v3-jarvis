@@ -107,12 +107,14 @@ export function OfertaCheckoutModal({ open, onClose, priceLabel = "R$ 997" }: Pr
   // Progresso gamificado
   const progress = useMemo(() => {
     let p = 0;
-    if (validName(name)) p += 20;
-    if (validEmail(email)) p += 20;
-    if (validPhone(phone)) p += 20;
-    if (step >= 2) p = Math.max(p, 66);
-    if (method) p = Math.max(p, 90);
-    if (step === 3) p = 100;
+    if (validName(name)) p += 12;
+    if (validEmail(email)) p += 12;
+    if (validPhone(phone)) p += 12;
+    if (step >= 2) p = Math.max(p, 50);
+    if (method) p = Math.max(p, 65);
+    if (step >= 3) p = Math.max(p, 75);
+    if (step >= 4) p = Math.max(p, 90);
+    if (step === 5) p = 100;
     return p;
   }, [name, email, phone, step, method]);
 
