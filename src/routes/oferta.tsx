@@ -187,11 +187,14 @@ function OfertaPage() {
   const { h, m, s, ready } = useCountdown(endsAt);
   const timer = ready ? `${pad(h)}:${pad(m)}:${pad(s)}` : "--:--:--";
 
-  const [modalOpen, setModalOpen] = useState(false);
-  const openCheckout = () => setModalOpen(true);
   const scrollToPricing = () => {
     if (typeof document !== "undefined") {
       document.getElementById("oferta")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  };
+  const goToCheckout = () => {
+    if (typeof window !== "undefined") {
+      window.location.href = "https://www.xbotting.com.br/checkout/8edf01ca-eb3e-4355-a02b-8234ad2db794";
     }
   };
 
