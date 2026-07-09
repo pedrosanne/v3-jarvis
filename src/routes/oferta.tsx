@@ -213,19 +213,25 @@ function OfertaPage() {
 
       {/* HERO */}
       <section className="relative z-10 mx-auto flex max-w-6xl flex-col items-center px-4 pt-16 pb-24 text-center sm:pt-24">
-        <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-cyan-400/30 bg-cyan-500/10 px-4 py-1.5 font-mono text-[10px] uppercase tracking-[0.28em] text-cyan-200 shadow-[0_0_24px_-6px_rgba(34,211,238,0.8)]">
-          <Sparkles className="h-3 w-3" /> JARVIS v4.2 • Núcleo neural ativo
+        <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-amber-300/40 bg-amber-400/10 px-4 py-1.5 font-mono text-[10px] uppercase tracking-[0.28em] text-amber-200 shadow-[0_0_24px_-6px_rgba(251,191,36,0.7)]">
+          <Sparkles className="h-3 w-3" /> Condição de lançamento • 30 primeiros
         </div>
 
         <h1 className="max-w-4xl text-balance text-4xl font-black leading-[1.05] tracking-tight sm:text-6xl">
-          O primeiro co-piloto de <span className="bg-gradient-to-r from-cyan-200 via-cyan-100 to-cyan-300 bg-clip-text text-transparent drop-shadow-[0_0_24px_rgba(34,211,238,0.4)]">IA</span> que analisa o mercado
-          <br className="hidden sm:block" /> por você — em <span className="text-cyan-300">8 segundos</span>, com precisão cirúrgica.
+          Ative o JARVIS por{" "}
+          <span className="bg-gradient-to-r from-amber-200 via-amber-100 to-amber-300 bg-clip-text text-transparent drop-shadow-[0_0_24px_rgba(251,191,36,0.5)]">
+            R$ 997
+          </span>
+          <br className="hidden sm:block" />
+          <span className="text-cyan-300">antes do preço voltar a R$ 4.997.</span>
         </h1>
 
         <p className="mt-6 max-w-2xl text-balance text-base text-cyan-100/80 sm:text-lg">
-          JARVIS é o assistente que fundos institucionais pagam milhões para ter.
-          Agora ele opera do <b>seu lado</b> — 24h, sem emoção, sem cansar.
+          Estamos abrindo <b className="text-amber-200">apenas 30 vagas</b> nessa condição para validar
+          o núcleo neural v4.2 com operadores reais. Depois disso, o acesso volta ao valor cheio de
+          <b> R$ 4.997</b> — sem exceção, sem &quot;cupom&quot;, sem &quot;me manda no direct&quot;.
         </p>
+
 
         {/* Wave visual */}
         <div className="relative mt-10 h-64 w-full max-w-3xl overflow-hidden rounded-2xl border border-cyan-500/25 bg-gradient-to-b from-cyan-950/40 via-[#04080d] to-[#04080d] shadow-[0_0_80px_-20px_rgba(34,211,238,0.6)]">
