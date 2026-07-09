@@ -452,62 +452,42 @@ interface FieldProps {
   autoComplete?: string;
   inputMode?: "text" | "email" | "tel" | "numeric";
 }
-const Field = (() => {
-  const Comp = (
-    {
-      icon: Icon,
-      label,
-      placeholder,
-      value,
-      onChange,
-      onBlur,
-      error,
-      valid,
-      type = "text",
-      autoComplete,
-      inputMode,
-    }: FieldProps,
-    ref: React.Ref<HTMLInputElement>,
-  ) => {
-    return (
-      <label className="block">
-        <span className="mb-1.5 flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.22em] text-cyan-300/80">
-          <Icon className="h-3 w-3" /> {label}
-        </span>
-        <div className="relative">
-          <input
-            ref={ref}
-            type={type}
-            value={value}
-            onChange={(e) => onChange(e.target.value)}
-            onBlur={onBlur}
-            placeholder={placeholder}
-            autoComplete={autoComplete}
-            inputMode={inputMode}
-            className={cn(
-              "w-full rounded-xl border bg-black/60 px-4 py-3 pr-10 text-sm text-cyan-50 placeholder:text-cyan-500/40 outline-none transition-colors",
-              error
-                ? "border-red-400/50 focus:border-red-300"
-                : valid
-                ? "border-emerald-400/50 focus:border-emerald-300"
-                : "border-cyan-500/25 focus:border-cyan-300/70",
-            )}
-          />
-          {valid && !error && (
-            <Check className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-emerald-300" />
+const Field = forwardRef<HTMLInputElement, FieldProps>(function Field(
+  { icon: Icon, label, placeholder, value, onChange, onBlur, error, valid, type = "text", autoComplete, inputMode },
+  ref,
+) {
+  return (
+    <label className="block">
+      <span className="mb-1.5 flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.22em] text-cyan-300/80">
+        <Icon className="h-3 w-3" /> {label}
+      </span>
+      <div className="relative">
+        <input
+          ref={ref}
+          type={type}
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          onBlur={onBlur}
+          placeholder={placeholder}
+          autoComplete={autoComplete}
+          inputMode={inputMode}
+          className={cn(
+            "w-full rounded-xl border bg-black/60 px-4 py-3 pr-10 text-sm text-cyan-50 placeholder:text-cyan-500/40 outline-none transition-colors",
+            error
+              ? "border-red-400/50 focus:border-red-300"
+              : valid
+              ? "border-emerald-400/50 focus:border-emerald-300"
+              : "border-cyan-500/25 focus:border-cyan-300/70",
           )}
-        </div>
-        {error && <span className="mt-1 block text-[11px] text-red-300">{error}</span>}
-      </label>
-    );
-  };
-  return Object.assign(
-    // eslint-disable-next-line react/display-name
-    require("react").forwardRef(Comp) as React.ForwardRefExoticComponent<
-      FieldProps & React.RefAttributes<HTMLInputElement>
-    >,
+        />
+        {valid && !error && (
+          <Check className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-emerald-300" />
+        )}
+      </div>
+      {error && <span className="mt-1 block text-[11px] text-red-300">{error}</span>}
+    </label>
   );
-})();
+});
 
 function PayOption({
   active,
