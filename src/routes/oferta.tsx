@@ -767,6 +767,8 @@ function OfertaPage() {
           O JARVIS é uma ferramenta de análise e decisão — o usuário é responsável pelas próprias operações.
         </div>
       </footer>
+
+      <OfertaCheckoutModal open={modalOpen} onClose={() => setModalOpen(false)} priceLabel={fmt(LAUNCH_PRICE)} />
     </div>
   );
 }
