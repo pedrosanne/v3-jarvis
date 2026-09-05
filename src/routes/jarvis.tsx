@@ -414,8 +414,6 @@ function JARVISPage() {
 
 
   // Broker verification ----------------------------------------------------
-  const ALLOWED_BROKERS = ["forexoficial.com", "ilov.pro", "deffy.com.br"];
-
   function parseDomain(raw: string): string | null {
     if (!raw) return null;
     let v = raw.trim();
@@ -451,7 +449,7 @@ function JARVISPage() {
       { label: "Validando certificado TLS", ms: 650 },
       { label: "Consultando registro CVM/CySEC", ms: 800 },
       { label: "Auditando licença de operação", ms: 750 },
-      { label: "Cross-check whitelist JARVIS", ms: 700 },
+      { label: "Verificando compatibilidade com JARVIS", ms: 700 },
     ];
     setBrokerSteps(steps.map((s) => ({ label: s.label, done: false })));
 
@@ -892,7 +890,6 @@ function JARVISPage() {
                 progress={brokerProgress}
                 steps={brokerSteps}
                 domain={brokerDomain}
-                allowedBrokers={ALLOWED_BROKERS}
                 savedUrl={savedBrokerUrl}
                 onStart={startBrokerCheck}
                 onReset={resetBroker}
@@ -1232,6 +1229,7 @@ function JARVISPage() {
           signal={signal}
           asset={asset}
           tf={tf.label}
+          brokerUrl={brokerUrl || savedBrokerUrl || (brokerDomain ? `https://${brokerDomain}` : "")}
           onClose={() => {
             // força recarregar a página /jarvis do zero
             window.location.reload();
@@ -1246,6 +1244,7 @@ function SignalModal({
   signal,
   asset,
   tf,
+  brokerUrl,
   onClose,
 }: {
   signal: {
@@ -1258,9 +1257,13 @@ function SignalModal({
   };
   asset: string;
   tf: string;
+  brokerUrl?: string;
   onClose: () => void;
 }) {
   const isBuy = signal.side === "BUY";
+  const targetBrokerUrl = brokerUrl?.trim()
+    ? (brokerUrl.startsWith("http") ? brokerUrl : `https://${brokerUrl}`)
+    : "";
   
   const [confirmOpen, setConfirmOpen] = useState(false);
 
@@ -1444,14 +1447,17 @@ function SignalModal({
 
           {/* CTA */}
           <a
-            href="https://forexoficial.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={() => {
+            href={targetBrokerUrl || undefined}
+            target={targetBrokerUrl ? "_blank" : undefined}
+            rel={targetBrokerUrl ? "noopener noreferrer" : undefined}
+            onClick={(e) => {
+              if (!targetBrokerUrl) {
+                e.preventDefault();
+              }
               sfxSuccess();
               const txt = `${signal.side} ${asset} @ ${signal.entry} | SL ${signal.sl} | TP ${signal.tp}`;
               navigator.clipboard?.writeText(txt).catch(() => {});
-              toast.success("Sinal copiado", { description: "Abrindo corretora..." });
+              toast.success("Sinal copiado", { description: targetBrokerUrl ? "Abrindo corretora..." : "Sinal copiado para a área de transferência!" });
             }}
             className={cn(
               "group relative mt-5 flex w-full items-center justify-center gap-2 overflow-hidden rounded-xl px-5 py-3.5 font-mono text-sm font-bold uppercase tracking-[0.18em] text-black transition-all hover:scale-[1.02]",
@@ -1834,7 +1840,7 @@ function BrokerUrlGate({
   progress: number;
   steps: { label: string; done: boolean; ok?: boolean }[];
   domain: string | null;
-  allowedBrokers: string[];
+  allowedBrokers?: string[];
   savedUrl: string | null;
   onStart: (raw: string) => void;
   onReset: () => void;
@@ -1923,7 +1929,7 @@ function BrokerUrlGate({
             </h3>
             <p className="mt-0.5 text-[12px] leading-snug text-cyan-300/70">
               {status === "idle" &&
-                "JARVIS aceita apenas corretoras regulamentadas e auditadas."}
+                "JARVIS é compatível com qualquer corretora do mercado."}
               {checking && domain && (
                 <span className="font-mono text-cyan-300/90">{domain}</span>
               )}
