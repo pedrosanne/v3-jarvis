@@ -82,16 +82,16 @@ function ExtensionPage() {
         <section className="rounded-xl border border-border bg-card p-6">
           <div className="mb-3 flex items-center gap-2">
             <Globe className="h-4 w-4 text-primary" />
-            <h3 className="text-base font-semibold">Domínio personalizado</h3>
+            <h3 className="text-base font-semibold">Domínio personalizado & Solução para Erro 404</h3>
           </div>
           <p className="text-sm text-muted-foreground">
-            A extensão aponta por padrão para a URL pública do JARVIS. Para usar com seu próprio
-            domínio, abra o painel lateral, clique no ícone <strong>⚙</strong> e informe a URL base
-            (ex.{" "}
-            <code className="rounded bg-muted px-1.5 py-0.5">https://app.seudominio.com</code>) e a
-            rota inicial (ex. <code className="rounded bg-muted px-1.5 py-0.5">/jarvis</code> ou{" "}
-            <code className="rounded bg-muted px-1.5 py-0.5">/</code>).
+            A extensão embute a aplicação web. Se você visualizar a página de <strong>Erro 404</strong> ao abrir o painel lateral:
           </p>
+          <ol className="mt-2 list-disc space-y-1.5 pl-5 text-sm text-muted-foreground">
+            <li>Clique no ícone de engrenagem (<strong>⚙</strong>) no cabeçalho da extensão.</li>
+            <li>Insira a URL base do seu servidor (ex: <code className="rounded bg-muted px-1.5 py-0.5">https://seu-dominio.com</code> ou <code className="rounded bg-muted px-1.5 py-0.5">http://localhost:5173</code>).</li>
+            <li>Defina a rota inicial como <code className="rounded bg-muted px-1.5 py-0.5">/jarvis</code> (ou <code className="rounded bg-muted px-1.5 py-0.5">/</code>) e clique em <strong>Salvar e recarregar</strong>.</li>
+          </ol>
         </section>
 
         <section className="rounded-xl border border-border bg-card p-6">

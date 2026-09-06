@@ -45,7 +45,10 @@
       <div class="settings-card">
         <h1>Domínio do JARVIS</h1>
         <p class="muted">
-          Aponte o painel para o deploy do JARVIS (produção, staging ou domínio próprio).
+          Aponte a extensão para a URL onde seu JARVIS está rodando (ex: produção no Vercel ou local em http://localhost:5173).
+        </p>
+        <p class="muted" style="color: #38bdf8; font-size: 11px; margin-top: -6px;">
+          💡 <strong>Viu o Erro 404?</strong> Certifique-se de preencher a URL base com o endereço correto do seu deploy e selecione a rota <strong>/jarvis</strong> ou <strong>/</strong>.
         </p>
         <form id="domainForm" class="stack">
           <label>
@@ -67,6 +70,11 @@
               autocomplete="off"
             />
           </label>
+          <div class="row" style="gap: 4px; flex-wrap: wrap; margin-top: 4px;">
+            <button type="button" id="btnLocalhost" class="ghost" style="font-size: 11px; padding: 4px 8px;">Local (5173)</button>
+            <button type="button" id="btnRouteJarvis" class="ghost" style="font-size: 11px; padding: 4px 8px;">Rota /jarvis</button>
+            <button type="button" id="btnRouteRoot" class="ghost" style="font-size: 11px; padding: 4px 8px;">Rota /</button>
+          </div>
           <p class="hint" id="domainHint"></p>
           <div class="row">
             <button type="button" id="resetDomain" class="ghost">Padrão</button>

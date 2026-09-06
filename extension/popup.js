@@ -107,6 +107,18 @@ $("backFromSettings").addEventListener("click", () => {
   $("view-settings").classList.add("hidden");
 });
 
+$("btnLocalhost").addEventListener("click", () => {
+  $("domainInput").value = "http://localhost:5173";
+});
+
+$("btnRouteJarvis").addEventListener("click", () => {
+  $("pathInput").value = "/jarvis";
+});
+
+$("btnRouteRoot").addEventListener("click", () => {
+  $("pathInput").value = "/";
+});
+
 $("resetDomain").addEventListener("click", async () => {
   await setStored(URL_KEY, "");
   await setStored(PATH_KEY, "");

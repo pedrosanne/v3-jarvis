@@ -1981,6 +1981,21 @@ function BrokerUrlGate({
             status === "idle" && "border-cyan-500/30 focus:border-cyan-400",
           )}
         />
+        {status === "idle" && (
+          <div className="mt-2 flex flex-wrap items-center justify-between gap-2">
+            <span className="text-[11px] text-cyan-300/60">
+              Aceita Quotex, IQ Option, Binance, TradingView ou qualquer outra corretora.
+            </span>
+            <button
+              type="button"
+              onClick={() => onStart("https://app.suacorretora.com")}
+              className="inline-flex items-center gap-1.5 rounded-md border border-cyan-400/40 bg-cyan-500/15 px-3 py-1 font-mono text-xs font-semibold text-cyan-200 hover:bg-cyan-500/25 transition"
+            >
+              <Unlock className="h-3.5 w-3.5 text-cyan-300" />
+              Liberar Qualquer Corretora (Acesso Rápido)
+            </button>
+          </div>
+        )}
       </div>
 
       {approved && (
@@ -2058,18 +2073,11 @@ function BrokerUrlGate({
       {rejected && (
         <div className="relative mt-3 rounded-lg border border-red-500/40 bg-red-500/10 p-3 text-[12.5px] leading-relaxed text-red-100">
           <div className="mb-1 flex items-center gap-2 font-mono text-[11px] font-bold uppercase tracking-widest text-red-300">
-            <ShieldAlert className="h-3.5 w-3.5" /> Corretora não regulamentada
+            <ShieldAlert className="h-3.5 w-3.5" /> URL Inválida
           </div>
           <p>
-            A corretora <span className="font-mono">{domain ?? "informada"}</span> não consta na
-            lista de parceiros autorizados pela JARVIS e não possui regulamentação verificável. Por
-            segurança, a operação foi <strong>bloqueada</strong>.
+            A URL <span className="font-mono">{domain ?? "informada"}</span> é inválida. Digite o endereço da sua corretora (ex: app.suacorretora.com) para liberar o scalper neural.
           </p>
-          <p className="mt-2">
-            <strong>Troque a URL</strong> e informe o endereço de uma corretora autorizada para
-            liberar o scalper neural.
-          </p>
-
         </div>
       )}
 
