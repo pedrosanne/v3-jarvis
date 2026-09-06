@@ -1981,21 +1981,7 @@ function BrokerUrlGate({
             status === "idle" && "border-cyan-500/30 focus:border-cyan-400",
           )}
         />
-        {status === "idle" && (
-          <div className="mt-2 flex flex-wrap items-center justify-between gap-2">
-            <span className="text-[11px] text-cyan-300/60">
-              Aceita Quotex, IQ Option, Binance, TradingView ou qualquer outra corretora.
-            </span>
-            <button
-              type="button"
-              onClick={() => onStart("https://app.suacorretora.com")}
-              className="inline-flex items-center gap-1.5 rounded-md border border-cyan-400/40 bg-cyan-500/15 px-3 py-1 font-mono text-xs font-semibold text-cyan-200 hover:bg-cyan-500/25 transition"
-            >
-              <Unlock className="h-3.5 w-3.5 text-cyan-300" />
-              Liberar Qualquer Corretora (Acesso Rápido)
-            </button>
-          </div>
-        )}
+
       </div>
 
       {approved && (
