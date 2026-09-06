@@ -2,7 +2,7 @@
 // Rebranded from JARVIS to JARVIS. The panel auto-resizes to whatever width
 // the user drags the Chrome side panel to.
 
-const DEFAULT_APP_URL = "https://v3-jarvis.lovable.app";
+const DEFAULT_APP_URL = "https://v3-jarvis-psi.vercel.app";
 const DEFAULT_PATH = "/jarvis";
 const URL_KEY = "jarvis_app_url";
 const PATH_KEY = "jarvis_app_path";
