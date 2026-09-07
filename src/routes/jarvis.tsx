@@ -70,7 +70,15 @@ export const Route = createFileRoute("/jarvis")({
   component: JARVISPage,
 });
 
-type AssetCategory = "Forex" | "Cripto" | "Ações";
+type AssetCategory =
+  | "Opções (OTC)"
+  | "Forex"
+  | "Ações"
+  | "Cripto"
+  | "Commodities"
+  | "ETFs"
+  | "Índices";
+
 type AssetItem = {
   symbol: string; // displayed: "EUR/CHF (OTC)"
   code: string;   // short: EUR-CHF-OTC
@@ -89,22 +97,137 @@ const crypto = (s: string) =>
 const clearbit = (d: string) => `https://logo.clearbit.com/${d}`;
 
 const ASSET_CATALOG: AssetItem[] = [
-  // Forex OTC
-  { symbol: "EUR/CHF (OTC)", code: "EUR-CHF-OTC", name: "Euro / Swiss Franc", category: "Forex", payout: 88, flags: [flag("eu"), flag("ch")] },
-  { symbol: "USD/CHF (OTC)", code: "USD-CHF-OTC", name: "US Dollar / Swiss Franc", category: "Forex", payout: 91, flags: [flag("us"), flag("ch")] },
-  // Cripto
-  { symbol: "Avalanche (OTC)", code: "AVAX-OTC", name: "Avalanche", category: "Cripto", payout: 88, logo: crypto("avax"), color: "#e84142" },
-  { symbol: "Bitcoin", code: "BTC-USDT", name: "Bitcoin", category: "Cripto", payout: 89, logo: crypto("btc"), color: "#f7931a" },
-  { symbol: "BNB (OTC)", code: "BNB-OTC", name: "BNB", category: "Cripto", payout: 89, logo: crypto("bnb"), color: "#f3ba2f" },
-  { symbol: "Cardano (OTC)", code: "ADA-OTC", name: "Cardano", category: "Cripto", payout: 89, logo: crypto("ada"), color: "#0033ad" },
-  { symbol: "Dogecoin (OTC)", code: "DOGE-OTC", name: "Dogecoin", category: "Cripto", payout: 89, logo: crypto("doge"), color: "#c2a633" },
-  { symbol: "Ethereum", code: "ETH", name: "Ethereum", category: "Cripto", payout: 89, logo: crypto("eth"), color: "#627eea" },
-  { symbol: "Polkadot (OTC)", code: "DOT-OTC", name: "Polkadot", category: "Cripto", payout: 87, logo: crypto("dot"), color: "#e6007a" },
-  { symbol: "Polygon (OTC)", code: "MATIC-OTC", name: "Polygon", category: "Cripto", payout: 86, logo: crypto("matic"), color: "#8247e5" },
-  { symbol: "Solana", code: "SOL", name: "Solana", category: "Cripto", payout: 89, logo: crypto("sol"), color: "#14f195" },
-  // Ações
-  { symbol: "Apple Inc. (OTC)", code: "AAPL-OTC", name: "Apple Inc.", category: "Ações", payout: 89, logo: clearbit("apple.com"), color: "#ffffff" },
-  { symbol: "Microsoft Corp. (OTC)", code: "MSFT-OTC", name: "Microsoft Corp.", category: "Ações", payout: 89, logo: clearbit("microsoft.com"), color: "#00a4ef" },
+  // --- Opções (OTC) ---
+  { symbol: "EUR/USD (OTC)", code: "EUR-USD-OTC", name: "Euro / US Dollar OTC", category: "Opções (OTC)", payout: 93, flags: [flag("eu"), flag("us")] },
+  { symbol: "GBP/USD (OTC)", code: "GBP-USD-OTC", name: "British Pound / US Dollar OTC", category: "Opções (OTC)", payout: 92, flags: [flag("gb"), flag("us")] },
+  { symbol: "USD/JPY (OTC)", code: "USD-JPY-OTC", name: "US Dollar / Yen OTC", category: "Opções (OTC)", payout: 91, flags: [flag("us"), flag("jp")] },
+  { symbol: "AUD/USD (OTC)", code: "AUD-USD-OTC", name: "Australian Dollar / US Dollar OTC", category: "Opções (OTC)", payout: 90, flags: [flag("au"), flag("us")] },
+  { symbol: "EUR/GBP (OTC)", code: "EUR-GBP-OTC", name: "Euro / British Pound OTC", category: "Opções (OTC)", payout: 89, flags: [flag("eu"), flag("gb")] },
+  { symbol: "USD/CAD (OTC)", code: "USD-CAD-OTC", name: "US Dollar / Canadian Dollar OTC", category: "Opções (OTC)", payout: 89, flags: [flag("us"), flag("ca")] },
+  { symbol: "EUR/JPY (OTC)", code: "EUR-JPY-OTC", name: "Euro / Japanese Yen OTC", category: "Opções (OTC)", payout: 90, flags: [flag("eu"), flag("jp")] },
+  { symbol: "GBP/JPY (OTC)", code: "GBP-JPY-OTC", name: "British Pound / Yen OTC", category: "Opções (OTC)", payout: 91, flags: [flag("gb"), flag("jp")] },
+  { symbol: "USD/CHF (OTC)", code: "USD-CHF-OTC", name: "US Dollar / Swiss Franc OTC", category: "Opções (OTC)", payout: 91, flags: [flag("us"), flag("ch")] },
+  { symbol: "EUR/CHF (OTC)", code: "EUR-CHF-OTC", name: "Euro / Swiss Franc OTC", category: "Opções (OTC)", payout: 88, flags: [flag("eu"), flag("ch")] },
+  { symbol: "AUD/JPY (OTC)", code: "AUD-JPY-OTC", name: "Australian Dollar / Yen OTC", category: "Opções (OTC)", payout: 89, flags: [flag("au"), flag("jp")] },
+  { symbol: "NZD/USD (OTC)", code: "NZD-USD-OTC", name: "NZ Dollar / US Dollar OTC", category: "Opções (OTC)", payout: 88, flags: [flag("nz"), flag("us")] },
+  { symbol: "CAD/CHF (OTC)", code: "CAD-CHF-OTC", name: "Canadian Dollar / Swiss Franc OTC", category: "Opções (OTC)", payout: 87, flags: [flag("ca"), flag("ch")] },
+  { symbol: "EUR/AUD (OTC)", code: "EUR-AUD-OTC", name: "Euro / Australian Dollar OTC", category: "Opções (OTC)", payout: 88, flags: [flag("eu"), flag("au")] },
+  { symbol: "USD/BRL (OTC)", code: "USD-BRL-OTC", name: "US Dollar / Real Brasileiro OTC", category: "Opções (OTC)", payout: 95, flags: [flag("us"), flag("br")] },
+  { symbol: "USD/INR (OTC)", code: "USD-INR-OTC", name: "US Dollar / Indian Rupee OTC", category: "Opções (OTC)", payout: 92, flags: [flag("us"), flag("in")] },
+  { symbol: "USD/MXN (OTC)", code: "USD-MXN-OTC", name: "US Dollar / Peso Mexicano OTC", category: "Opções (OTC)", payout: 90, flags: [flag("us"), flag("mx")] },
+  { symbol: "USD/TRY (OTC)", code: "USD-TRY-OTC", name: "US Dollar / Lira Turca OTC", category: "Opções (OTC)", payout: 94, flags: [flag("us"), flag("tr")] },
+  { symbol: "USD/ARS (OTC)", code: "USD-ARS-OTC", name: "US Dollar / Peso Argentino OTC", category: "Opções (OTC)", payout: 96, flags: [flag("us"), flag("ar")] },
+  { symbol: "Apple Inc. (OTC)", code: "AAPL-OTC", name: "Apple Inc. OTC", category: "Opções (OTC)", payout: 89, logo: clearbit("apple.com"), color: "#ffffff" },
+  { symbol: "Microsoft (OTC)", code: "MSFT-OTC", name: "Microsoft Corp. OTC", category: "Opções (OTC)", payout: 89, logo: clearbit("microsoft.com"), color: "#00a4ef" },
+  { symbol: "Tesla (OTC)", code: "TSLA-OTC", name: "Tesla Inc. OTC", category: "Opções (OTC)", payout: 92, logo: clearbit("tesla.com"), color: "#e82127" },
+  { symbol: "Amazon (OTC)", code: "AMZN-OTC", name: "Amazon.com OTC", category: "Opções (OTC)", payout: 89, logo: clearbit("amazon.com"), color: "#ff9900" },
+  { symbol: "Google (OTC)", code: "GOOGL-OTC", name: "Alphabet Inc. OTC", category: "Opções (OTC)", payout: 88, logo: clearbit("google.com"), color: "#4285f4" },
+  { symbol: "Meta (OTC)", code: "META-OTC", name: "Meta Platforms OTC", category: "Opções (OTC)", payout: 90, logo: clearbit("meta.com"), color: "#0081fb" },
+  { symbol: "Nvidia (OTC)", code: "NVDA-OTC", name: "Nvidia Corp. OTC", category: "Opções (OTC)", payout: 93, logo: clearbit("nvidia.com"), color: "#76b900" },
+  { symbol: "Gold (OTC)", code: "XAU-USD-OTC", name: "Gold / Ouro OTC", category: "Opções (OTC)", payout: 92, color: "#ffd700" },
+  { symbol: "Silver (OTC)", code: "XAG-USD-OTC", name: "Silver / Prata OTC", category: "Opções (OTC)", payout: 88, color: "#c0c0c0" },
+  { symbol: "Bitcoin (OTC)", code: "BTC-OTC", name: "Bitcoin OTC", category: "Opções (OTC)", payout: 94, logo: crypto("btc"), color: "#f7931a" },
+  { symbol: "Ethereum (OTC)", code: "ETH-OTC", name: "Ethereum OTC", category: "Opções (OTC)", payout: 91, logo: crypto("eth"), color: "#627eea" },
+
+  // --- Forex ---
+  { symbol: "EUR/USD", code: "EUR-USD", name: "Euro / US Dollar", category: "Forex", payout: 87, flags: [flag("eu"), flag("us")] },
+  { symbol: "GBP/USD", code: "GBP-USD", name: "British Pound / US Dollar", category: "Forex", payout: 86, flags: [flag("gb"), flag("us")] },
+  { symbol: "USD/JPY", code: "USD-JPY", name: "US Dollar / Japanese Yen", category: "Forex", payout: 85, flags: [flag("us"), flag("jp")] },
+  { symbol: "AUD/USD", code: "AUD-USD", name: "Australian Dollar / US Dollar", category: "Forex", payout: 84, flags: [flag("au"), flag("us")] },
+  { symbol: "USD/CAD", code: "USD-CAD", name: "US Dollar / Canadian Dollar", category: "Forex", payout: 83, flags: [flag("us"), flag("ca")] },
+  { symbol: "USD/CHF", code: "USD-CHF", name: "US Dollar / Swiss Franc", category: "Forex", payout: 84, flags: [flag("us"), flag("ch")] },
+  { symbol: "EUR/GBP", code: "EUR-GBP", name: "Euro / British Pound", category: "Forex", payout: 82, flags: [flag("eu"), flag("gb")] },
+  { symbol: "EUR/JPY", code: "EUR-JPY", name: "Euro / Japanese Yen", category: "Forex", payout: 85, flags: [flag("eu"), flag("jp")] },
+  { symbol: "GBP/JPY", code: "GBP-JPY", name: "British Pound / Japanese Yen", category: "Forex", payout: 87, flags: [flag("gb"), flag("jp")] },
+  { symbol: "EUR/CHF", code: "EUR-CHF", name: "Euro / Swiss Franc", category: "Forex", payout: 82, flags: [flag("eu"), flag("ch")] },
+  { symbol: "AUD/JPY", code: "AUD-JPY", name: "Australian Dollar / Japanese Yen", category: "Forex", payout: 83, flags: [flag("au"), flag("jp")] },
+  { symbol: "NZD/USD", code: "NZD-USD", name: "New Zealand Dollar / US Dollar", category: "Forex", payout: 82, flags: [flag("nz"), flag("us")] },
+  { symbol: "CAD/JPY", code: "CAD-JPY", name: "Canadian Dollar / Japanese Yen", category: "Forex", payout: 81, flags: [flag("ca"), flag("jp")] },
+  { symbol: "CHF/JPY", code: "CHF-JPY", name: "Swiss Franc / Japanese Yen", category: "Forex", payout: 82, flags: [flag("ch"), flag("jp")] },
+  { symbol: "EUR/CAD", code: "EUR-CAD", name: "Euro / Canadian Dollar", category: "Forex", payout: 83, flags: [flag("eu"), flag("ca")] },
+  { symbol: "EUR/AUD", code: "EUR-AUD", name: "Euro / Australian Dollar", category: "Forex", payout: 82, flags: [flag("eu"), flag("au")] },
+  { symbol: "GBP/CAD", code: "GBP-CAD", name: "British Pound / Canadian Dollar", category: "Forex", payout: 84, flags: [flag("gb"), flag("ca")] },
+  { symbol: "GBP/CHF", code: "GBP-CHF", name: "British Pound / Swiss Franc", category: "Forex", payout: 83, flags: [flag("gb"), flag("ch")] },
+  { symbol: "GBP/AUD", code: "GBP-AUD", name: "British Pound / Australian Dollar", category: "Forex", payout: 83, flags: [flag("gb"), flag("au")] },
+  { symbol: "AUD/CAD", code: "AUD-CAD", name: "Australian Dollar / Canadian Dollar", category: "Forex", payout: 80, flags: [flag("au"), flag("ca")] },
+  { symbol: "AUD/CHF", code: "AUD-CHF", name: "Australian Dollar / Swiss Franc", category: "Forex", payout: 80, flags: [flag("au"), flag("ch")] },
+  { symbol: "AUD/NZD", code: "AUD-NZD", name: "Australian Dollar / NZ Dollar", category: "Forex", payout: 81, flags: [flag("au"), flag("nz")] },
+  { symbol: "NZD/JPY", code: "NZD-JPY", name: "New Zealand Dollar / Yen", category: "Forex", payout: 81, flags: [flag("nz"), flag("jp")] },
+  { symbol: "USD/BRL", code: "USD-BRL", name: "US Dollar / Real Brasileiro", category: "Forex", payout: 88, flags: [flag("us"), flag("br")] },
+  { symbol: "USD/MXN", code: "USD-MXN", name: "US Dollar / Peso Mexicano", category: "Forex", payout: 84, flags: [flag("us"), flag("mx")] },
+
+  // --- Ações ---
+  { symbol: "Apple Inc.", code: "AAPL", name: "Apple Inc.", category: "Ações", payout: 85, logo: clearbit("apple.com"), color: "#ffffff" },
+  { symbol: "Microsoft Corp.", code: "MSFT", name: "Microsoft Corp.", category: "Ações", payout: 85, logo: clearbit("microsoft.com"), color: "#00a4ef" },
+  { symbol: "Amazon.com", code: "AMZN", name: "Amazon.com Inc.", category: "Ações", payout: 86, logo: clearbit("amazon.com"), color: "#ff9900" },
+  { symbol: "Tesla Inc.", code: "TSLA", name: "Tesla Inc.", category: "Ações", payout: 88, logo: clearbit("tesla.com"), color: "#e82127" },
+  { symbol: "Alphabet Google", code: "GOOGL", name: "Alphabet Inc.", category: "Ações", payout: 84, logo: clearbit("google.com"), color: "#4285f4" },
+  { symbol: "Meta Platforms", code: "META", name: "Meta Platforms Inc.", category: "Ações", payout: 87, logo: clearbit("meta.com"), color: "#0081fb" },
+  { symbol: "NVIDIA Corp.", code: "NVDA", name: "Nvidia Corporation", category: "Ações", payout: 90, logo: clearbit("nvidia.com"), color: "#76b900" },
+  { symbol: "Netflix Inc.", code: "NFLX", name: "Netflix Inc.", category: "Ações", payout: 86, logo: clearbit("netflix.com"), color: "#e50914" },
+  { symbol: "AMD", code: "AMD", name: "Advanced Micro Devices", category: "Ações", payout: 86, logo: clearbit("amd.com"), color: "#ed1c24" },
+  { symbol: "Intel Corp.", code: "INTC", name: "Intel Corporation", category: "Ações", payout: 83, logo: clearbit("intel.com"), color: "#0071c5" },
+  { symbol: "Coca-Cola Co.", code: "KO", name: "The Coca-Cola Company", category: "Ações", payout: 82, logo: clearbit("coca-cola.com"), color: "#f40009" },
+  { symbol: "PepsiCo Inc.", code: "PEP", name: "PepsiCo Inc.", category: "Ações", payout: 81, logo: clearbit("pepsico.com"), color: "#00529b" },
+  { symbol: "McDonald's", code: "MCD", name: "McDonald's Corp.", category: "Ações", payout: 82, logo: clearbit("mcdonalds.com"), color: "#ffbc0d" },
+  { symbol: "Nike Inc.", code: "NKE", name: "Nike Inc.", category: "Ações", payout: 83, logo: clearbit("nike.com"), color: "#111111" },
+  { symbol: "Walt Disney", code: "DIS", name: "The Walt Disney Company", category: "Ações", payout: 83, logo: clearbit("disney.com"), color: "#113ccf" },
+  { symbol: "Boeing Co.", code: "BA", name: "The Boeing Company", category: "Ações", payout: 84, logo: clearbit("boeing.com"), color: "#0033a0" },
+  { symbol: "Pfizer Inc.", code: "PFE", name: "Pfizer Inc.", category: "Ações", payout: 81, logo: clearbit("pfizer.com"), color: "#0000ff" },
+  { symbol: "Walmart Inc.", code: "WMT", name: "Walmart Inc.", category: "Ações", payout: 82, logo: clearbit("walmart.com"), color: "#0071ce" },
+  { symbol: "Visa Inc.", code: "V", name: "Visa Inc.", category: "Ações", payout: 83, logo: clearbit("visa.com"), color: "#1a1f71" },
+  { symbol: "Mastercard", code: "MA", name: "Mastercard Inc.", category: "Ações", payout: 83, logo: clearbit("mastercard.com"), color: "#ff5f00" },
+  { symbol: "Coinbase Global", code: "COIN", name: "Coinbase Global Inc.", category: "Ações", payout: 89, logo: clearbit("coinbase.com"), color: "#0052ff" },
+  { symbol: "MicroStrategy", code: "MSTR", name: "MicroStrategy Inc.", category: "Ações", payout: 91, logo: clearbit("microstrategy.com"), color: "#d9232a" },
+  { symbol: "Alibaba Group", code: "BABA", name: "Alibaba Group", category: "Ações", payout: 84, logo: clearbit("alibaba.com"), color: "#ff6a00" },
+  { symbol: "Palantir Tech", code: "PLTR", name: "Palantir Technologies", category: "Ações", payout: 88, logo: clearbit("palantir.com"), color: "#101010" },
+
+  // --- Cripto ---
+  { symbol: "Bitcoin", code: "BTC-USDT", name: "Bitcoin / Tether", category: "Cripto", payout: 89, logo: crypto("btc"), color: "#f7931a" },
+  { symbol: "Ethereum", code: "ETH-USDT", name: "Ethereum / Tether", category: "Cripto", payout: 89, logo: crypto("eth"), color: "#627eea" },
+  { symbol: "Solana", code: "SOL-USDT", name: "Solana / Tether", category: "Cripto", payout: 89, logo: crypto("sol"), color: "#14f195" },
+  { symbol: "BNB", code: "BNB-USDT", name: "Binance Coin", category: "Cripto", payout: 88, logo: crypto("bnb"), color: "#f3ba2f" },
+  { symbol: "Ripple (XRP)", code: "XRP-USDT", name: "XRP / Tether", category: "Cripto", payout: 87, logo: crypto("xrp"), color: "#23292f" },
+  { symbol: "Cardano", code: "ADA-USDT", name: "Cardano / Tether", category: "Cripto", payout: 86, logo: crypto("ada"), color: "#0033ad" },
+  { symbol: "Dogecoin", code: "DOGE-USDT", name: "Dogecoin / Tether", category: "Cripto", payout: 88, logo: crypto("doge"), color: "#c2a633" },
+  { symbol: "Avalanche", code: "AVAX-USDT", name: "Avalanche", category: "Cripto", payout: 87, logo: crypto("avax"), color: "#e84142" },
+  { symbol: "Shiba Inu", code: "SHIB-USDT", name: "Shiba Inu", category: "Cripto", payout: 86, logo: crypto("shib"), color: "#ffa409" },
+  { symbol: "Polkadot", code: "DOT-USDT", name: "Polkadot", category: "Cripto", payout: 86, logo: crypto("dot"), color: "#e6007a" },
+  { symbol: "Polygon", code: "MATIC-USDT", name: "Polygon / MATIC", category: "Cripto", payout: 86, logo: crypto("matic"), color: "#8247e5" },
+  { symbol: "Chainlink", code: "LINK-USDT", name: "Chainlink", category: "Cripto", payout: 86, logo: crypto("link"), color: "#375bd2" },
+  { symbol: "Uniswap", code: "UNI-USDT", name: "Uniswap", category: "Cripto", payout: 85, logo: crypto("uni"), color: "#ff007a" },
+  { symbol: "Litecoin", code: "LTC-USDT", name: "Litecoin", category: "Cripto", payout: 85, logo: crypto("ltc"), color: "#345d9d" },
+  { symbol: "NEAR Protocol", code: "NEAR-USDT", name: "NEAR Protocol", category: "Cripto", payout: 86, logo: crypto("near"), color: "#000000" },
+  { symbol: "Sui Network", code: "SUI-USDT", name: "Sui Network", category: "Cripto", payout: 88, logo: crypto("sui"), color: "#4fa8f6" },
+  { symbol: "Aptos", code: "APT-USDT", name: "Aptos", category: "Cripto", payout: 86, logo: crypto("apt"), color: "#222222" },
+  { symbol: "Toncoin", code: "TON-USDT", name: "Toncoin", category: "Cripto", payout: 87, logo: crypto("ton"), color: "#0088cc" },
+
+  // --- Commodities ---
+  { symbol: "Gold (XAU/USD)", code: "XAU-USD", name: "Ouro Spot / US Dollar", category: "Commodities", payout: 89, color: "#ffd700" },
+  { symbol: "Silver (XAG/USD)", code: "XAG-USD", name: "Prata Spot / US Dollar", category: "Commodities", payout: 86, color: "#c0c0c0" },
+  { symbol: "Crude Oil Brent", code: "BRENT", name: "Petróleo Brent Crude", category: "Commodities", payout: 87, color: "#222222" },
+  { symbol: "WTI Crude Oil", code: "WTI", name: "Petróleo WTI Crude", category: "Commodities", payout: 86, color: "#333333" },
+  { symbol: "Natural Gas", code: "NGAS", name: "Gás Natural Spot", category: "Commodities", payout: 84, color: "#00a8ff" },
+  { symbol: "Copper", code: "COPPER", name: "Cobre Spot", category: "Commodities", payout: 83, color: "#b87333" },
+  { symbol: "Platinum", code: "XPT-USD", name: "Platina Spot", category: "Commodities", payout: 82, color: "#e5e4e2" },
+
+  // --- ETFs ---
+  { symbol: "SPDR S&P 500 (SPY)", code: "SPY", name: "SPDR S&P 500 ETF Trust", category: "ETFs", payout: 85, logo: clearbit("ssga.com"), color: "#003366" },
+  { symbol: "Invesco QQQ", code: "QQQ", name: "Invesco QQQ Trust Nasdaq", category: "ETFs", payout: 86, logo: clearbit("invesco.com"), color: "#004b87" },
+  { symbol: "iShares MSCI Brazil (EWZ)", code: "EWZ", name: "iShares MSCI Brazil ETF", category: "ETFs", payout: 87, logo: clearbit("blackrock.com"), color: "#009c3b" },
+  { symbol: "Vanguard Total Stock (VTI)", code: "VTI", name: "Vanguard Total Stock Market", category: "ETFs", payout: 84, logo: clearbit("vanguard.com"), color: "#96151d" },
+  { symbol: "iShares Russell 2000 (IWM)", code: "IWM", name: "iShares Russell 2000 ETF", category: "ETFs", payout: 84, logo: clearbit("blackrock.com"), color: "#000000" },
+  { symbol: "ARK Innovation (ARKK)", code: "ARKK", name: "ARK Innovation ETF", category: "ETFs", payout: 87, logo: clearbit("ark-invest.com"), color: "#22a6b3" },
+  { symbol: "Semiconductor ETF (SMH)", code: "SMH", name: "VanEck Semiconductor ETF", category: "ETFs", payout: 88, logo: clearbit("vaneck.com"), color: "#005a9c" },
+
+  // --- Índices ---
+  { symbol: "S&P 500 (SPX500)", code: "SPX500", name: "S&P 500 Index", category: "Índices", payout: 88, color: "#003366" },
+  { symbol: "Nasdaq 100 (NAS100)", code: "NAS100", name: "Nasdaq 100 Index", category: "Índices", payout: 89, color: "#004b87" },
+  { symbol: "Dow Jones (US30)", code: "US30", name: "Dow Jones Industrial Average", category: "Índices", payout: 87, color: "#1e3799" },
+  { symbol: "Germany DAX 40", code: "GER40", name: "Germany DAX 40 Index", category: "Índices", payout: 86, color: "#dd0000" },
+  { symbol: "UK FTSE 100", code: "UK100", name: "UK FTSE 100 Index", category: "Índices", payout: 85, color: "#00247d" },
+  { symbol: "Nikkei 225", code: "JPN225", name: "Japan Nikkei 225 Index", category: "Índices", payout: 86, color: "#bc002d" },
+  { symbol: "Brazil Bovespa (IBOV)", code: "IBOV", name: "Índice Bovespa B3", category: "Índices", payout: 88, color: "#009c3b" },
 ];
 
 const ASSETS = ASSET_CATALOG.map((a) => a.symbol);
@@ -2422,13 +2545,30 @@ function AssetPickerDialog({
   });
 
   const grouped: Record<AssetCategory, AssetItem[]> = {
+    "Opções (OTC)": [],
     Forex: [],
-    Cripto: [],
     "Ações": [],
+    Cripto: [],
+    Commodities: [],
+    ETFs: [],
+    "Índices": [],
   };
-  filtered.forEach((a) => grouped[a.category].push(a));
+  filtered.forEach((a) => {
+    if (grouped[a.category]) {
+      grouped[a.category].push(a);
+    }
+  });
 
-  const tabs: ("Todos" | AssetCategory)[] = ["Todos", "Forex", "Cripto", "Ações"];
+  const tabs: ("Todos" | AssetCategory)[] = [
+    "Todos",
+    "Opções (OTC)",
+    "Forex",
+    "Ações",
+    "Cripto",
+    "Commodities",
+    "ETFs",
+    "Índices",
+  ];
 
   return (
     <Dialog open={open} onOpenChange={(o) => !disabled && setOpen(o)}>

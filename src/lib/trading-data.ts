@@ -29,16 +29,26 @@ export const sideLabel = (s: "Long" | "Short") => (s === "Long" ? "CALL" : "PUT"
 export const sideLabelPt = (s: "Long" | "Short") => (s === "Long" ? "ALTA" : "BAIXA");
 
 const assets = [
+  "EUR/USD (OTC)",
+  "GBP/USD (OTC)",
+  "USD/JPY (OTC)",
+  "USD/BRL (OTC)",
   "EUR/USD",
   "GBP/USD",
   "USD/JPY",
   "AUD/USD",
   "EUR/JPY",
   "USD/BRL",
-  "EUR/USD-OTC",
-  "GBP/USD-OTC",
-  "BTC/USD",
-  "ETH/USD",
+  "Bitcoin",
+  "Ethereum",
+  "Solana",
+  "Apple Inc.",
+  "Tesla Inc.",
+  "NVIDIA Corp.",
+  "Gold (XAU/USD)",
+  "Crude Oil Brent",
+  "SPDR S&P 500 (SPY)",
+  "Nasdaq 100 (NAS100)",
 ];
 const strategies = [
   "Price Action",
