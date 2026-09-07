@@ -18,12 +18,12 @@ export type JarvisStep =
   | "slide-hack";
 
 const STEP_META: Record<JarvisStep, { url: string; caption: string }> = {
-  "broker-url": { url: brokerUrlAsset.url, caption: "Adicione o link da sua corretora." },
-  "account-id": { url: accountIdAsset.url, caption: "Adicione o ID da sua conta na corretora." },
-  screenshot: { url: screenshotAsset.url, caption: "Envie um print do gráfico." },
-  asset: { url: assetAsset.url, caption: "Selecione um ativo." },
-  timeframe: { url: timeframeAsset.url, caption: "Escolha um tempo." },
-  "slide-hack": { url: slideHackAsset.url, caption: "Arraste para o lado para ativar o hack." },
+  "broker-url": { url: "/jarvis-audio/broker-url.mp3", caption: "Adicione o link da sua corretora." },
+  "account-id": { url: "/jarvis-audio/account-id.mp3", caption: "Adicione o ID da sua conta na corretora." },
+  screenshot: { url: "/jarvis-audio/screenshot.mp3", caption: "Envie um print do gráfico." },
+  asset: { url: "/jarvis-audio/asset.mp3", caption: "Selecione um ativo." },
+  timeframe: { url: "/jarvis-audio/timeframe.mp3", caption: "Escolha um tempo." },
+  "slide-hack": { url: "/jarvis-audio/slide-hack.mp3", caption: "Arraste para o lado para ativar o hack." },
 };
 
 let sharedCtx: AudioContext | null = null;
