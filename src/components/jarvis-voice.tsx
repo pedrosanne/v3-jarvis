@@ -56,36 +56,79 @@ export function JarvisVoice({ step, muted, onToggleMute }: { step: JarvisStep | 
 
   // play on step change
   useEffect(() => {
-    if (!step || muted) return;
+    if (!step || muted) {
+      setPlaying(false);
+      if (typeof window !== "undefined" && "speechSynthesis" in window) {
+        window.speechSynthesis.cancel();
+      }
+      if (audioRef.current) {
+        audioRef.current.pause();
+      }
+      return;
+    }
     if (lastStepRef.current === step) return;
     lastStepRef.current = step;
     const meta = STEP_META[step];
     setCaption(meta.caption);
 
-    const audio = audioRef.current;
-    if (!audio) return;
-    audio.src = meta.url;
-    audio.currentTime = 0;
-
-    // wire analyser once
-    const ctx = getCtx();
-    if (ctx && !srcRef.current) {
+    const speakFallback = () => {
+      if (typeof window === "undefined" || !("speechSynthesis" in window)) return;
       try {
-        const src = ctx.createMediaElementSource(audio);
-        const analyser = ctx.createAnalyser();
-        analyser.fftSize = 128;
-        analyser.smoothingTimeConstant = 0.78;
-        src.connect(analyser);
-        analyser.connect(ctx.destination);
-        srcRef.current = src;
-        analyserRef.current = analyser;
-      } catch {
-        /* ignore */
-      }
-    }
+        window.speechSynthesis.cancel();
+        const utter = new SpeechSynthesisUtterance(meta.caption);
+        utter.lang = "pt-BR";
+        utter.rate = 1.0;
+        utter.pitch = 0.95;
 
-    const p = audio.play();
-    if (p) p.then(() => setPlaying(true)).catch(() => setPlaying(false));
+        const voices = window.speechSynthesis.getVoices();
+        const ptVoice = voices.find((v) => v.lang.toLowerCase().includes("pt"));
+        if (ptVoice) utter.voice = ptVoice;
+
+        utter.onstart = () => setPlaying(true);
+        utter.onend = () => setPlaying(false);
+        utter.onerror = () => setPlaying(false);
+
+        window.speechSynthesis.speak(utter);
+      } catch {
+        setPlaying(false);
+      }
+    };
+
+    const audio = audioRef.current;
+    if (audio && meta.url && !meta.url.startsWith("/__l5e/")) {
+      audio.src = meta.url;
+      audio.currentTime = 0;
+
+      // wire analyser once
+      const ctx = getCtx();
+      if (ctx && !srcRef.current) {
+        try {
+          const src = ctx.createMediaElementSource(audio);
+          const analyser = ctx.createAnalyser();
+          analyser.fftSize = 128;
+          analyser.smoothingTimeConstant = 0.78;
+          src.connect(analyser);
+          analyser.connect(ctx.destination);
+          srcRef.current = src;
+          analyserRef.current = analyser;
+        } catch {
+          /* ignore */
+        }
+      }
+
+      const p = audio.play();
+      if (p) {
+        p.then(() => {
+          setPlaying(true);
+        }).catch(() => {
+          speakFallback();
+        });
+      } else {
+        speakFallback();
+      }
+    } else {
+      speakFallback();
+    }
   }, [step, muted]);
 
   // render wave
