@@ -534,8 +534,9 @@ function JARVISPage() {
 
   function maskAccountId(raw: string) {
     const v = raw.trim();
-    if (v.length <= 10) return v;
-    return v.slice(0, 8) + "•••••••••••" + v.slice(-6);
+    if (v.length <= 4) return v;
+    if (v.length <= 8) return v.slice(0, 2) + "•••••" + v.slice(-2);
+    return v.slice(0, 3) + "••••••••" + v.slice(-3);
   }
 
   function startAccountCheck(raw: string) {
@@ -547,8 +548,8 @@ function JARVISPage() {
     setAccountProgress(0);
     setAccountMeta(null);
 
-    // Accept any reasonably formatted ID (>= 12 chars, alphanumeric + dashes)
-    const valid = /^[a-zA-Z0-9-]{12,}$/.test(v);
+    // Accept any non-empty account ID (numeric, alphanumeric, uuid, dashes, etc.)
+    const valid = Boolean(v && v.length >= 2);
 
     const steps = [
       { label: "Conectando à API da corretora", ms: 600 },
@@ -913,7 +914,7 @@ function JARVISPage() {
                   steps={accountSteps}
                   meta={accountMeta}
                   savedId={savedAccountId}
-                  exampleId="745972b1-lf5a-3c2f-be6b-3c1a72778934"
+                  exampleId="195059771"
                   onStart={startAccountCheck}
                   onReset={resetAccount}
                   onSaveDefault={saveAccountDefault}
@@ -2118,8 +2119,8 @@ function AccountIdGate({
   function trigger(value: string) {
     setAccountId(value);
     if (debounceRef.current) clearTimeout(debounceRef.current);
-    if (value.trim().length >= 12) {
-      debounceRef.current = setTimeout(() => onStart(value), 350);
+    if (value.trim().length >= 2) {
+      debounceRef.current = setTimeout(() => onStart(value.trim()), 350);
     }
   }
 
@@ -2213,6 +2214,12 @@ function AccountIdGate({
         <input
           value={accountId}
           onChange={(e) => trigger(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" && accountId.trim().length >= 2) {
+              if (debounceRef.current) clearTimeout(debounceRef.current);
+              onStart(accountId.trim());
+            }
+          }}
           onPaste={(e) => {
             const v = e.clipboardData.getData("text");
             if (v) {
