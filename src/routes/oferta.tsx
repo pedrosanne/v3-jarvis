@@ -318,7 +318,7 @@ function OfertaPage() {
               </div>
               <div className="pointer-events-none absolute inset-x-0 bottom-0 flex items-center justify-between px-3 py-2 font-mono text-[10px] uppercase tracking-[0.22em] text-cyan-300/70">
                 <span>EUR/USD • M1</span>
-                <span className="text-emerald-300">▲ BUY 92.7%</span>
+                <span className="text-emerald-300">▲ COMPRA 92.7%</span>
               </div>
             </div>
           </div>

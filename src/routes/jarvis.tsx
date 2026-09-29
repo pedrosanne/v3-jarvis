@@ -392,7 +392,7 @@ function JARVISPage() {
   const [price, setPrice] = useState(1.0875);
   const [confidence, setConfidence] = useState(0);
   const [signal, setSignal] = useState<null | {
-    side: "BUY" | "SELL";
+    side: "COMPRA" | "VENDA" | "BUY" | "SELL";
     entry: number;
     sl: number;
     tp: number;
@@ -493,17 +493,19 @@ function JARVISPage() {
   }, [voiceArmed]);
   const activeStep: JarvisStep | null = !voiceArmed
     ? null
-    : !brokerApproved
-      ? "broker-url"
-      : !accountApproved
-        ? "account-id"
-        : !chartPrint
-          ? "screenshot"
-          : !assetPicked
-            ? "asset"
-            : !tfPicked
-              ? "timeframe"
-              : "slide-hack";
+    : phase === "signal"
+      ? null
+      : !brokerApproved
+        ? "cole-a-url"
+        : !accountApproved
+          ? "adicione-o-id"
+          : !chartPrint
+            ? "envie-o-print"
+            : !assetPicked
+              ? "selecione-o-ativo"
+              : !tfPicked
+                ? "escolha-o-tempo"
+                : "arraste-para-o-lado";
 
   // Auto-scroll lento enquanto a análise roda
   const scrollTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -964,11 +966,12 @@ function JARVISPage() {
     }
 
     // Build signal
-    const side: "BUY" | "SELL" = Math.random() > 0.5 ? "BUY" : "SELL";
+    const side: "COMPRA" | "VENDA" = Math.random() > 0.5 ? "COMPRA" : "VENDA";
     const entry = +price.toFixed(5);
     const spread = entry * 0.0015;
-    const sl = +(side === "BUY" ? entry - spread : entry + spread).toFixed(5);
-    const tp = +(side === "BUY" ? entry + spread * 2.2 : entry - spread * 2.2).toFixed(5);
+    const isBuy = side === "COMPRA" || (side as string) === "BUY";
+    const sl = +(isBuy ? entry - spread : entry + spread).toFixed(5);
+    const tp = +(isBuy ? entry + spread * 2.2 : entry - spread * 2.2).toFixed(5);
     const expiry = new Date(Date.now() + tf.seconds * 1000).toLocaleTimeString();
     const conf = 88 + Math.floor(Math.random() * 10);
 
@@ -1354,6 +1357,8 @@ function JARVISPage() {
           asset={asset}
           tf={tf.label}
           brokerUrl={brokerUrl || savedBrokerUrl || (brokerDomain ? `https://${brokerDomain}` : "")}
+          voiceMuted={voiceMuted}
+          onToggleVoiceMute={() => setVoiceMuted((m) => !m)}
           onClose={() => {
             // força recarregar a página /jarvis do zero
             window.location.reload();
@@ -1369,10 +1374,12 @@ function SignalModal({
   asset,
   tf,
   brokerUrl,
+  voiceMuted,
+  onToggleVoiceMute,
   onClose,
 }: {
   signal: {
-    side: "BUY" | "SELL";
+    side: "COMPRA" | "VENDA" | "BUY" | "SELL";
     entry: number;
     sl: number;
     tp: number;
@@ -1382,9 +1389,12 @@ function SignalModal({
   asset: string;
   tf: string;
   brokerUrl?: string;
+  voiceMuted: boolean;
+  onToggleVoiceMute: () => void;
   onClose: () => void;
 }) {
-  const isBuy = signal.side === "BUY";
+  const isBuy = signal.side === "COMPRA" || signal.side === "BUY";
+  const sideLabel = isBuy ? "COMPRA" : "VENDA";
   const targetBrokerUrl = brokerUrl?.trim()
     ? (brokerUrl.startsWith("http") ? brokerUrl : `https://${brokerUrl}`)
     : "";
@@ -1494,7 +1504,7 @@ function SignalModal({
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full opacity-75" style={{ background: accentHex }} />
                 <span className="relative inline-flex h-2 w-2 rounded-full" style={{ background: accentHex }} />
               </span>
-              J.A.R.V.I.S. // SIGNAL LOCKED
+              J.A.R.V.I.S. // SINAL CONFIRMADO
             </div>
             <div className="text-white/30">#{Math.floor(Math.random() * 9000 + 1000)}</div>
           </div>
@@ -1512,7 +1522,7 @@ function SignalModal({
                   letterSpacing: "0.02em",
                 }}
               >
-                {signal.side}
+                {sideLabel}
               </div>
               <div
                 className="absolute -inset-x-4 -bottom-1 h-px"
@@ -1526,8 +1536,18 @@ function SignalModal({
             </div>
           </div>
 
+          {/* Jarvis Voice Audio no resultado */}
+          <div className="mt-5">
+            <JarvisVoice
+              step={isBuy ? "sinal-compra" : "sinal-venda"}
+              muted={voiceMuted}
+              onToggleMute={onToggleVoiceMute}
+              accent={isBuy ? "cyan" : "red"}
+            />
+          </div>
+
           {/* Confidence bar — HUD style */}
-          <div className="mt-6 rounded-xl border border-white/10 bg-black/40 p-3">
+          <div className="mt-5 rounded-xl border border-white/10 bg-black/40 p-3">
             <div className="flex items-center justify-between font-mono text-[10px] uppercase tracking-widest">
               <span className="text-white/50">Confiança Neural</span>
               <span className="font-bold tabular-nums" style={{ color: accentHex }}>
@@ -1563,9 +1583,9 @@ function SignalModal({
           <div className="mt-3 flex items-center justify-between rounded-lg border border-white/5 bg-black/30 px-3 py-1.5 font-mono text-[9px] uppercase tracking-widest text-white/40">
             <span className="flex items-center gap-1.5">
               <span className="inline-block h-1 w-1 animate-pulse rounded-full" style={{ background: accentHex }} />
-              feed live
+              feed ao vivo
             </span>
-            <span>lat: 12ms</span>
+            <span>latência: 12ms</span>
             <span>vol: ●●●○○</span>
           </div>
 
@@ -1579,7 +1599,7 @@ function SignalModal({
                 e.preventDefault();
               }
               sfxSuccess();
-              const txt = `${signal.side} ${asset} @ ${signal.entry} | SL ${signal.sl} | TP ${signal.tp}`;
+              const txt = `${sideLabel} ${asset} @ ${signal.entry} | SL ${signal.sl} | TP ${signal.tp}`;
               navigator.clipboard?.writeText(txt).catch(() => {});
               toast.success("Sinal copiado", { description: targetBrokerUrl ? "Abrindo corretora..." : "Sinal copiado para a área de transferência!" });
             }}
